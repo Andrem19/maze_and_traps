@@ -13,11 +13,14 @@ class MenuButton {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Image.asset(
-                'assets/images/button.png',
-                height: Get.size.height / 20,
-                width: Get.size.width / 2,
-                fit: BoxFit.fill,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.asset(
+                  'assets/images/button.png',
+                  height: Get.size.height / 20,
+                  width: Get.size.width / 2,
+                  fit: BoxFit.fill,
+                ),
               ),
               Text(
                 name,

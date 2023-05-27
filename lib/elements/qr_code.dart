@@ -17,19 +17,25 @@ class QrCode extends StatelessWidget {
             onTap: () => controller.changeQrShow(),
               child: Builder(builder: (context) {
                 if (controller.showQR.value) {
-                  return Container(
-                    color: Colors.white,
-                    height: 200,
-                    width: 200,
-                    child: controller.createQR(),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Container(
+                      color: Colors.white,
+                      height: 200,
+                      width: 200,
+                      child: controller.createQR(),
+                    ),
                   );
                 } else {
-                  return Container(
-                    color: Colors.white,
-                    height: 200,
-                    width: 200,
-                    child:
-                        Image.asset('assets/images/maze_preview.jpg'),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Container(
+                      color: Colors.white,
+                      height: 200,
+                      width: 200,
+                      child:
+                          Image.asset('assets/images/maze_preview.jpg'),
+                    ),
                   );
                 }
               }),
