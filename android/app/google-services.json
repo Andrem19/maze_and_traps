@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "699351213389",
+    "project_id": "mazeandtraps",
+    "storage_bucket": "mazeandtraps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699351213389:android:f48d7532c60d74da520304",
+        "android_client_info": {
+          "package_name": "com.example.mazeandtraps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgT7Ga_Rmoq0Ul2KuqE4scxq46pKjxynY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
