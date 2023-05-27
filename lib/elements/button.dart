@@ -25,7 +25,8 @@ class MenuButton {
               Text(
                 name,
                 style: const TextStyle(
-                    fontSize: 15,
+                  fontFamily: 'ArchitectsDaughter',
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                     shadows: [

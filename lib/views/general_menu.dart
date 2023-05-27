@@ -25,7 +25,7 @@ class GeneralMenu extends StatelessWidget {
               children: [
                 QrCode(),
                 SearchField(),
-                MenuButton.getButton('SETTINGS', Routes.SETTINGS)
+                MenuButton.getButton('Settings', Routes.SETTINGS)
               ],
             ),
           );
