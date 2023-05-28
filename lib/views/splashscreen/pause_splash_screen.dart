@@ -15,13 +15,11 @@ class PauseSplashScreen extends StatefulWidget {
 }
 
 class _PauseSplashScreenState extends State<PauseSplashScreen> {
-
   @override
   void initState() {
     Get.put(PauseSplashController());
 
     super.initState();
-
   }
 
   @override
@@ -35,9 +33,7 @@ class _PauseSplashScreenState extends State<PauseSplashScreen> {
     return GetBuilder<PauseSplashController>(builder: (controller) {
       return GestureDetector(
         onTap: () async {
-          await FlameAudio.play('door-slide1.mp3');
-          await Future.delayed(Duration(milliseconds: 500));
-          Get.offNamed(Routes.GENERAL_MENU);
+          controller.playDoor();
         },
         child: Scaffold(
           body: Container(
@@ -57,8 +53,13 @@ class _PauseSplashScreenState extends State<PauseSplashScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(controller.isShow.value ? controller.text.value : '', style: const TextStyle(fontSize: 25),),
-                    SizedBox(height: 20,)
+                    Text(
+                      controller.isShow.value ? controller.text.value : '',
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 )
               ],

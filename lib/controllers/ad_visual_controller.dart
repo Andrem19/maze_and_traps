@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class AdAndVisualController extends GetxController {
   MainGameController mainCtrl = Get.find<MainGameController>();
+  String currentPress = '';
   Rx<bool> showQR = false.obs;
   bool openDialog = false;
 
@@ -18,22 +19,24 @@ class AdAndVisualController extends GetxController {
   }
 
   Future<void> pressMenuButtonEffects(String path) async {
+    currentPress = path;
     buttonWasClick = true;
     await FlameAudio.play('boom1.mp3');
     for (var i = 0; i < 8; i++) {
-      await Future.delayed(Duration(milliseconds: 30));
+      await Future.delayed(Duration(milliseconds: 40));
       mainScreenShaddow.value += 0.1;
       update();
     }
-    await Future.delayed(Duration(milliseconds: 60));
+    await Future.delayed(Duration(milliseconds: 220));
     for (var i = 0; i < 8; i++) {
-      await Future.delayed(Duration(milliseconds: 30));
+      await Future.delayed(Duration(milliseconds: 40));
       mainScreenShaddow.value -= 0.1;
       update();
     }
     if (mainScreenShaddow.value != 0.0) {
       mainScreenShaddow.value = 0.0;
     }
+    currentPress = '';
     update();
     Get.toNamed(path);
     buttonWasClick = false;

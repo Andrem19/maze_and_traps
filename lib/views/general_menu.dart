@@ -21,29 +21,35 @@ class GeneralMenu extends StatelessWidget {
         body: GetBuilder<AdAndVisualController>(builder: (AdController) {
           return Stack(
             children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.black
+                    .withOpacity(AdController.mainScreenShaddow.value),
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   QrCode(),
                   SearchField(),
-                  MenuButton.getButton('Map Editor', Routes.EDIT_MENU),
-                  MenuButton.getButton('Settings', Routes.SETTINGS)
+                  MenuButton(path: Routes.EDIT_MENU, name: 'Map Editor'),
+                  MenuButton(path: Routes.SETTINGS, name: 'Settings')
                 ],
               ),
-              Builder(
-                builder: (context) {
-                  if (AdController.buttonWasClick) {
-                    return Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.black
-                          .withOpacity(AdController.mainScreenShaddow.value),
-                    );
-                  } else
-                    return SizedBox();
-                },
-              ),
+              // Builder(
+              //   builder: (context) {
+              //     if (AdController.buttonWasClick) {
+              //       return Container(
+              //         height: double.infinity,
+              //         width: double.infinity,
+              //         color: Colors.black
+              //             .withOpacity(AdController.mainScreenShaddow.value),
+              //       );
+              //     } else
+              //       return SizedBox();
+              //   },
+              // ),
             ],
           );
         }),

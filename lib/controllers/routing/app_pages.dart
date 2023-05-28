@@ -15,7 +15,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = _Paths.GENERAL_MENU;
+  static const INITIAL = _Paths.GAME_SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
