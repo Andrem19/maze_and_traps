@@ -26,7 +26,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Maze&Traps',
       theme: ThemeData(
+        fontFamily: 'BebasNeue-Regular',
         brightness: Brightness.dark,
+        buttonTheme: ButtonThemeData(
+        buttonColor: Colors.grey, // replace with your desired color
+      ),
       ),
       getPages: AppPages.routes,
       initialRoute: AppPages.INITIAL,

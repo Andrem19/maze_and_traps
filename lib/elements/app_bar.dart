@@ -7,7 +7,7 @@ class AppBarElement {
       actions: [
         Center(
             child: Text(
-          'score: ${controller.score.value ?? 0}',
+          'score: ${controller.points.value ?? 0}',
           style: TextStyle(fontSize: 20),
         )),
         SizedBox(

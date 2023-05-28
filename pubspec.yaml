@@ -81,6 +81,10 @@ flutter:
   assets:
     - assets/images/button.png
     - assets/images/maze_preview.jpg
+    - assets/images/maze_icon.png
+    - assets/images/snowflake.jpg
+    - assets/images/teleport.jpg
+    - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -94,9 +98,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: ArchitectsDaughter
+    - family: BebasNeue-Regular
       fonts:
-        - asset: assets/fonts/ArchitectsDaughter-Regular.ttf
+        - asset: assets/fonts/BebasNeue-Regular.ttf
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

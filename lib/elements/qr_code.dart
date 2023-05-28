@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:mazeandtraps/controllers/ad_visual_controller.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 
 class QrCode extends StatelessWidget {
@@ -9,7 +10,7 @@ class QrCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MainGameController>(
+    return GetBuilder<AdAndVisualController>(
       builder: (controller) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
