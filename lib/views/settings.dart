@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/controllers/settings_controller.dart';
+import 'package:mazeandtraps/elements/appbar_pages.dart';
 
 import '../controllers/main_game_controller.dart';
 import '../elements/custom_text_field.dart';
@@ -26,19 +28,7 @@ class SettingsScreen extends StatelessWidget {
     return Shell.getShell(
       GetBuilder<SettingsController>(builder: (controller) {
         return Scaffold(
-            appBar: AppBar(
-              title: Center(child: const Text('SETTINGS')),
-              leading: IconButton(
-                onPressed: () async {
-                  // await onBackPressed();
-                  Get.back();
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'SETTINGS'),
             body: Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Column(

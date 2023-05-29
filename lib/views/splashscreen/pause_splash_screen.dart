@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/pausesplashcontroller.dart';
 
 import '../../controllers/routing/app_pages.dart';
+import '../../elements/shell.dart';
 
 class PauseSplashScreen extends StatefulWidget {
   PauseSplashScreen({super.key});
@@ -35,7 +36,7 @@ class _PauseSplashScreenState extends State<PauseSplashScreen> {
         onTap: () async {
           controller.playDoor();
         },
-        child: Scaffold(
+        child: Shell.getShell(Scaffold(
           body: Container(
             width: double.infinity,
             height: double.infinity,
@@ -66,6 +67,7 @@ class _PauseSplashScreenState extends State<PauseSplashScreen> {
             ),
           ),
         ),
+        )
       );
     });
   }

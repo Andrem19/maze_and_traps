@@ -17,7 +17,7 @@ class GeneralMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shell.getShell(GetBuilder<MainGameController>(builder: (controller) {
       return Scaffold(
-        appBar: AppBarElement.getAppBar(controller),
+        appBar: AppBarElement.getAppBar(),
         body: GetBuilder<AdAndVisualController>(builder: (AdController) {
           return Stack(
             children: [
@@ -33,23 +33,12 @@ class GeneralMenu extends StatelessWidget {
                 children: [
                   QrCode(),
                   SearchField(),
+                  MenuButton(path: Routes.TRAPS_SHOP, name: 'Traps Shop'),
+                  MenuButton(path: Routes.LEADERBOARD, name: 'Leaderboard'),
                   MenuButton(path: Routes.EDIT_MENU, name: 'Map Editor'),
                   MenuButton(path: Routes.SETTINGS, name: 'Settings')
                 ],
               ),
-              // Builder(
-              //   builder: (context) {
-              //     if (AdController.buttonWasClick) {
-              //       return Container(
-              //         height: double.infinity,
-              //         width: double.infinity,
-              //         color: Colors.black
-              //             .withOpacity(AdController.mainScreenShaddow.value),
-              //       );
-              //     } else
-              //       return SizedBox();
-              //   },
-              // ),
             ],
           );
         }),

@@ -7,6 +7,7 @@ import 'package:mazeandtraps/elements/shell.dart';
 import '../../controllers/ad_visual_controller.dart';
 import '../../controllers/map_editor_controller.dart';
 import '../../controllers/routing/app_pages.dart';
+import '../../elements/appbar_pages.dart';
 
 class EditMenu extends StatelessWidget {
   const EditMenu({super.key});
@@ -26,20 +27,7 @@ class EditMenu extends StatelessWidget {
       GetBuilder<MapEditorController>(
         builder: (controller) {
           return Scaffold(
-            appBar: AppBar(
-              title: Center(child: const Text('MAPS')),
-              centerTitle: true,
-              leading: IconButton(
-                onPressed: () async {
-                  // await onBackPressed();
-                  Get.back();
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'MAP EDITOR'),
             body: Column(
               children: [
                 StreamBuilder(

@@ -1,6 +1,8 @@
 
 import 'package:get/get.dart';
+import 'package:mazeandtraps/controllers/leaders_controller.dart';
 import 'package:mazeandtraps/controllers/settings_controller.dart';
+import 'package:mazeandtraps/controllers/traps_and_shop_controller.dart';
 
 import '../ad_visual_controller.dart';
 import '../main_game_controller.dart';
@@ -30,5 +32,17 @@ class SettingsBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(SettingsController(), permanent: false);
+  }
+}
+class LeaderboardBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(LeadersController(), permanent: false);
+  }
+}
+class TrapsAndShopBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(TrapsAndShopController(), permanent: false);
   }
 }

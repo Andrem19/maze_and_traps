@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Maze&Traps',
       theme: ThemeData(
-        fontFamily: 'BebasNeue-Regular',
+        fontFamily: 'MazeRush',
         brightness: Brightness.dark,
         buttonTheme: ButtonThemeData(
         buttonColor: Colors.grey, // replace with your desired color

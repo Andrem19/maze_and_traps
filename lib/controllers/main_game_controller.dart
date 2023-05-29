@@ -8,8 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../keys.dart';
+import '../models/trap.dart';
+import '../services/generate_traps.dart';
 
 class MainGameController extends GetxController {
+  List<Trap> allTrapsInTheGame = TrapsGenerator.getTraps();
+  RxList<Trap> allMyTraps = <Trap>[].obs;
+  RxList<Trap> backpackSet = <Trap>[].obs;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots;
   late StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> listner;
 
@@ -20,6 +25,8 @@ class MainGameController extends GetxController {
   RxString userName = ''.obs;
   String userUid = '';
   RxInt points = 0.obs;
+  RxInt scrolls = 0.obs;
+  RxList<dynamic> scrollsList = <dynamic>[].obs;
 
   TextEditingController playerSearch = TextEditingController(text: '');
   TextEditingController targetQrCode = TextEditingController();
@@ -102,6 +109,9 @@ class MainGameController extends GetxController {
         'isAnybodyAscMe': false,
         'whoInviteMeToPlay': '',
         'theGameIdInviteMe': '',
+        'scrolls': [],
+        'allTraps': [],
+        'mySetOfTraps': [],
         'points': 0,
       });
       pref.setString('secretToken', secrTok);
@@ -133,7 +143,6 @@ class MainGameController extends GetxController {
       var document = await firebaseFirestore.collection('users').doc(uid).get();
       if (document.exists) {
         var data = document.data();
-
         String token = data!['secretToken'];
         if (secretT != token) {
           registerNewUser();
@@ -141,6 +150,12 @@ class MainGameController extends GetxController {
         points.value = data['points'];
         userName.value = data['name'];
         userUid = data['uid'];
+        scrollsList.value = data['scrolls'];
+        allMyTraps.value =
+            TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame);
+        backpackSet.value =
+            TrapsGenerator.toListTraps(data['mySetOfTraps'], allTrapsInTheGame);
+        scrolls.value = scrollsList.length;
       } else {
         registerNewUser();
       }

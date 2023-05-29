@@ -10,6 +10,10 @@ abstract class Routes {
   static const EDIT_MENU = _Paths.EDIT_MENU;
   static const GAME_SPLASH_SCREEN = _Paths.GAME_SPLASH_SCREEN;
   static const PAUSE_SPLASH_SCREEN = _Paths.PAUSE_SPLASH_SCREEN;
+  static const LEADERBOARD = _Paths.LEADERBOARD;
+  static const SCROLL_LIST = _Paths.SCROLL_LIST;
+  static const BACKPACK = _Paths.BACKPACK;
+  static const TRAPS_SHOP = _Paths.TRAPS_SHOP;
 }
 
 abstract class _Paths {
@@ -20,4 +24,8 @@ abstract class _Paths {
   static const EDIT_MENU = "/edit_menu";
   static const GAME_SPLASH_SCREEN = "/game_splash_screen";
   static const PAUSE_SPLASH_SCREEN = "/pause_splash_screen";
+  static const LEADERBOARD = "/leaderboard";
+  static const SCROLL_LIST = "/scroll_list";
+  static const BACKPACK = "/backpack";
+  static const TRAPS_SHOP = "/traps_shop";
 }
