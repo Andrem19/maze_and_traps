@@ -12,10 +12,19 @@ class CustomDialog {
         title: Text(trap.name),
         content: Container(
             constraints: BoxConstraints(
-                maxWidth: kIsWeb ? Get.size.width / 5 : Get.size.width * 0.7),
-            child: Text(
-              trap.description,
-              maxLines: 5,
+                maxWidth: kIsWeb ? Get.size.width / 5 : Get.size.width * 0.7,
+                maxHeight: Get.size.height / 5),
+            child: Column(
+              children: [
+                Text(
+                  trap.description,
+                  maxLines: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text('Weight: ${trap.weight}'),
+                )
+              ],
             )),
         actions: [
           ElevatedButton(
