@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mazeandtraps/controllers/main_game_controller.dart';
+import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 
 import '../keys.dart';
 import '../models/champions copy.dart';
 import '../models/maze_map.dart';
+import 'main_game_controller.dart';
 
-class MapTrainingController extends GetxController {
+class MapsMenuController extends GetxController {
   bool isLoading = false;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   RxList<Champions> mapChampions =
@@ -15,7 +16,7 @@ class MapTrainingController extends GetxController {
   TextEditingController queryKey = TextEditingController(text: '');
 
   late Stream<QuerySnapshot> maps;
-  
+
   @override
   void onInit() {
     maps = FirebaseFirestore.instance
@@ -27,8 +28,9 @@ class MapTrainingController extends GetxController {
   }
 
   void search(String query) async {
+    String normalizedQuery = query.toLowerCase();
     try {
-      if (query == '') {
+      if (normalizedQuery == '') {
         maps = FirebaseFirestore.instance
             .collection('maps')
             .orderBy('rating', descending: false)
@@ -37,8 +39,8 @@ class MapTrainingController extends GetxController {
       } else {
         maps = FirebaseFirestore.instance
             .collection('maps')
-            .where('name', isGreaterThanOrEqualTo: query)
-            .where('name', isLessThan: query + 'z')
+            .where('name', isGreaterThanOrEqualTo: normalizedQuery)
+            .where('name', isLessThan: normalizedQuery + 'z')
             .snapshots();
       }
       update();
@@ -78,9 +80,9 @@ class MapTrainingController extends GetxController {
       var maze = MazeMap.fromJson(mapJson);
       maze.shaddowRadius = 5;
       var ctrMain = Get.find<MainGameController>();
-      // ctrMain.currentGameMap = maze; !!!!!!!
+      ctrMain.currentGameMap = maze;
       ctrMain.currentMapId = map.docs[0].id;
-      // Get.toNamed(Routes.GAME_ACT); !!!!!!!!!!!
+      Get.toNamed(Routes.MAP_TRAINING_ACT);
     } on FirebaseException catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(error.code),

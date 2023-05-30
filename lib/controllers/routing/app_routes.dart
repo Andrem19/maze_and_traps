@@ -14,6 +14,9 @@ abstract class Routes {
   static const SCROLL_LIST = _Paths.SCROLL_LIST;
   static const BACKPACK = _Paths.BACKPACK;
   static const TRAPS_SHOP = _Paths.TRAPS_SHOP;
+  static const MAP_TRAINING_MENU = _Paths.MAP_TRAINING_MENU;
+  static const MAP_TRAINING_ACT = _Paths.MAP_TRAINING_ACT;
+  static const MAP_CHAMPIONS = _Paths.MAP_CHAMPIONS;
 }
 
 abstract class _Paths {
@@ -28,4 +31,7 @@ abstract class _Paths {
   static const SCROLL_LIST = "/scroll_list";
   static const BACKPACK = "/backpack";
   static const TRAPS_SHOP = "/traps_shop";
+  static const MAP_TRAINING_MENU = "/map_training_menu";
+  static const MAP_TRAINING_ACT = "/map_training_act";
+  static const MAP_CHAMPIONS = "/map_champions";
 }

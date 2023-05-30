@@ -117,7 +117,7 @@ class CustomDialog {
                           child: Text(
                             'NOT ENOUGH SCROLS',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                                TextStyle(color: Colors.white, fontSize: 12.0),
                           ));
                     }
                   },

@@ -88,6 +88,23 @@ flutter:
     - assets/images/maze_icon.png
     - assets/images/snowflake.jpg
     - assets/images/teleport.jpg
+    - assets/images/texture_Background.png
+    - assets/images/texture_floor1.png
+    - assets/images/texture_ButtonHovered.png
+    - assets/images/texture_ButtonIdle.png
+    - assets/images/shaddow/texture_Fog.png
+    - assets/images/shaddow/texture_Fog1.png
+    - assets/images/shaddow/texture_Fog2.png
+    - assets/images/shaddow/texture_Fog3.png
+    - assets/images/shaddow/texture_Fog4.png
+    - assets/images/control/texture_DownGreen.png
+    - assets/images/control/texture_DownRed.png
+    - assets/images/control/texture_LeftGreen.png
+    - assets/images/control/texture_LeftRed.png
+    - assets/images/control/texture_RightGreen.png
+    - assets/images/control/texture_RightRed.png
+    - assets/images/control/UpDamageIcon.png
+    - assets/images/control/UpHealIcon.png
     - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see

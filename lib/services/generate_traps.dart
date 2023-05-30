@@ -88,10 +88,12 @@ class TrapsGenerator {
 
   static List<Trap> toListTraps(List<dynamic> traps, List<Trap> allTraps) {
     List<Trap> listToReturn = [];
-    for (var i = 0; i < traps.length; i++) {
-      Trap trap =
-          allTraps.firstWhere((element) => element.name == traps[i].toString());
-      listToReturn.add(trap);
+    if (traps.length > 0) {
+      for (var i = 0; i < traps.length; i++) {
+        Trap trap = allTraps
+            .firstWhere((element) => element.name == traps[i].toString());
+        listToReturn.add(trap);
+      }
     }
     return upTo12(listToReturn);
   }

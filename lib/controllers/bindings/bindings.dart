@@ -1,6 +1,8 @@
 
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/leaders_controller.dart';
+import 'package:mazeandtraps/controllers/map_training_act_controller.dart';
+import 'package:mazeandtraps/controllers/maps_menu_controller.dart';
 import 'package:mazeandtraps/controllers/settings_controller.dart';
 import 'package:mazeandtraps/controllers/traps_and_shop_controller.dart';
 
@@ -44,5 +46,17 @@ class TrapsAndShopBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(TrapsAndShopController(), permanent: false);
+  }
+}
+class MapMenuBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(MapsMenuController(), permanent: false);
+  }
+}
+class MapTrainingActBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(MapTrainingActController(), permanent: false);
   }
 }

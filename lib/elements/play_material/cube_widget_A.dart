@@ -1,14 +1,17 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../controllers/main_game_controller.dart';
 import '../../models/game_info.dart';
 import '../../models/node.dart';
 import '../../services/compare_coord.dart';
+import '../brick.dart';
 
 class CubeBrick_A extends StatelessWidget {
   GameInfo gameInfo;
-  Node nodeProto;
+  NodeCube nodeProto;
   CubeBrick_A({
     Key? key,
     required this.nodeProto,
@@ -18,9 +21,18 @@ class CubeBrick_A extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (nodeProto.isShaddow) {
-      return Container(
-        color: Colors.black38,
-      );
+      return GetBuilder<MainGameController>(builder: (controller) {
+        int rand = Random().nextInt(50);
+        return Container(
+          color: rand % 4 == 0
+              ? Color.fromARGB(255, 60, 58, 58)
+              : rand % 2 == 0
+                  ? Color.fromARGB(255, 48, 44, 44)
+                  : rand % 3 == 0
+                      ? Color.fromARGB(255, 59, 61, 65)
+                      : Color.fromARGB(255, 39, 42, 39),
+        );
+      });
     } else {
       if (nodeProto.wall) {
         return Image.asset('assets/images/texture_Wall.png');
@@ -37,6 +49,7 @@ class CubeBrick_A extends StatelessWidget {
         );
       } else {
         return Container(
+          child: createStuff(nodeProto),
           decoration: BoxDecoration(
             color: Colors.white30,
             border: Border.all(
@@ -44,13 +57,12 @@ class CubeBrick_A extends StatelessWidget {
               color: Colors.black12,
             ),
           ),
-          child: createStuff(nodeProto),
         );
       }
     }
   }
 
-  Container? createStuff(Node nodeProto) {
+  Container? createStuff(NodeCube nodeProto) {
     if (Compare.compareCoord(gameInfo.Player_A_Coord, nodeProto)) {
       if (Compare.compareCoord(gameInfo.Frozen_trap_B, nodeProto)) {
         return Container(

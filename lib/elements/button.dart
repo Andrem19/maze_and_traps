@@ -32,7 +32,7 @@ class MenuButton extends StatelessWidget {
                             .withOpacity(path == controller.currentPress ? 0.0 : controller.mainScreenShaddow.value),
                         BlendMode.darken),
                     child: Image.asset(
-                      'assets/images/button.png',
+                      'assets/images/texture_ButtonIdle.png',
                       height: Get.size.height / 20,
                       width: Get.size.width / 2,
                       fit: BoxFit.fill,

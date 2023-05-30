@@ -9,12 +9,13 @@ import '../models/trap.dart';
 
 class TrapsAndShopController extends GetxController {
   RxInt weight = 10.obs;
+  RxInt weightPrice = 2.obs;
   MainGameController main = Get.find<MainGameController>();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   @override
-  void onInit() {
-    countWeight();
+  void onInit() async {
+    await countWeight();
     super.onInit();
   }
 
@@ -272,12 +273,51 @@ class TrapsAndShopController extends GetxController {
     update();
   }
 
-  void countWeight() {
+  Future<void> countWeight() async {
     int sum = 0;
     main.backpackSet.forEach((item) {
       sum += item.weight;
     });
-    weight.value = 10 - sum;
+    var doc =
+        await firebaseFirestore.collection('users').doc(main.userUid).get();
+    var data = doc.data();
+    int w = data!['weight'];
+    List<dynamic> scrols = data['scrolls'];
+    int weightP = data['weightPrice'];
+    weightPrice.value = weightP;
+    main.scrolls.value = scrols.length;
+    weight.value = w - sum;
+    update();
+    main.update();
+  }
+
+  void buyWeight() async {
+    if (main.scrolls.value >= weightPrice.value) {
+      for (var i = 0; i < weightPrice.value; i++) {
+        main.scrollsList.removeLast();
+      }
+      var doc =
+          await firebaseFirestore.collection('users').doc(main.userUid).get();
+      var data = doc.data();
+      int weight = data!['weight'];
+      int weightP = data!['weightPrice'];
+      weightP = (weightP + (weightP / 4)).toInt();
+      if (weightP == 3) {
+        weightP = 4;
+      }
+      if (weightP == 2) {
+        weightP = 3;
+      }
+      
+
+      weight += 1;
+      await firebaseFirestore.collection('users').doc(main.userUid).update({
+        'scrolls': main.scrollsList,
+        'weight': weight,
+        'weightPrice': weightP,
+      });
+      countWeight();
+    }
   }
 
   // void testScrolls() async {

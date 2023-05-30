@@ -1,17 +1,24 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mazeandtraps/services/map_operation.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../keys.dart';
+import '../models/maze_map.dart';
 import '../models/trap.dart';
 import '../services/generate_traps.dart';
 
 class MainGameController extends GetxController {
+
+  MazeMap? currentGameMap;
   List<Trap> allTrapsInTheGame = TrapsGenerator.getTraps();
   RxList<Trap> allMyTraps = <Trap>[].obs;
   RxList<Trap> backpackSet = <Trap>[].obs;
@@ -21,7 +28,6 @@ class MainGameController extends GetxController {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   var uuid = Uuid();
   late SharedPreferences pref;
-
   RxString userName = ''.obs;
   String userUid = '';
   RxInt points = 0.obs;
@@ -36,6 +42,7 @@ class MainGameController extends GetxController {
   String currentMapName = '';
   String currentmultiplayerGameId = '';
   String currentMapId = '';
+  Direction moveDir = Direction.up;
 
   @override
   void onInit() async {
@@ -48,6 +55,10 @@ class MainGameController extends GetxController {
   void onClose() {
     destroyListner();
     super.onClose();
+  }
+
+  void playButton() {
+    // FlameAudio.play('button_change_direction.ogg');
   }
 
   ////   AUTHORIZATION ////
@@ -98,6 +109,9 @@ class MainGameController extends GetxController {
     String uid = uuid.v4();
     String part = uid.substring(30);
     String secrTok = uuid.v4();
+    for (var i = 0; i < 200; i++) {
+      scrollsList.add('scroll');
+    }
 
     try {
       await firebaseFirestore.collection('users').doc(uid).set({
@@ -109,9 +123,11 @@ class MainGameController extends GetxController {
         'isAnybodyAscMe': false,
         'whoInviteMeToPlay': '',
         'theGameIdInviteMe': '',
-        'scrolls': [],
+        'scrolls': scrollsList,
         'allTraps': [],
-        'mySetOfTraps': [],
+        'mySetOfTraps': ['Blindness'],
+        'weight': 3,
+        'weightPrice': 2,
         'points': 0,
       });
       pref.setString('secretToken', secrTok);
@@ -119,6 +135,10 @@ class MainGameController extends GetxController {
       userName.value = 'Pl-$part';
       points.value = 0;
       userUid = uid;
+      allMyTraps.value = TrapsGenerator.toListTraps([], allTrapsInTheGame);
+      backpackSet.value =
+          TrapsGenerator.toListTraps(['Blindness'], allTrapsInTheGame);
+      scrolls.value = scrollsList.length;
       update();
     } on FirebaseException catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
@@ -284,4 +304,6 @@ class MainGameController extends GetxController {
     });
     IsUserInGame = status;
   }
+
+
 }

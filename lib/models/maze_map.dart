@@ -12,7 +12,7 @@ enum Direction { up, down, left, right }
 
 class MazeMap {
   //Should be 60x30 cube
-  List<List<Node>> mazeMap;
+  List<List<NodeCube>> mazeMap;
   String message_A;
   String message_B;
   int shaddowRadius;
@@ -393,9 +393,9 @@ class MazeMap {
 
   factory MazeMap.fromMap(Map<String, dynamic> map) {
     return MazeMap(
-      mazeMap: List<List<Node>>.from(map['mazeMap'].entries.map(
-            (entry) => List<Node>.from(
-                entry.value.entries.map((e) => Node.fromMap(e.value))),
+      mazeMap: List<List<NodeCube>>.from(map['mazeMap'].entries.map(
+            (entry) => List<NodeCube>.from(
+                entry.value.entries.map((e) => NodeCube.fromMap(e.value))),
           )),
       shaddowRadius: map['shaddowRadius'] as int,
       message_A: map['message_A'] as String,

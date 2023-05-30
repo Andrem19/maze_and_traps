@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class Node {
+class NodeCube {
   int row;
   int col;
   bool wall;
@@ -10,7 +10,7 @@ class Node {
   bool editAlowd;
   bool is_A_START;
   bool is_B_START;
-  Node({
+  NodeCube({
     required this.row,
     required this.col,
     required this.wall,
@@ -22,7 +22,7 @@ class Node {
   });
   
 
-  Node copyWith({
+  NodeCube copyWith({
     int? row,
     int? col,
     bool? wall,
@@ -32,7 +32,7 @@ class Node {
     bool? is_A_START,
     bool? is_B_START,
   }) {
-    return Node(
+    return NodeCube(
       row: row ?? this.row,
       col: col ?? this.col,
       wall: wall ?? this.wall,
@@ -57,8 +57,8 @@ class Node {
     };
   }
 
-  factory Node.fromMap(Map<String, dynamic> map) {
-    return Node(
+  factory NodeCube.fromMap(Map<String, dynamic> map) {
+    return NodeCube(
       row: map['row'] as int,
       col: map['col'] as int,
       wall: map['wall'] as bool,
@@ -72,15 +72,15 @@ class Node {
 
   String toJson() => json.encode(toMap());
 
-  factory Node.fromJson(String source) => Node.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory NodeCube.fromJson(String source) => NodeCube.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Node(row: $row, col: $col, wall: $wall, isShaddow: $isShaddow, isShadowCorner: $isShadowCorner, editAlowd: $editAlowd, is_A_START: $is_A_START, is_B_START: $is_B_START)';
+    return 'NodeCube(row: $row, col: $col, wall: $wall, isShaddow: $isShaddow, isShadowCorner: $isShadowCorner, editAlowd: $editAlowd, is_A_START: $is_A_START, is_B_START: $is_B_START)';
   }
 
   @override
-  bool operator ==(covariant Node other) {
+  bool operator ==(covariant NodeCube other) {
     if (identical(this, other)) return true;
   
     return 

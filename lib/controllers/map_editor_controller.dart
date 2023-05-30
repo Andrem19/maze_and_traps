@@ -69,13 +69,14 @@ class MapEditorController extends GetxController {
     String id = uuid.v4();
     try {
       if (mapNameController.text != '') {
+        String normalizedName = mapNameController.text.toLowerCase();
         var isNameExist = await FirebaseFirestore.instance
             .collection('maps')
-            .where('name', isEqualTo: mapNameController.text)
+            .where('name', isEqualTo: normalizedName)
             .get();
         if (isNameExist.size == 0) {
           await firebaseFirestore.collection('maps').add({
-            'name': mapNameController.text,
+            'name': normalizedName,
             'id': id,
             'author': mainCtrlr.userUid,
             'authorName': mainCtrlr.userName.value,

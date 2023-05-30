@@ -21,6 +21,16 @@ class GeneralMenu extends StatelessWidget {
         body: GetBuilder<AdAndVisualController>(builder: (AdController) {
           return Stack(
             children: [
+              DecoratedBox(
+              position: DecorationPosition.background,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/texture_Background.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(),
+            ),
               Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -33,6 +43,7 @@ class GeneralMenu extends StatelessWidget {
                 children: [
                   QrCode(),
                   SearchField(),
+                  MenuButton(path: Routes.MAP_TRAINING_MENU, name: 'Map Training'),
                   MenuButton(path: Routes.TRAPS_SHOP, name: 'Traps Shop'),
                   MenuButton(path: Routes.LEADERBOARD, name: 'Leaderboard'),
                   MenuButton(path: Routes.EDIT_MENU, name: 'Map Editor'),
