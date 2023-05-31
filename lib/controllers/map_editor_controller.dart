@@ -14,6 +14,7 @@ import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
 class MapEditorController extends GetxController {
+  int priceToSaveMap = 2;
   Rx<bool> isLoading = false.obs;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   late GameInfo dumbGameInfo = GameInfo.createEmptyGameInfo(mazeMap);
@@ -23,7 +24,8 @@ class MapEditorController extends GetxController {
   var uuid = Uuid();
   TextEditingController mapNameController = TextEditingController();
 
-  late Rx<MazeMap> _mazeMap = EditorPageMap.createStruct(TestData.createTestMap()).obs;
+  late Rx<MazeMap> _mazeMap =
+      EditorPageMap.createStruct(TestData.createTestMap()).obs;
 
   MazeMap get mazeMap => _mazeMap.value;
 
@@ -66,6 +68,10 @@ class MapEditorController extends GetxController {
   }
 
   void saveMap() async {
+    bool res = await checkAndChargeScrolls();
+    if (!res) {
+      return;
+    }
     String id = uuid.v4();
     try {
       if (mapNameController.text != '') {
@@ -145,6 +151,40 @@ class MapEditorController extends GetxController {
       ));
       print(error.toString());
     }
+  }
+
+  Future<bool> checkAndChargeScrolls() async {
+    if (priceToSaveMap <= mainCtrlr.scrolls.value) {
+      for (var i = 0; i < priceToSaveMap; i++) {
+        mainCtrlr.scrollsList.removeLast();
+      }
+      try {
+        await firebaseFirestore
+            .collection('users')
+            .doc(mainCtrlr.userUid)
+            .update({'scrolls': mainCtrlr.scrollsList});
+        mainCtrlr.authenticate();
+        return true;
+      } on FirebaseException catch (error) {
+        Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+          content: Text(error.code),
+          backgroundColor: Colors.red,
+        ));
+      } catch (error) {
+        Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+          content: Text(error.toString()),
+          backgroundColor: Colors.red,
+        ));
+        print(error.toString());
+      }
+    } else {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text('You need $priceToSaveMap scrolls to save map'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    return false;
   }
 
   void createNewMap() {

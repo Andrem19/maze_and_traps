@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/map_training_act_controller.dart';
 import 'package:mazeandtraps/elements/play_material/cube_widget_A.dart';
-import 'package:mazeandtraps/elements/play_material/cube_widget_AA.dart';
+import 'package:mazeandtraps/elements/play_material/cube_widget_A.dart';
 
 import '../../elements/controll.dart';
 import '../../elements/shell.dart';
@@ -35,9 +35,7 @@ class MapTrainingAct extends StatelessWidget {
                       children: List.generate(
                           controller.mazeMap.value.mazeMap[row].length, (col) {
                         return Expanded(
-                          child: Cube_Widget_AA(
-                            gameInfo: controller.gameInfo.value,
-                              nodeProto: controller.mazeMap.value.mazeMap[row]
+                          child: NodeWidget.getNode(controller.gameInfo.value, controller.mazeMap.value.mazeMap[row]
                                   [col]),
                         );
                       })),
@@ -56,7 +54,10 @@ class MapTrainingAct extends StatelessWidget {
                     fontSize: 20, 
                     fontWeight: FontWeight.bold),)),
                     SizedBox(width: 10,),
-                    Text(controller.textMessage.value, style: TextStyle(color: Colors.red),),
+                    Text(controller.textMessage.value, style: TextStyle(
+                    color: Colors.red, 
+                    fontSize: 20, 
+                    fontWeight: FontWeight.bold), ),
             ],
           ),
           Positioned(

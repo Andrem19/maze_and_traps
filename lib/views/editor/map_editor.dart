@@ -39,11 +39,8 @@ class MapEditorScreen extends StatelessWidget {
                                   onTap: () {
                                     controller.changeWall(row, col);
                                   },
-                                  child: CubeBrick_A(
-                                    nodeProto: controller.mazeMap.mazeMap[row]
-                                        [col],
-                                    gameInfo: controller.dumbGameInfo,
-                                  ),
+                                  child: NodeWidget.getNode(controller.dumbGameInfo, controller.mazeMap.mazeMap[row]
+                                        [col]),
                                 ),
                               );
                             })),

@@ -11,7 +11,6 @@ import 'node.dart';
 enum Direction { up, down, left, right }
 
 class MazeMap {
-  //Should be 60x30 cube
   List<List<NodeCube>> mazeMap;
   String message_A;
   String message_B;
@@ -126,6 +125,20 @@ class MazeMap {
     ExitTeleport_A = info.ExitTeleport_A;
     ExitTeleport_B = info.ExitTeleport_B;
   }
+  double calculateDistance() {
+  int numRows = mazeMap.length;
+  int numCols = mazeMap[0].length;
+
+  int player1Row = Player_A_Coord.row;
+  int player1Col = Player_A_Coord.col;
+  int player2Row = Player_B_Coord.row;
+  int player2Col = Player_B_Coord.col;
+
+  double distance = sqrt(pow(player2Row - player1Row, 2) + pow(player2Col - player1Col, 2));
+
+  return distance;
+}
+
 
   void countRadiusAroundPlayer_A(int shaddowRadius, bool withBorder) {
   mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
@@ -136,6 +149,24 @@ class MazeMap {
   for (int row = startRow; row <= endRow; row++) {
     for (int col = startCol; col <= endCol; col++) {
       double distance = sqrt(pow(Player_A_Coord.row - row, 2) + pow(Player_A_Coord.col - col, 2));
+      if (distance <= shaddowRadius) {
+        mazeMap[row][col].isShaddow = false;
+      } else if (withBorder && distance > shaddowRadius && distance <= shaddowRadius + 1) {
+        mazeMap[row][col].halfShaddow = true;
+      }
+    }
+  }
+}
+
+void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
+  mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
+  int startRow = Player_B_Coord.row - shaddowRadius - 1 < 0 ? 0 : Player_B_Coord.row - shaddowRadius - 1;
+  int endRow = Player_B_Coord.row + shaddowRadius + 1 >= mazeMap.length ? mazeMap.length - 1 : Player_B_Coord.row + shaddowRadius + 1;
+  int startCol = Player_B_Coord.col - shaddowRadius - 1 < 0 ? 0 : Player_B_Coord.col - shaddowRadius - 1;
+  int endCol = Player_B_Coord.col + shaddowRadius + 1 >= mazeMap[0].length ? mazeMap[0].length - 1 : Player_B_Coord.col + shaddowRadius + 1;
+  for (int row = startRow; row <= endRow; row++) {
+    for (int col = startCol; col <= endCol; col++) {
+      double distance = sqrt(pow(Player_B_Coord.row - row, 2) + pow(Player_B_Coord.col - col, 2));
       if (distance <= shaddowRadius) {
         mazeMap[row][col].isShaddow = false;
       } else if (withBorder && distance > shaddowRadius && distance <= shaddowRadius + 1) {
