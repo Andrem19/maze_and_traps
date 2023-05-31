@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
-
 
 import 'game_info.dart';
 import 'node.dart';
@@ -15,7 +15,6 @@ class MazeMap {
   List<List<NodeCube>> mazeMap;
   String message_A;
   String message_B;
-  int shaddowRadius;
   Coordinates Player_A_Coord;
   Coordinates Player_B_Coord;
   Coordinates DoorTeleport_A;
@@ -36,7 +35,6 @@ class MazeMap {
     required this.mazeMap,
     required this.message_A,
     required this.message_B,
-    required this.shaddowRadius,
     required this.Player_A_Coord,
     required this.Player_B_Coord,
     required this.Frozen_trap_A,
@@ -129,45 +127,24 @@ class MazeMap {
     ExitTeleport_B = info.ExitTeleport_B;
   }
 
-  void countAndExecShaddow_A() {
-    if (shaddowRadius > 1) {
-      for (var i = 0; i < mazeMap.length; i++) {
-        for (var j = 0; j < mazeMap[0].length; j++) {
-          if (i > Player_A_Coord.row - shaddowRadius &&
-              i < Player_A_Coord.row + shaddowRadius) {
-            if (j > Player_A_Coord.col - shaddowRadius &&
-                j < Player_A_Coord.col + shaddowRadius) {
-              mazeMap[i][j].isShaddow = false;
-            } else {
-              mazeMap[i][j].isShaddow = true;
-            }
-          } else {
-            mazeMap[i][j].isShaddow = true;
-          }
-        }
+  void countRadiusAroundPlayer_A(int shaddowRadius, bool withBorder) {
+  mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
+  int startRow = Player_A_Coord.row - shaddowRadius - 1 < 0 ? 0 : Player_A_Coord.row - shaddowRadius - 1;
+  int endRow = Player_A_Coord.row + shaddowRadius + 1 >= mazeMap.length ? mazeMap.length - 1 : Player_A_Coord.row + shaddowRadius + 1;
+  int startCol = Player_A_Coord.col - shaddowRadius - 1 < 0 ? 0 : Player_A_Coord.col - shaddowRadius - 1;
+  int endCol = Player_A_Coord.col + shaddowRadius + 1 >= mazeMap[0].length ? mazeMap[0].length - 1 : Player_A_Coord.col + shaddowRadius + 1;
+  for (int row = startRow; row <= endRow; row++) {
+    for (int col = startCol; col <= endCol; col++) {
+      double distance = sqrt(pow(Player_A_Coord.row - row, 2) + pow(Player_A_Coord.col - col, 2));
+      if (distance <= shaddowRadius) {
+        mazeMap[row][col].isShaddow = false;
+      } else if (withBorder && distance > shaddowRadius && distance <= shaddowRadius + 1) {
+        mazeMap[row][col].halfShaddow = true;
       }
     }
   }
+}
 
-  void countAndExecShaddow_B() {
-    if (shaddowRadius > 1) {
-      for (var i = 0; i < mazeMap.length; i++) {
-        for (var j = 0; j < mazeMap[0].length; j++) {
-          if (i > Player_B_Coord.row - shaddowRadius &&
-              i < Player_B_Coord.row + shaddowRadius) {
-            if (j > Player_B_Coord.col - shaddowRadius &&
-                j < Player_B_Coord.col + shaddowRadius) {
-              mazeMap[i][j].isShaddow = false;
-            } else {
-              mazeMap[i][j].isShaddow = true;
-            }
-          } else {
-            mazeMap[i][j].isShaddow = true;
-          }
-        }
-      }
-    }
-  }
 
   bool MovePlayer_A(Direction direction) {
     if (Player_A_Frozen != 0) {
@@ -371,7 +348,6 @@ class MazeMap {
       }),
       'message_A': message_A,
       'message_B': message_B,
-      'shaddowRadius': shaddowRadius,
       'Player_A_Coord': Player_A_Coord.toMap(),
       'Player_B_Coord': Player_B_Coord.toMap(),
       'Frozen_trap_A': Frozen_trap_A.toMap(),
@@ -397,7 +373,6 @@ class MazeMap {
             (entry) => List<NodeCube>.from(
                 entry.value.entries.map((e) => NodeCube.fromMap(e.value))),
           )),
-      shaddowRadius: map['shaddowRadius'] as int,
       message_A: map['message_A'] as String,
       message_B: map['message_B'] as String,
       Player_A_Coord:

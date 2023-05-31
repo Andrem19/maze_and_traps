@@ -78,7 +78,6 @@ class MapsMenuController extends GetxController {
       var mapJson = map.docs[0]['map'];
 
       var maze = MazeMap.fromJson(mapJson);
-      maze.shaddowRadius = 5;
       var ctrMain = Get.find<MainGameController>();
       ctrMain.currentGameMap = maze;
       ctrMain.currentMapId = map.docs[0].id;

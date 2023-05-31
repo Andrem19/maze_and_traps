@@ -6,7 +6,7 @@ class NodeCube {
   int col;
   bool wall;
   bool isShaddow;
-  bool isShadowCorner;
+  bool halfShaddow;
   bool editAlowd;
   bool is_A_START;
   bool is_B_START;
@@ -15,7 +15,7 @@ class NodeCube {
     required this.col,
     required this.wall,
     required this.isShaddow,
-    required this.isShadowCorner,
+    required this.halfShaddow,
     required this.editAlowd,
     required this.is_A_START,
     required this.is_B_START,
@@ -27,7 +27,7 @@ class NodeCube {
     int? col,
     bool? wall,
     bool? isShaddow,
-    bool? isShadowCorner,
+    bool? halfShaddow,
     bool? editAlowd,
     bool? is_A_START,
     bool? is_B_START,
@@ -37,7 +37,7 @@ class NodeCube {
       col: col ?? this.col,
       wall: wall ?? this.wall,
       isShaddow: isShaddow ?? this.isShaddow,
-      isShadowCorner: isShadowCorner ?? this.isShadowCorner,
+      halfShaddow: halfShaddow ?? this.halfShaddow,
       editAlowd: editAlowd ?? this.editAlowd,
       is_A_START: is_A_START ?? this.is_A_START,
       is_B_START: is_B_START ?? this.is_B_START,
@@ -50,7 +50,7 @@ class NodeCube {
       'col': col,
       'wall': wall,
       'isShaddow': isShaddow,
-      'isShadowCorner': isShadowCorner,
+      'halfShaddow': halfShaddow,
       'editAlowd': editAlowd,
       'is_A_START': is_A_START,
       'is_B_START': is_B_START,
@@ -63,7 +63,7 @@ class NodeCube {
       col: map['col'] as int,
       wall: map['wall'] as bool,
       isShaddow: map['isShaddow'] as bool,
-      isShadowCorner: map['isShadowCorner'] as bool,
+      halfShaddow: map['halfShaddow'] as bool,
       editAlowd: map['editAlowd'] as bool,
       is_A_START: map['is_A_START'] as bool,
       is_B_START: map['is_B_START'] as bool,
@@ -76,7 +76,7 @@ class NodeCube {
 
   @override
   String toString() {
-    return 'NodeCube(row: $row, col: $col, wall: $wall, isShaddow: $isShaddow, isShadowCorner: $isShadowCorner, editAlowd: $editAlowd, is_A_START: $is_A_START, is_B_START: $is_B_START)';
+    return 'NodeCube(row: $row, col: $col, wall: $wall, isShaddow: $isShaddow, halfShaddow: $halfShaddow, editAlowd: $editAlowd, is_A_START: $is_A_START, is_B_START: $is_B_START)';
   }
 
   @override
@@ -88,7 +88,7 @@ class NodeCube {
       other.col == col &&
       other.wall == wall &&
       other.isShaddow == isShaddow &&
-      other.isShadowCorner == isShadowCorner &&
+      other.halfShaddow == halfShaddow &&
       other.editAlowd == editAlowd &&
       other.is_A_START == is_A_START &&
       other.is_B_START == is_B_START;
@@ -100,7 +100,7 @@ class NodeCube {
       col.hashCode ^
       wall.hashCode ^
       isShaddow.hashCode ^
-      isShadowCorner.hashCode ^
+      halfShaddow.hashCode ^
       editAlowd.hashCode ^
       is_A_START.hashCode ^
       is_B_START.hashCode;

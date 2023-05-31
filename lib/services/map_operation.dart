@@ -20,7 +20,7 @@ class TestData {
           row: row,
           col: col,
           isShaddow: false,
-          isShadowCorner: false,
+          halfShaddow: false,
           wall: false,
           is_A_START: false,
           is_B_START: false,
@@ -36,7 +36,6 @@ class TestData {
         Player_B_Coord:
             Coordinates(isInit: true, row: 0, col: maze[0].length - 1),
         Player_A_Coord: Coordinates(isInit: true, row: maze.length - 1, col: 0),
-        shaddowRadius: 0,
         A_FrozenInstalled: false,
         B_FrozenInstalled: false,
         A_DoorInstalled: false,
@@ -61,5 +60,15 @@ class TestData {
   //     });
   //   });
   //   return listFog;
+  // }
+
+  // static List<List<List<int>>> calc5Fog() {
+  //   List<List<List<int>>> setFog = [
+  //     [[]]
+  //   ];
+  //   for (var i = 0; i < 5; i++) {
+  //     setFog.add(calculateFog());
+  //   }
+  //   return setFog;
   // }
 }

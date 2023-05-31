@@ -14,6 +14,10 @@ import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
 class MapTrainingActController extends GetxController {
+  // late List<List<List<int>>> fogSet;
+  int fogCounter = 0;
+  late DateTime now;
+  int shaddowRadius = 4;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   MainGameController mainCtrl = Get.find<MainGameController>();
   late Rx<GameInfo> gameInfo =
@@ -43,6 +47,8 @@ class MapTrainingActController extends GetxController {
   @override
   void onInit() {
     Get.find<MainGameController>().changeStatusInGame(true);
+    now = DateTime.now();
+    // fogSet = TestData.calc5Fog();
     if (mainCtrl.currentGameMap != null) {
       mazeMap.value = mainCtrl.currentGameMap!;
     } else {
@@ -73,12 +79,18 @@ class MapTrainingActController extends GetxController {
   }
 
   void runEngine() async {
-    mazeMap.value.countAndExecShaddow_A();
+    mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      // if (fogCounter > 3) {
+      //   fogCounter = 0;
+      //   now = DateTime.now();
+      // } else {
+      //   fogCounter++;
+      // }
       moveDirection.value = mainCtrl.moveDir;
       mazeMap.value.MovePlayer_A(moveDirection.value);
       gameInfo.value = mazeMap.value.getGameInfo();
-      mazeMap.value.countAndExecShaddow_A();
+      mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
       time--;
       clockTimer = Duration(seconds: time);
       timerText.value =

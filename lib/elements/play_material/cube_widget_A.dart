@@ -7,7 +7,6 @@ import '../../controllers/main_game_controller.dart';
 import '../../models/game_info.dart';
 import '../../models/node.dart';
 import '../../services/compare_coord.dart';
-import '../brick.dart';
 
 class CubeBrick_A extends StatelessWidget {
   GameInfo gameInfo;
@@ -23,14 +22,18 @@ class CubeBrick_A extends StatelessWidget {
     if (nodeProto.isShaddow) {
       return GetBuilder<MainGameController>(builder: (controller) {
         int rand = Random().nextInt(50);
-        return Container(
-          color: rand % 4 == 0
-              ? Color.fromARGB(255, 60, 58, 58)
-              : rand % 2 == 0
-                  ? Color.fromARGB(255, 48, 44, 44)
-                  : rand % 3 == 0
-                      ? Color.fromARGB(255, 59, 61, 65)
-                      : Color.fromARGB(255, 39, 42, 39),
+        return Opacity(
+          opacity: nodeProto.halfShaddow ? 0.2 : 0.8,
+          child: Container(
+            color: rand % 4 == 0
+                ? Color.fromARGB(255, 34, 33, 33)
+                : rand % 2 == 0
+                    ? Color.fromARGB(255, 30, 29, 29)
+                    : rand % 3 == 0
+                        ? Color.fromARGB(255, 32, 33, 34)
+                        : Color.fromARGB(255, 21, 22, 21),
+            child: nodeProto.halfShaddow ? createStuff(nodeProto) : null,
+          ),
         );
       });
     } else {
