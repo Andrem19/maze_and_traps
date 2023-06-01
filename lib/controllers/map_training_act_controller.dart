@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 
 import '../keys.dart';
 import '../models/game_info.dart';
@@ -14,7 +13,9 @@ import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
 class MapTrainingActController extends GetxController {
-  int shaddowRadius = 4;
+  int timerDuration = 1200;
+  
+  int shaddowRadius = 3;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   MainGameController mainCtrl = Get.find<MainGameController>();
   late Rx<GameInfo> gameInfo =
@@ -36,14 +37,19 @@ class MapTrainingActController extends GetxController {
   bool get frozenActivate => _frozenActivate.value;
   bool get teleportDoor => _teleportDoor.value;
   bool get teleportExit => _teleportExit.value;
+  RxBool up = false.obs;
+  RxBool down = false.obs;
+  RxBool left = false.obs;
+  RxBool right = false.obs;
 
   Rx<Direction> moveDirection = Direction.up.obs;
   Rx<MazeMap> mazeMap =
       EditorPageMap.createStruct(TestData.createTestMap()).obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     Get.find<MainGameController>().changeStatusInGame(true);
+    await setSettings();
     if (mainCtrl.currentGameMap != null) {
       mazeMap.value = mainCtrl.currentGameMap!;
     } else {
@@ -75,23 +81,36 @@ class MapTrainingActController extends GetxController {
 
   void runEngine() async {
     mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
-    _timer = Timer.periodic(Duration(milliseconds: 1200), (timer) {
-      moveDirection.value = mainCtrl.moveDir;
-      mazeMap.value.MovePlayer_A(moveDirection.value);
-      double distance = mazeMap.value.calculateDistance();
-      distance = double.parse(distance.toStringAsFixed(2));
-      textMessage.value = 'Distance: $distance';
-      gameInfo.value = mazeMap.value.getGameInfo();
-      mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
-      time--;
-      clockTimer = Duration(seconds: time);
-      timerText.value =
-          '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
-      update();
-      if (time < 1 || isPlayerWinn()) {
-        FlameAudio.play('victory.wav');
-        gameEnd();
-      }
+    _timer =
+        Timer.periodic(Duration(milliseconds: timerDuration), (timer) async {
+      await timerCode();
+    });
+  }
+
+  Future<void> timerCode() async {
+    moveDirection.value = mainCtrl.moveDir;
+    mazeMap.value.MovePlayer_A(moveDirection.value);
+    double distance = mazeMap.value.calculateDistance();
+    distance = double.parse(distance.toStringAsFixed(2));
+    textMessage.value = 'Distance: $distance';
+    gameInfo.value = mazeMap.value.getGameInfo();
+    mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
+    time--;
+    clockTimer = Duration(seconds: time);
+    timerText.value =
+        '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    update();
+    if (time < 1 || isPlayerWinn()) {
+      FlameAudio.play('victory.wav');
+      gameEnd();
+    }
+  }
+
+  void changeTimerDuration() {
+    _timer.cancel();
+    _timer =
+        Timer.periodic(Duration(milliseconds: timerDuration), (timer) async {
+      await timerCode();
     });
   }
 
@@ -149,5 +168,21 @@ class MapTrainingActController extends GetxController {
         backgroundColor: Colors.red,
       ));
     }
+  }
+
+  void allDirFalse() {
+    right.value = false;
+    left.value = false;
+    up.value = false;
+    down.value = false;
+    update();
+  }
+
+  Future<void> setSettings() async {
+    timerDuration = mainCtrl.globalSettings.speed_1;
+    mainCtrl.player_A_Life.value = mainCtrl.globalSettings.default_health.toDouble();
+    mainCtrl.player_B_Life.value = mainCtrl.globalSettings.default_health.toDouble();
+    shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
+    durationOfAct = mainCtrl.globalSettings.timer_back_for_training;
   }
 }

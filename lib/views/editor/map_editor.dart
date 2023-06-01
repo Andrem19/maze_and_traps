@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/map_editor_controller.dart';
 import '../../elements/play_material/cube_widget_A.dart';
+import '../../elements/play_material/node_widget.dart';
 import '../../elements/shell.dart';
 
 class MapEditorScreen extends StatelessWidget {

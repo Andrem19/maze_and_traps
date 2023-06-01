@@ -13,11 +13,22 @@ import 'package:uuid/uuid.dart';
 
 import '../keys.dart';
 import '../models/maze_map.dart';
+import '../models/settings.dart';
 import '../models/trap.dart';
 import '../services/generate_traps.dart';
 
 class MainGameController extends GetxController {
-
+  RxDouble player_A_Life = 55.0.obs;
+  RxDouble player_B_Life = 55.0.obs;
+  GlobalSettings globalSettings = GlobalSettings(
+      default_health: 55,
+      default_shaddow_radius: 3,
+      shaddow_radius_with_buf: 5,
+      speed_1: 1200,
+      speed_2: 800,
+      speed_3: 600,
+      timer_back_for_battle: 240,
+      timer_back_for_training: 600);
   MazeMap? currentGameMap;
   List<Trap> allTrapsInTheGame = TrapsGenerator.getTraps();
   RxList<Trap> allMyTraps = <Trap>[].obs;
@@ -46,6 +57,7 @@ class MainGameController extends GetxController {
 
   @override
   void onInit() async {
+    globalSettings = await loadSettings();
     pref = await SharedPreferences.getInstance();
     authenticate();
     super.onInit();
@@ -298,12 +310,70 @@ class MainGameController extends GetxController {
     });
   }
 
-  void changeStatusInGame(bool status) {
-    firebaseFirestore.collection('users').doc(userUid).update({
+  void changeStatusInGame(bool status) async {
+    await firebaseFirestore.collection('users').doc(userUid).update({
       'isUserInGame': status,
     });
     IsUserInGame = status;
   }
 
+  GlobalSettings fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? options) {
+    final Map<String, dynamic> data = snapshot.data() ?? {};
+    // Parse the data and return a new Settings object
+    return GlobalSettings(
+      default_health: data['default_health'] as int? ?? 0,
+      default_shaddow_radius: data['default_shaddow_radius'] as int? ?? 0,
+      shaddow_radius_with_buf: data['shaddow_radius_with_buf'] as int? ?? 0,
+      speed_1: data['speed_1'] as int? ?? 0,
+      speed_2: data['speed_2'] as int? ?? 0,
+      speed_3: data['speed_3'] as int? ?? 0,
+      timer_back_for_battle: data['timer_back_for_battle'] as int? ?? 0,
+      timer_back_for_training: data['timer_back_for_training'] as int? ?? 0,
+    );
+  }
 
+  Map<String, dynamic> toFirestore(
+      GlobalSettings settings, SetOptions? options) {
+    // Convert the Settings object back into a map
+    return {
+      'default_health': settings.default_health,
+      'default_shaddow_radius': settings.default_shaddow_radius,
+      'shaddow_radius_with_buf': settings.shaddow_radius_with_buf,
+      'speed_1': settings.speed_1,
+      'speed_2': settings.speed_2,
+      'speed_3': settings.speed_3,
+      'timer_back_for_battle': settings.timer_back_for_battle,
+      'timer_back_for_training': settings.timer_back_for_training,
+    };
+  }
+
+  Future<GlobalSettings> loadSettings() async {
+    var doc = await firebaseFirestore
+        .collection('globalSettings')
+        .doc('settings_1')
+        .withConverter(fromFirestore: fromFirestore, toFirestore: toFirestore)
+        .get();
+    var data = doc.data();
+    player_A_Life.value = data!.default_health.toDouble();
+    player_B_Life.value = data!.default_health.toDouble();
+    if (data != null) {
+      return data;
+    }
+    return GlobalSettings(
+        default_health: 55,
+        default_shaddow_radius: 3,
+        shaddow_radius_with_buf: 5,
+        speed_1: 1200,
+        speed_2: 800,
+        speed_3: 600,
+        timer_back_for_battle: 240,
+        timer_back_for_training: 600);
+  }
+
+  void playSwipe(int num) async {
+    num % 2 == 0
+        ? await FlameAudio.play('sfx_Swipe.mp3')
+        : await FlameAudio.play('sfx_Swipe1.mp3');
+  }
 }

@@ -67,8 +67,19 @@ class MapEditorController extends GetxController {
     return true;
   }
 
+  Future<bool> checkMazeWallValid() async {
+    int wallCount = mazeMap.mazeMap
+        .fold(0, (acc, row) => acc + row.where((cell) => cell.wall).length);
+    print('Number of walls: $wallCount');
+    return wallCount > 5;
+  }
+
   void saveMap() async {
     bool res = await checkAndChargeScrolls();
+    if (!res) {
+      return;
+    }
+    res = await checkMazeWallValid();
     if (!res) {
       return;
     }

@@ -57,6 +57,6 @@ class AdAndVisualController extends GetxController {
   }
 
   Future<void> loadAudioAssets() async {
-    await FlameAudio.audioCache.loadAll(['door-slide1.mp3', 'boom1.mp3']);
+    await FlameAudio.audioCache.loadAll(['door-slide1.mp3', 'boom1.mp3', 'sfx_Swipe.mp3', 'sfx_Swipe1.mp3']);
   }
 }

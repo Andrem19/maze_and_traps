@@ -5,13 +5,10 @@ import 'package:mazeandtraps/services/node_stuff.dart';
 
 import '../../models/game_info.dart';
 import '../../models/node.dart';
+import 'node_widget.dart';
 
 class NodeWidget {
   static Widget getNode(GameInfo gameInfo, NodeCube nodeProto) {
-    int randomInt = Random().nextInt(5);
-    DateTime now = DateTime.now();
-    int rand = now.millisecond;
-    // int rand = Random().nextInt(50);
     return nodeProto.isShaddow
         ? Stack(
             children: [
@@ -19,19 +16,28 @@ class NodeWidget {
               Opacity(
                 opacity: nodeProto.halfShaddow ? 0.6 : 1,
                 child: Container(
-                  color: randomInt < 4
-                      ? Color.fromARGB(255, 24, 22, 23)
-                      : (rand % 4 == 0
-                          ? Color.fromARGB(255, 34, 33, 33)
-                          : rand % 2 == 0
-                              ? Color.fromARGB(255, 30, 29, 29)
-                              : rand % 3 == 0
-                                  ? Color.fromARGB(255, 32, 33, 34)
-                                  : Color.fromARGB(255, 21, 22, 21)),
+                  color: generateColor(),
                 ),
               ),
             ],
           )
         : Stuff.createBackground(nodeProto, gameInfo);
+  }
+
+  static Color generateColor() {
+    Random random = Random();
+    int randomInt = random.nextInt(5);
+    DateTime now = DateTime.now();
+    int rand = now.millisecond;
+    Color color = randomInt < 4
+        ? Color.fromARGB(255, 24, 22, 23)
+        : (rand % 4 == 0
+            ? Color.fromARGB(255, 34, 33, 33)
+            : rand % 2 == 0
+                ? Color.fromARGB(255, 30, 29, 29)
+                : rand % 3 == 0
+                    ? Color.fromARGB(255, 32, 33, 34)
+                    : Color.fromARGB(255, 21, 22, 21));
+    return color;
   }
 }
