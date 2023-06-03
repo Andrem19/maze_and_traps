@@ -23,19 +23,23 @@ class WaitingGameController extends GetxController {
 
   @override
   void onInit() async {
-    if (mainCtrl.YourCurrentRole == 'A') {
-      await _addPlayerToList(mainCtrl.randomRival);
+    if (!mainCtrl.randomRival) {
+      if (mainCtrl.YourCurrentRole == 'A') {
+        await _addPlayerToList(mainCtrl.randomRival);
 
-      await firebaseFirestore
-          .collection('users')
-          .doc(mainCtrl.playerWhoIInvite_ID)
-          .update({
-        'isAnybodyAscMe': true,
-        'whoInviteMeToPlay': mainCtrl.userName.value,
-        'theGameIdInviteMe': mainCtrl.currentmultiplayerGameId
-      });
-    } else if (mainCtrl.YourCurrentRole == 'B') {
-      startGameStream();
+        await firebaseFirestore
+            .collection('users')
+            .doc(mainCtrl.playerWhoIInvite_ID)
+            .update({
+          'isAnybodyAscMe': true,
+          'whoInviteMeToPlay': mainCtrl.userName.value,
+          'theGameIdInviteMe': mainCtrl.currentmultiplayerGameId
+        });
+      } else if (mainCtrl.YourCurrentRole == 'B') {
+        startGameStream(mainCtrl.currentmultiplayerGameId);
+      }
+    } else {
+      _adPlayerToQueueOrFindRival();
     }
     super.onInit();
   }
@@ -44,6 +48,42 @@ class WaitingGameController extends GetxController {
   void onClose() {
     listner.cancel();
     super.onClose();
+  }
+
+  void _adPlayerToQueueOrFindRival() async {
+    var playerList = await FirebaseFirestore.instance
+        .collection('gameBattle')
+        .where('gameStatus', isEqualTo: 'searching')
+        .get();
+
+    if (playerList.docs.length < 1) {
+      _addPlayerToList(mainCtrl.randomRival);
+    } else {
+      await FirebaseFirestore.instance
+          .collection('gameBattle')
+          .doc(playerList.docs[0].id)
+          .update({
+        'Player_B_uid': mainCtrl.userUid,
+        'Player_B_Name': mainCtrl.userName.value,
+        'gameStatus': 'waiting'
+      });
+      var data = playerList.docs[0].data();
+
+      mainCtrl.currentMapId = data['Map_Id'];
+      var maps = await FirebaseFirestore.instance
+          .collection('maps')
+          .where('id', isEqualTo: mainCtrl.currentMapId)
+          .get();
+      if (maps.docs.length > 0) {
+        var data = maps.docs[0].data();
+        mainCtrl.currentGameMap = MazeMap.fromJson(data['map']);
+        // prepareMapToGame();
+      }
+      mainCtrl.currentmultiplayerGameId = playerList.docs[0].id;
+      mainCtrl.currentMapName = data['MapName'];
+      mainCtrl.YourCurrentRole = 'B';
+      startGameStream(playerList.docs[0].id);
+    }
   }
 
   Future<bool> _addPlayerToList(bool randomRival) async {
@@ -78,7 +118,7 @@ class WaitingGameController extends GetxController {
         mainCtrl.YourCurrentRole = 'A';
         nameOfMap.value = mainCtrl.currentMapName ?? '';
         mainCtrl.currentmultiplayerGameId = doc.id;
-        startGameStream();
+        startGameStream(doc.id);
         return true;
       } on FirebaseException catch (error) {
         Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
@@ -97,12 +137,10 @@ class WaitingGameController extends GetxController {
     return false;
   }
 
-  void startGameStream() async {
+  void startGameStream(String id) async {
     print('listner');
-    snapshots = FirebaseFirestore.instance
-        .collection('gameBattle')
-        .doc(mainCtrl.currentmultiplayerGameId)
-        .snapshots();
+    snapshots =
+        FirebaseFirestore.instance.collection('gameBattle').doc(id).snapshots();
     listner = snapshots.listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data();

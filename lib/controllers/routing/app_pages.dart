@@ -5,6 +5,7 @@ import 'package:mazeandtraps/views/general_menu.dart';
 import 'package:mazeandtraps/views/play/maps_training/map_training_act.dart';
 import 'package:mazeandtraps/views/play/maps_training/maps_champions.dart';
 import 'package:mazeandtraps/views/play/multiplayer/battle_act.dart';
+import 'package:mazeandtraps/views/play/multiplayer/end_game_screen.dart';
 import 'package:mazeandtraps/views/play/play_menu.dart';
 import 'package:mazeandtraps/views/scrolls/scrolls_list.dart';
 import 'package:mazeandtraps/views/settings.dart';
@@ -102,6 +103,10 @@ class AppPages {
       name: _Paths.WAITING_PAGE, 
       page: () => WaitingPage(),
       binding: WaitingGameControllerBinding()
+    ),
+    GetPage(
+      name: _Paths.END_GAME_SCREEN, 
+      page: () => EndGameScreen(),
     ),
   ];
 }

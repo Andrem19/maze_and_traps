@@ -52,5 +52,8 @@ class PlayMenuController extends GetxController {
     }
   }
 
-  
+  void setUpRandomRival(bool randomRival) {
+    print('random Rival true func');
+    mainCtrl.randomRival = randomRival;
+  }
 }

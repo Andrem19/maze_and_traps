@@ -14,7 +14,7 @@ class BattleAct extends StatelessWidget {
     return Shell.getShell(Scaffold(
       body: GetBuilder<BattleActController>(
         builder: (controller) {
-          return Center(child: Text(controller.id));
+          return Center(child: Text(''));
         }
       ),
     ));

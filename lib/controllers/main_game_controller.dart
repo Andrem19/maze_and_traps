@@ -55,6 +55,7 @@ class MainGameController extends GetxController {
   RxBool wantToPlay = false.obs;
   RxDouble player_A_Life = 55.0.obs;
   RxDouble player_B_Life = 55.0.obs;
+  String vinner = '';
 
   @override
   void onInit() async {
@@ -142,6 +143,7 @@ class MainGameController extends GetxController {
         'weight': 3,
         'weightPrice': 2,
         'wantToPlay': true,
+        'lastActive': FieldValue.serverTimestamp(),
         'points': 0,
       });
       pref.setString('secretToken', secrTok);
@@ -166,6 +168,39 @@ class MainGameController extends GetxController {
         backgroundColor: Colors.red,
       ));
     }
+  }
+
+  void changeInGameLastTime() async {
+    await firebaseFirestore.collection('users').doc(userUid).update({
+      'lastActive': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<bool> checkUserLastTimeOnline(int MAX_OFFLINE_TIME) async {
+    try {
+      DocumentSnapshot snapshot =
+          await firebaseFirestore.collection('users').doc(userUid).get();
+      Timestamp lastInGame = snapshot['lastActive'];
+      var currentTime = Timestamp.now();
+      if (lastInGame != null) {
+        var difference = currentTime.seconds - lastInGame.seconds;
+        if (difference > MAX_OFFLINE_TIME) {
+          false;
+        } else
+          return true;
+      }
+    } on FirebaseException catch (error) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text(error.code),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text(error.toString()),
+        backgroundColor: Colors.red,
+      ));
+    }
+    return false;
   }
 
   void changeWantToPlay() async {
@@ -229,6 +264,24 @@ class MainGameController extends GetxController {
   }
 
   //// Listner and game logic ////
+  ///
+  void deleteMultiplayerGameInstant() async {
+    var doc = await firebaseFirestore
+        .collection('gameBattle')
+        .doc(currentmultiplayerGameId)
+        .get();
+    if (doc.exists) {
+      var data = doc.data();
+      bool Player_A = data!['Player_A_ready'];
+      bool Player_B = data['Player_B_ready'];
+      if (!Player_A && !Player_B) {
+        await firebaseFirestore
+            .collection('gameBattle')
+            .doc(currentmultiplayerGameId)
+            .delete();
+      }
+    }
+  }
 
   Future<void> agreeToPlayPreparing(String theGameIdInviteMe) async {
     try {

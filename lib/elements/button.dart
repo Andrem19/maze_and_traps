@@ -5,8 +5,10 @@ import 'package:mazeandtraps/controllers/ad_visual_controller.dart';
 class MenuButton extends StatelessWidget {
   final String name;
   final String path;
+  final Function? func;
   static const double shaddow = 0.5;
-  const MenuButton({super.key, required this.path, required this.name});
+  const MenuButton(
+      {super.key, required this.path, required this.name, this.func});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,9 @@ class MenuButton extends StatelessWidget {
         child: InkWell(
           onTap: () async {
             if (!controller.buttonWasClick) {
+              if (func != null) {
+                func!();
+              }
               await controller.pressMenuButtonEffects(path);
             }
           },
@@ -28,8 +33,9 @@ class MenuButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
-                        Colors.black
-                            .withOpacity(path == controller.currentPress ? 0.0 : controller.mainScreenShaddow.value),
+                        Colors.black.withOpacity(path == controller.currentPress
+                            ? 0.0
+                            : controller.mainScreenShaddow.value),
                         BlendMode.darken),
                     child: Image.asset(
                       'assets/images/texture_ButtonIdle.png',

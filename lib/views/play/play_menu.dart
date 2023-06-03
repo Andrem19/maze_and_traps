@@ -22,7 +22,7 @@ class PlayMenu extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SearchField(),
-                      MenuButton(path: Routes.LEADERBOARD, name: 'Search Random Rival'),
+                      MenuButton(path: Routes.WAITING_PAGE, name: 'Search Random Rival', func: () => controller.setUpRandomRival(true)),
                       MenuButton(path: Routes.MAP_TRAINING_MENU, name: 'Training Maps'),
                       
                     ],

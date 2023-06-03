@@ -20,6 +20,7 @@ abstract class Routes {
   static const PLAY_MENU = _Paths.PLAY_MENU;
   static const BATTLE_ACT = _Paths.BATTLE_ACT;
   static const WAITING_PAGE = _Paths.WAITING_PAGE;
+  static const END_GAME_SCREEN = _Paths.END_GAME_SCREEN;
 }
 
 abstract class _Paths {
@@ -40,4 +41,5 @@ abstract class _Paths {
   static const PLAY_MENU = "/play_menu";
   static const BATTLE_ACT = "/battle_act";
   static const WAITING_PAGE = "/waiting_page";
+  static const END_GAME_SCREEN = "/end_game_screen";
 }
