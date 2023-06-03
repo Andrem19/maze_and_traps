@@ -3,14 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../models/game_info.dart';
+import '../../models/maze_map.dart';
 import '../../models/node.dart';
 import '../../services/node_stuff.dart';
 
 class BackgroundWidget extends StatefulWidget {
   final NodeCube nodeProto;
   final GameInfo gameInfo;
+  final Coordinates Player_A_Coord;
+  final Coordinates Player_B_Coord;
 
-  BackgroundWidget({required this.nodeProto, required this.gameInfo});
+  BackgroundWidget({required this.Player_A_Coord, required this.Player_B_Coord, required this.nodeProto, required this.gameInfo});
 
   @override
   _BackgroundWidgetState createState() => _BackgroundWidgetState();
@@ -30,7 +33,7 @@ class _BackgroundWidgetState extends State<BackgroundWidget> {
     return CustomPaint(
       painter: BackgroundPainter(backgroundColor: _backgroundColor),
       child: Container(
-        child: Stuff.createBackground(widget.nodeProto, widget.gameInfo),
+        child: Stuff.createBackground(widget.Player_A_Coord, widget.Player_B_Coord, widget.nodeProto, widget.gameInfo),
       ),
     );
   }
@@ -38,7 +41,7 @@ class _BackgroundWidgetState extends State<BackgroundWidget> {
   Color _calculateBackgroundColor() {
     final randomInt = Random().nextInt(10);
     final rand = Random().nextInt(5);
-    
+
     return randomInt < 4
         ? Color.fromARGB(255, 24, 22, 23)
         : (rand % 4 == 0

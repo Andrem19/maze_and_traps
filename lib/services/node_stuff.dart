@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mazeandtraps/elements/play_material/player.dart';
+import 'package:mazeandtraps/models/maze_map.dart';
 import '../models/game_info.dart';
 import '../models/node.dart';
 import 'compare_coord.dart';
 
 class Stuff {
-  static Widget createBackground(NodeCube nodeProto, GameInfo gameInfo) {
+  static Widget createBackground(Coordinates Player_A_Coord, Coordinates Player_B_Coord, NodeCube nodeProto, GameInfo gameInfo) {
     return Stack(
       children: [
         Builder(builder: (context) {
@@ -32,21 +33,21 @@ class Stuff {
             );
           }
         }),
-        createStuff(nodeProto, gameInfo),
+        createStuff(Player_A_Coord, Player_B_Coord, nodeProto, gameInfo),
       ],
     );
   }
 
-  static Widget createStuff(NodeCube nodeProto, GameInfo gameInfo) {
+  static Widget createStuff(Coordinates Player_A_Coord, Coordinates Player_B_Coord, NodeCube nodeProto, GameInfo gameInfo) {
     return Builder(
       builder: (context) {
-        if (Compare.compareCoord(gameInfo.Player_A_Coord, nodeProto)) {
+        if (Compare.compareCoord(Player_A_Coord, nodeProto)) {
           return Player.getPlayer(Colors.green, Color.fromARGB(255, 48, 109, 49));
-        } else if (Compare.compareCoord(gameInfo.Player_B_Coord, nodeProto)) {
+        } else if (Compare.compareCoord(Player_B_Coord, nodeProto)) {
           return Player.getPlayer(Colors.red, Color.fromARGB(255, 110, 30, 24));
         } else {
           if (!nodeProto.isShaddow &&
-              !Compare.compareCoord(gameInfo.Player_A_Coord, nodeProto)) {
+              !Compare.compareCoord(Player_A_Coord, nodeProto)) {
             if (Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto) &&
                 gameInfo.Frozen_trap_A.isInit) {
               return Container(

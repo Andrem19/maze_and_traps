@@ -17,6 +17,9 @@ abstract class Routes {
   static const MAP_TRAINING_MENU = _Paths.MAP_TRAINING_MENU;
   static const MAP_TRAINING_ACT = _Paths.MAP_TRAINING_ACT;
   static const MAP_CHAMPIONS = _Paths.MAP_CHAMPIONS;
+  static const PLAY_MENU = _Paths.PLAY_MENU;
+  static const BATTLE_ACT = _Paths.BATTLE_ACT;
+  static const WAITING_PAGE = _Paths.WAITING_PAGE;
 }
 
 abstract class _Paths {
@@ -34,4 +37,7 @@ abstract class _Paths {
   static const MAP_TRAINING_MENU = "/map_training_menu";
   static const MAP_TRAINING_ACT = "/map_training_act";
   static const MAP_CHAMPIONS = "/map_champions";
+  static const PLAY_MENU = "/play_menu";
+  static const BATTLE_ACT = "/battle_act";
+  static const WAITING_PAGE = "/waiting_page";
 }

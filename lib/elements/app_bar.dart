@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
+import 'package:mazeandtraps/elements/play_switcher.dart';
 
 class AppBarElement {
   static AppBar getAppBar() {

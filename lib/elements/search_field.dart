@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/ad_visual_controller.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
+import 'package:mazeandtraps/controllers/play_menu_controller.dart';
 
 import '../controllers/routing/app_pages.dart';
 
@@ -55,7 +56,7 @@ class SearchField extends StatelessWidget {
                     textStyle: const TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
-                  // controller.invitePlayerForBattle();
+                  Get.find<PlayMenuController>().invitePlayerForBattle();
                 },
               ),
             )),

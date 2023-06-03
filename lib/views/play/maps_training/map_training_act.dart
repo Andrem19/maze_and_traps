@@ -10,10 +10,10 @@ import 'package:mazeandtraps/controllers/map_training_act_controller.dart';
 import 'package:mazeandtraps/elements/play_material/traps.dart';
 import 'package:mazeandtraps/services/arrow_direction.dart';
 
-import '../../elements/play_material/cube_widget_A.dart';
-import '../../elements/play_material/node_widget.dart';
-import '../../elements/shell.dart';
-import '../../models/maze_map.dart';
+import '../../../elements/play_material/cube_widget_A.dart';
+import '../../../elements/play_material/node_widget.dart';
+import '../../../elements/shell.dart';
+import '../../../models/maze_map.dart';
 
 class MapTrainingAct extends StatelessWidget {
   const MapTrainingAct({super.key});
@@ -42,7 +42,7 @@ class MapTrainingAct extends StatelessWidget {
                             controller.mazeMap.value.mazeMap[row].length,
                             (col) {
                           return Expanded(
-                            child: NodeWidget.getNode(controller.gameInfo.value,
+                            child: NodeWidget.getNode(controller.mazeMap.value.Player_A_Coord, controller.mazeMap.value.Player_B_Coord, controller.gameInfo.value,
                                 controller.mazeMap.value.mazeMap[row][col]),
                           );
                         })),

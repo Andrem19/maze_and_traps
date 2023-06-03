@@ -6,8 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mazeandtraps/services/map_operation.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,8 +17,6 @@ import '../models/trap.dart';
 import '../services/generate_traps.dart';
 
 class MainGameController extends GetxController {
-  RxDouble player_A_Life = 55.0.obs;
-  RxDouble player_B_Life = 55.0.obs;
   GlobalSettings globalSettings = GlobalSettings(
       default_health: 55,
       default_shaddow_radius: 3,
@@ -44,16 +41,20 @@ class MainGameController extends GetxController {
   RxInt points = 0.obs;
   RxInt scrolls = 0.obs;
   RxList<dynamic> scrollsList = <dynamic>[].obs;
-
   TextEditingController playerSearch = TextEditingController(text: '');
   TextEditingController targetQrCode = TextEditingController();
 
   bool IsUserInGame = false;
+  bool randomRival = false;
   String YourCurrentRole = 'A';
   String currentMapName = '';
   String currentmultiplayerGameId = '';
   String currentMapId = '';
+  String playerWhoIInvite_ID = '';
   Direction moveDir = Direction.up;
+  RxBool wantToPlay = false.obs;
+  RxDouble player_A_Life = 55.0.obs;
+  RxDouble player_B_Life = 55.0.obs;
 
   @override
   void onInit() async {
@@ -140,11 +141,13 @@ class MainGameController extends GetxController {
         'mySetOfTraps': ['Blindness'],
         'weight': 3,
         'weightPrice': 2,
+        'wantToPlay': true,
         'points': 0,
       });
       pref.setString('secretToken', secrTok);
       pref.setString('uid', uid);
       userName.value = 'Pl-$part';
+      wantToPlay.value = true;
       points.value = 0;
       userUid = uid;
       allMyTraps.value = TrapsGenerator.toListTraps([], allTrapsInTheGame);
@@ -160,6 +163,25 @@ class MainGameController extends GetxController {
     } catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(error.toString()),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  void changeWantToPlay() async {
+    await firebaseFirestore.collection('users').doc(userUid).update({
+      'wantToPlay': wantToPlay.value,
+    });
+    if (wantToPlay.value) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content:
+            Text('You have allowed other players to invite you to the game.'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text(
+            'You have blocked other players from inviting you to the game.'),
         backgroundColor: Colors.red,
       ));
     }
@@ -183,6 +205,7 @@ class MainGameController extends GetxController {
         userName.value = data['name'];
         userUid = data['uid'];
         scrollsList.value = data['scrolls'];
+        wantToPlay.value = data['wantToPlay'];
         allMyTraps.value =
             TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame);
         backpackSet.value =
@@ -211,7 +234,7 @@ class MainGameController extends GetxController {
     try {
       firebaseFirestore.collection('gameBattle').doc(theGameIdInviteMe).update({
         'Player_B_uid': userUid,
-        'Player_B_Name': userName,
+        'Player_B_Name': userName.value,
         'gameStatus': 'waiting'
       });
       var doc = await firebaseFirestore
@@ -229,14 +252,14 @@ class MainGameController extends GetxController {
             .get();
         if (maps.docs.length > 0) {
           var data = maps.docs[0].data();
-          // currentGameMap = MazeMap.fromJson(data['map']);
+          currentGameMap = MazeMap.fromJson(data['map']);
           // prepareMapToGame();
         }
         currentmultiplayerGameId = theGameIdInviteMe;
         currentMapName = data['MapName'];
         YourCurrentRole = 'B';
       }
-      // Get.toNamed(Routes.INVITE_BATTLE); !!!!!!!
+      Get.toNamed(Routes.WAITING_PAGE);
     } on FirebaseException catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(error.code),

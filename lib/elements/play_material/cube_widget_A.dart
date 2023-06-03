@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mazeandtraps/models/maze_map.dart';
 import 'package:mazeandtraps/services/node_stuff.dart';
 
 import '../../models/game_info.dart';
@@ -8,11 +9,11 @@ import '../../models/node.dart';
 import 'node_widget.dart';
 
 class NodeWidget {
-  static Widget getNode(GameInfo gameInfo, NodeCube nodeProto) {
+  static Widget getNode(Coordinates Player_A_Coord, Coordinates Player_B_Coord, GameInfo gameInfo, NodeCube nodeProto) {
     return nodeProto.isShaddow
         ? Stack(
             children: [
-              Stuff.createBackground(nodeProto, gameInfo),
+              Stuff.createBackground(Player_A_Coord, Player_B_Coord, nodeProto, gameInfo),
               Opacity(
                 opacity: nodeProto.halfShaddow ? 0.6 : 1,
                 child: Container(
@@ -21,7 +22,7 @@ class NodeWidget {
               ),
             ],
           )
-        : Stuff.createBackground(nodeProto, gameInfo);
+        : Stuff.createBackground(Player_A_Coord, Player_B_Coord, nodeProto, gameInfo);
   }
 
   static Color generateColor() {

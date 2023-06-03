@@ -48,7 +48,7 @@ class MapTrainingActController extends GetxController {
 
   @override
   void onInit() async {
-    Get.find<MainGameController>().changeStatusInGame(true);
+    mainCtrl.changeStatusInGame(true);
     await setSettings();
     if (mainCtrl.currentGameMap != null) {
       mazeMap.value = mainCtrl.currentGameMap!;
@@ -66,7 +66,7 @@ class MapTrainingActController extends GetxController {
 
   @override
   void onClose() {
-    Get.find<MainGameController>().changeStatusInGame(false);
+    mainCtrl.changeStatusInGame(false);
     stopEngine();
     FlameAudio.bgm.stop();
     super.onClose();

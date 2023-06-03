@@ -105,8 +105,6 @@ class MazeMap {
 
   GameInfo getGameInfo() {
     return GameInfo(
-        Player_A_Coord: Player_A_Coord,
-        Player_B_Coord: Player_B_Coord,
         DoorTeleport_A: DoorTeleport_A,
         DoorTeleport_B: DoorTeleport_B,
         Frozen_trap_A: Frozen_trap_A,
@@ -116,8 +114,6 @@ class MazeMap {
   }
 
   void fromGameInfo(GameInfo info) {
-    Player_A_Coord = info.Player_A_Coord;
-    Player_B_Coord = info.Player_B_Coord;
     DoorTeleport_A = info.DoorTeleport_A;
     DoorTeleport_B = info.DoorTeleport_B;
     Frozen_trap_A = info.Frozen_trap_A;

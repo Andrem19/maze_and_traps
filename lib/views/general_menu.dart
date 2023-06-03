@@ -4,6 +4,7 @@ import 'package:mazeandtraps/controllers/ad_visual_controller.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/elements/app_bar.dart';
 import 'package:mazeandtraps/elements/button.dart';
+import 'package:mazeandtraps/elements/play_switcher.dart';
 import 'package:mazeandtraps/elements/qr_code.dart';
 import 'package:mazeandtraps/elements/search_field.dart';
 import 'package:mazeandtraps/elements/shell.dart';
@@ -37,17 +38,27 @@ class GeneralMenu extends StatelessWidget {
                 color: Colors.black
                     .withOpacity(AdController.mainScreenShaddow.value),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  QrCode(),
-                  SearchField(),
-                  MenuButton(path: Routes.MAP_TRAINING_MENU, name: 'Map Training'),
-                  MenuButton(path: Routes.TRAPS_SHOP, name: 'Traps Shop'),
-                  MenuButton(path: Routes.LEADERBOARD, name: 'Leaderboard'),
-                  MenuButton(path: Routes.EDIT_MENU, name: 'Map Editor'),
-                  MenuButton(path: Routes.SETTINGS, name: 'Settings')
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      QrCode(),
+                      Row(
+                        children: [
+                          Text(controller.wantToPlay.value ? 'I agree to receive invitations to the game' : 'I do not agree to receive invitations to the game'),
+                          PlaySwitcher.getPlaySwitcher(controller),
+                        ],
+                      ),
+                      MenuButton(path: Routes.PLAY_MENU, name: 'Play'),
+                      MenuButton(path: Routes.TRAPS_SHOP, name: 'Traps Shop'),
+                      MenuButton(path: Routes.LEADERBOARD, name: 'Leaderboard'),
+                      MenuButton(path: Routes.EDIT_MENU, name: 'Map Editor'),
+                      MenuButton(path: Routes.SETTINGS, name: 'Settings')
+                    ],
+                  ),
                 ],
               ),
             ],

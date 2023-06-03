@@ -2,8 +2,10 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/views/backpack/backpack.dart';
 import 'package:mazeandtraps/views/editor/map_editor.dart';
 import 'package:mazeandtraps/views/general_menu.dart';
-import 'package:mazeandtraps/views/maps_training/map_training_act.dart';
-import 'package:mazeandtraps/views/maps_training/maps_champions.dart';
+import 'package:mazeandtraps/views/play/maps_training/map_training_act.dart';
+import 'package:mazeandtraps/views/play/maps_training/maps_champions.dart';
+import 'package:mazeandtraps/views/play/multiplayer/battle_act.dart';
+import 'package:mazeandtraps/views/play/play_menu.dart';
 import 'package:mazeandtraps/views/scrolls/scrolls_list.dart';
 import 'package:mazeandtraps/views/settings.dart';
 import 'package:mazeandtraps/views/traps_shop.dart/traps_shop.dart';
@@ -11,7 +13,8 @@ import 'package:mazeandtraps/views/traps_shop.dart/traps_shop.dart';
 import '../../elements/qr_scanner.dart';
 import '../../views/editor/edit_menu.dart';
 import '../../views/general_leaderboard.dart';
-import '../../views/maps_training/maps_training_menu.dart';
+import '../../views/play/maps_training/maps_training_menu.dart';
+import '../../views/play/multiplayer/waiting_page.dart';
 import '../../views/splashscreen/game_splash_screen.dart';
 import '../bindings/bindings.dart';
 
@@ -85,6 +88,20 @@ class AppPages {
       page: () => MapTrainingAct(),
       binding: MapTrainingActBinding()
     ),
-    
+    GetPage(
+      name: _Paths.PLAY_MENU, 
+      page: () => PlayMenu(),
+      binding: PlayMenuControllerBinding()
+    ),
+    GetPage(
+      name: _Paths.BATTLE_ACT, 
+      page: () => BattleAct(),
+      binding: BattleActControllerBinding()
+    ),
+    GetPage(
+      name: _Paths.WAITING_PAGE, 
+      page: () => WaitingPage(),
+      binding: WaitingGameControllerBinding()
+    ),
   ];
 }
