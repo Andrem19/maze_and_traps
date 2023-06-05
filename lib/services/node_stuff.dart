@@ -1,80 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:mazeandtraps/elements/play_material/player.dart';
 import 'package:mazeandtraps/models/maze_map.dart';
+import 'package:mazeandtraps/services/create_stuff.dart';
 import '../models/game_info.dart';
 import '../models/node.dart';
 import 'compare_coord.dart';
 
-class Stuff {
-  static Widget createBackground(Coordinates Player_A_Coord, Coordinates Player_B_Coord, NodeCube nodeProto, GameInfo gameInfo) {
+// class MyStuffWidget extends StatefulWidget {
+//   final Coordinates playerACoord;
+//   final Coordinates playerBCoord;
+//   final NodeCube nodeProto;
+//   final GameInfo gameInfo;
+
+//   const MyStuffWidget({
+//     Key? key,
+//     required this.playerACoord,
+//     required this.playerBCoord,
+//     required this.nodeProto,
+//     required this.gameInfo,
+//   }) : super(key: key);
+
+//   @override
+//   _MyStuffWidgetState createState() => _MyStuffWidgetState();
+// }
+
+// class _MyStuffWidgetState extends State<MyStuffWidget> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       children: [
+//         Builder(
+//           builder: (context) {
+//             if (widget.nodeProto.wall) {
+//               return Image.asset('assets/images/texture_Wall.png');
+//             } else {
+//               return Container(
+//                 decoration:
+//                     widget.nodeProto.is_A_START || widget.nodeProto.is_B_START
+//                         ? BoxDecoration(
+//                             color: Colors.yellow,
+//                             border: Border.all(
+//                               width: 2.0,
+//                               color: Colors.black12,
+//                             ),
+//                           )
+//                         : 
+//                         BoxDecoration(
+//                             color: Color.fromARGB(255, 158, 152, 152),
+//                             border: Border.all(
+//                               width: 2.0,
+//                               color: Colors.black12,
+//                             ),
+//                           ),
+//               );
+//             }
+//           },
+//         ),
+//         CreateStuffWidget(
+//           playerACoord: widget.playerACoord,
+//           playerBCoord: widget.playerBCoord,
+//           nodeProto: widget.nodeProto,
+//           gameInfo: widget.gameInfo,
+//         ),
+//       ],
+//     );
+//   }
+// }
+class MyStuffWidget extends StatefulWidget {
+  final Coordinates playerACoord;
+  final Coordinates playerBCoord;
+  final NodeCube nodeProto;
+  final GameInfo gameInfo;
+  
+
+  MyStuffWidget({
+    Key? key,
+    required this.playerACoord,
+    required this.playerBCoord,
+    required this.nodeProto,
+    required this.gameInfo,
+  }) : super(key: key);
+
+  @override
+  _MyStuffWidgetState createState() => _MyStuffWidgetState();
+}
+
+class _MyStuffWidgetState extends State<MyStuffWidget> {
+  bool get isWall => widget.nodeProto.wall;
+
+  Widget _buildTile() {
+    if (isWall) {
+      return Image.asset('assets/images/texture_Wall.png');
+    } else {
+      return Container(
+        decoration:
+            widget.nodeProto.is_A_START || widget.nodeProto.is_B_START
+                ? yellowBoxDecoration
+                : grayBoxDecoration,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
-        Builder(builder: (context) {
-          if (nodeProto.wall) {
-            return Image.asset('assets/images/texture_Wall.png');
-            // return FacetedTile();
-          } else {
-            return Container(
-              decoration: nodeProto.is_A_START || nodeProto.is_B_START
-                  ? BoxDecoration(
-                      color: Colors.yellow,
-                      border: Border.all(
-                        width: 2.0,
-                        color: Colors.black12,
-                      ),
-                    )
-                  : BoxDecoration(
-                      color: Color.fromARGB(255, 158, 152, 152),
-                      border: Border.all(
-                        width: 2.0,
-                        color: Colors.black12,
-                      ),
-                    ),
-            );
-          }
-        }),
-        createStuff(Player_A_Coord, Player_B_Coord, nodeProto, gameInfo),
+        _buildTile(),
+        CreateStuffWidget(
+          playerACoord: widget.playerACoord,
+          playerBCoord: widget.playerBCoord,
+          nodeProto: widget.nodeProto,
+          gameInfo: widget.gameInfo,
+        ),
       ],
     );
   }
-
-  static Widget createStuff(Coordinates Player_A_Coord, Coordinates Player_B_Coord, NodeCube nodeProto, GameInfo gameInfo) {
-    return Builder(
-      builder: (context) {
-        if (Compare.compareCoord(Player_A_Coord, nodeProto)) {
-          return Player.getPlayer(Colors.green, Color.fromARGB(255, 48, 109, 49));
-        } else if (Compare.compareCoord(Player_B_Coord, nodeProto)) {
-          return Player.getPlayer(Colors.red, Color.fromARGB(255, 110, 30, 24));
-        } else {
-          if (!nodeProto.isShaddow &&
-              !Compare.compareCoord(Player_A_Coord, nodeProto)) {
-            if (Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto) &&
-                gameInfo.Frozen_trap_A.isInit) {
-              return Container(
-                child: Image.asset('assets/images/snowflake.jpg'),
-              );
-            } else if (Compare.compareCoord(
-                    gameInfo.DoorTeleport_A, nodeProto) &&
-                gameInfo.DoorTeleport_A.isInit) {
-              return Container(
-                child: Opacity(
-                    opacity: 0.5,
-                    child: Image.asset('assets/images/teleport.jpg')),
-              );
-            } else if (Compare.compareCoord(
-                    gameInfo.ExitTeleport_A, nodeProto) &&
-                gameInfo.ExitTeleport_A.isInit) {
-              return Container(
-                child: Opacity(
-                    opacity: 0.9,
-                    child: Image.asset('assets/images/teleport.jpg')),
-              );
-            }
-            return SizedBox();
-          }
-        }
-        return SizedBox();
-      },
-    );
-  }
 }
+final BoxDecoration yellowBoxDecoration = BoxDecoration(
+  color: Colors.yellow,
+  border: Border.all(
+    width: 2.0,
+    color: Colors.black12,
+  ),
+);
+
+final BoxDecoration grayBoxDecoration = BoxDecoration(
+  color: Color.fromARGB(255, 158, 152, 152),
+  border: Border.all(
+    width: 2.0,
+    color: Colors.black12,
+  ),
+);
+
+

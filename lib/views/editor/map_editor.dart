@@ -40,8 +40,9 @@ class MapEditorScreen extends StatelessWidget {
                                   onTap: () {
                                     controller.changeWall(row, col);
                                   },
-                                  child: NodeWidget.getNode(controller.mazeMap.Player_A_Coord, controller.mazeMap.Player_B_Coord, controller.dumbGameInfo, controller.mazeMap.mazeMap[row]
-                                        [col]),
+                                  // child: NodeWidget.getNode(controller.mazeMap.Player_A_Coord, controller.mazeMap.Player_B_Coord, controller.dumbGameInfo, controller.mazeMap.mazeMap[row]
+                                  // [col]),
+                                  child: NodeWidget(playerACoord: controller.mazeMap.Player_A_Coord, playerBCoord: controller.mazeMap.Player_B_Coord, gameInfo: controller.dumbGameInfo, nodeProto: controller.mazeMap.mazeMap[row][col]),
                                 ),
                               );
                             })),

@@ -33,7 +33,8 @@ class _BackgroundWidgetState extends State<BackgroundWidget> {
     return CustomPaint(
       painter: BackgroundPainter(backgroundColor: _backgroundColor),
       child: Container(
-        child: Stuff.createBackground(widget.Player_A_Coord, widget.Player_B_Coord, widget.nodeProto, widget.gameInfo),
+        // child: Stuff.createBackground(widget.Player_A_Coord, widget.Player_B_Coord, widget.nodeProto, widget.gameInfo),
+        child: MyStuffWidget(playerACoord: widget.Player_A_Coord, playerBCoord: widget.Player_B_Coord, nodeProto: widget.nodeProto, gameInfo: widget.gameInfo,),
       ),
     );
   }
