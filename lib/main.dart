@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       scaffoldMessengerKey: Keys.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
-      title: 'Maze&Traps',
+      title: 'Maze Rush',
       theme: ThemeData(
         fontFamily: 'MazeRush',
         brightness: Brightness.dark,
