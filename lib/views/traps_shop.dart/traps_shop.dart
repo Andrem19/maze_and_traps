@@ -15,7 +15,8 @@ class TrapShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(GetBuilder<MainGameController>(builder: (controller) {
+    return Shell(
+      content: GetBuilder<MainGameController>(builder: (controller) {
       return Scaffold(
         appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'TRAPS SHOP'),
         body: Padding(

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 import '../../controllers/map_editor_controller.dart';
 import '../../elements/play_material/cube_widget_A.dart';
-import '../../elements/play_material/node_widget.dart';
 import '../../elements/shell.dart';
 
 class MapEditorScreen extends StatelessWidget {
@@ -22,7 +21,8 @@ class MapEditorScreen extends StatelessWidget {
     }, builder: (controller) {
       return controller.isLoading.value
           ? const CircularProgressIndicator()
-          : Shell.getShell(Stack(
+          : Shell(
+      content: Stack(
               alignment: Alignment.topCenter,
               children: [
                 Container(
@@ -40,8 +40,6 @@ class MapEditorScreen extends StatelessWidget {
                                   onTap: () {
                                     controller.changeWall(row, col);
                                   },
-                                  // child: NodeWidget.getNode(controller.mazeMap.Player_A_Coord, controller.mazeMap.Player_B_Coord, controller.dumbGameInfo, controller.mazeMap.mazeMap[row]
-                                  // [col]),
                                   child: NodeWidget(playerACoord: controller.mazeMap.Player_A_Coord, playerBCoord: controller.mazeMap.Player_B_Coord, gameInfo: controller.dumbGameInfo, nodeProto: controller.mazeMap.mazeMap[row][col]),
                                 ),
                               );

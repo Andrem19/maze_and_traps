@@ -265,7 +265,7 @@ class MainGameController extends GetxController {
 
   //// Listner and game logic ////
   ///
-  void deleteMultiplayerGameInstant() async {
+  void deleteGameInstant() async {
     var doc = await firebaseFirestore
         .collection('gameBattle')
         .doc(currentmultiplayerGameId)

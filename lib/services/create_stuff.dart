@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mazeandtraps/controllers/main_game_controller.dart';
+import 'package:mazeandtraps/elements/play_material/player_B.dart';
 
-import '../elements/play_material/player.dart';
+import '../elements/play_material/player_A.dart';
 import '../models/game_info.dart';
 import '../models/maze_map.dart';
 import '../models/node.dart';
@@ -22,12 +25,23 @@ class CreateStuffWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var main = Get.find<MainGameController>();
     if (Compare.compareCoord(playerACoord, nodeProto)) {
-      return Player.getPlayer(Colors.green, Color(0xFF306D31));
-
+      if (main.YourCurrentRole == 'A') {
+        return Player_A.getPlayer(Colors.green, Color(0xFF306D31));
+      } else {
+        if (!nodeProto.isShaddow) {
+          return Player_A.getPlayer(Colors.red, Color(0xFF6E1E18));
+        }
+      }
     } else if (Compare.compareCoord(playerBCoord, nodeProto)) {
-      return Player.getPlayer(Colors.red, Color(0xFF6E1E18));
-
+      if (main.YourCurrentRole == 'A') {
+        if (!nodeProto.isShaddow) {
+          return Player_B.getPlayer(Colors.red, Color(0xFF6E1E18));
+        }
+      } else {
+        return Player_B.getPlayer(Colors.green, Color(0xFF306D31));
+      }
     } else {
       if (!nodeProto.isShaddow &&
           !Compare.compareCoord(playerACoord, nodeProto)) {

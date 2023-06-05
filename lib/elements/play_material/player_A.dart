@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/map_training_act_controller.dart';
 
-class Player {
+class Player_A {
   static getPlayer(Color color, Color borderColor) {
     var cont = Get.find<MainGameController>();
     double onePerc = (Get.size.height / 35) / 100;

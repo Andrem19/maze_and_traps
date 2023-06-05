@@ -39,14 +39,23 @@ class TrapsGenerator {
           cost: 12,
           weight: 5),
       Trap(
-          name: 'Speed increase',
+          name: 'Speed increase x 1.5',
           description:
-              'Give yourself a quick boost of speed, leaving your rival in the dust.',
+              'Give yourself a quick boost of speed 50%, leaving your rival in the dust.',
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 5,
           weight: 2),
+          Trap(
+          name: 'Speed increase x 2',
+          description:
+              'Give yourself a quick boost of speed 100%, leaving your rival in the dust.',
+          damage: 0,
+          baff: 0,
+          img: 'assets/images/trap_default.png',
+          cost: 12,
+          weight: 5),
       Trap(
           name: 'Go through the wall',
           description:
@@ -82,8 +91,32 @@ class TrapsGenerator {
           img: 'assets/images/trap_default.png',
           cost: 12,
           weight: 5),
+      Trap(
+          name: 'Meteor',
+          description: 'A meteor shower falls from the sky all over the map, inflicting a random defeat on different cells',
+          damage: 0,
+          baff: 0,
+          img: 'assets/images/trap_default.png',
+          cost: 12,
+          weight: 5),
+      Trap(
+          name: 'Invisibility',
+          description: 'You become invisible for 20 seconds',
+          damage: 0,
+          baff: 0,
+          img: 'assets/images/trap_default.png',
+          cost: 8,
+          weight: 3),
+          Trap(
+          name: 'Builder',
+          description: 'Builds an illusion of a wall that lasts 15 seconds',
+          damage: 0,
+          baff: 0,
+          img: 'assets/images/trap_default.png',
+          cost: 8,
+          weight: 3),
     ];
-    return upTo12(traps);
+    return upTo(traps, 16);
   }
 
   static List<Trap> toListTraps(List<dynamic> traps, List<Trap> allTraps) {
@@ -95,7 +128,7 @@ class TrapsGenerator {
         listToReturn.add(trap);
       }
     }
-    return upTo12(listToReturn);
+    return upTo(listToReturn, 12);
   }
 
   static List<dynamic> toListDynamic(List<Trap> traps) {
@@ -108,11 +141,11 @@ class TrapsGenerator {
     return listToReturn;
   }
 
-  static List<Trap> upTo12(List<Trap> traps) {
-    if (traps.length >= 12) {
+  static List<Trap> upTo(List<Trap> traps, int num) {
+    if (traps.length >= num) {
       return traps;
     } else {
-      for (var i = 0; i < 12; i++) {
+      for (var i = 0; i < num; i++) {
         Trap trap = Trap(
             name: 'empty',
             description: '',
@@ -122,11 +155,12 @@ class TrapsGenerator {
             cost: 0,
             weight: 0);
         traps.add(trap);
-        if (traps.length >= 12) {
+        if (traps.length >= num) {
           break;
         }
       }
       return traps;
     }
   }
+  
 }

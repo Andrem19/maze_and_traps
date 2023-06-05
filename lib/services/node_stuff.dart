@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mazeandtraps/elements/play_material/player.dart';
+import 'package:mazeandtraps/elements/play_material/player_A.dart';
 import 'package:mazeandtraps/models/maze_map.dart';
 import 'package:mazeandtraps/services/create_stuff.dart';
 import '../models/game_info.dart';

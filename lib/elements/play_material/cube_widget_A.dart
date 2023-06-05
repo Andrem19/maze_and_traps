@@ -9,7 +9,6 @@ import 'package:mazeandtraps/services/node_stuff.dart';
 
 import '../../models/game_info.dart';
 import '../../models/node.dart';
-import 'node_widget.dart';
 
 class NodeWidget extends StatefulWidget {
   final Coordinates playerACoord;

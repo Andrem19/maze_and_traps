@@ -16,7 +16,8 @@ class GeneralMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(GetBuilder<MainGameController>(builder: (controller) {
+    return Shell(
+      content: GetBuilder<MainGameController>(builder: (controller) {
       return Scaffold(
         appBar: AppBarElement.getAppBar(),
         body: GetBuilder<AdAndVisualController>(builder: (AdController) {

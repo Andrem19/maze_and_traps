@@ -25,8 +25,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(
-      GetBuilder<SettingsController>(builder: (controller) {
+    return Shell(
+      content: GetBuilder<SettingsController>(builder: (controller) {
         return Scaffold(
             appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'SETTINGS'),
             body: Padding(

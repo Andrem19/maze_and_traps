@@ -11,7 +11,8 @@ class MapsTrainingMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(
+    return Shell(
+      content: 
       Scaffold(
   appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'MAPS TRAINING'),
   body: GetBuilder<MapsMenuController>(

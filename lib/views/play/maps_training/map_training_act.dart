@@ -19,7 +19,8 @@ class MapTrainingAct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(Scaffold(
+    return Shell(
+      content: Scaffold(
       body: GetBuilder<MapTrainingActController>(initState: (state) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
             overlays: [SystemUiOverlay.bottom]);

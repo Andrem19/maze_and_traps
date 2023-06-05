@@ -16,7 +16,8 @@ class BackpackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var main = Get.find<MainGameController>();
-    return Shell.getShell(Scaffold(
+    return Shell(
+      content: Scaffold(
       appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'BACKPACK'),
       body: GetBuilder<TrapsAndShopController>(builder: (controller) {
         return Column(

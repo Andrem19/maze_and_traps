@@ -10,7 +10,8 @@ class EndGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(
+    return Shell(
+      content: 
       Scaffold(
         body: GetBuilder<MainGameController>(
           builder: (controller) {
@@ -38,7 +39,7 @@ class EndGameScreen extends StatelessWidget {
                   ) : SizedBox(),
                   ElevatedButton(
                     onPressed: () {
-                      controller.deleteMultiplayerGameInstant();
+                      controller.deleteGameInstant();
                       Get.offNamed(Routes.GENERAL_MENU);
                     },
                     child: const Text('To Main Screen'),

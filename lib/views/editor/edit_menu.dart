@@ -23,7 +23,8 @@ class EditMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(
+    return Shell(
+      content: 
       GetBuilder<MapEditorController>(
         builder: (controller) {
           return Scaffold(

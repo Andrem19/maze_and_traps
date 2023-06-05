@@ -16,40 +16,12 @@ class MazeMap {
   String message_B;
   Coordinates Player_A_Coord;
   Coordinates Player_B_Coord;
-  Coordinates DoorTeleport_A;
-  Coordinates DoorTeleport_B;
-  Coordinates Frozen_trap_A;
-  Coordinates Frozen_trap_B;
-  bool A_FrozenInstalled;
-  bool B_FrozenInstalled;
-  bool A_DoorInstalled;
-  bool B_DoorInstalled;
-  bool A_ExitInstalled;
-  bool B_ExitInstalled;
-  int Player_A_Frozen;
-  int Player_B_Frozen;
-  Coordinates ExitTeleport_A;
-  Coordinates ExitTeleport_B;
   MazeMap({
     required this.mazeMap,
     required this.message_A,
     required this.message_B,
     required this.Player_A_Coord,
     required this.Player_B_Coord,
-    required this.Frozen_trap_A,
-    required this.Frozen_trap_B,
-    required this.DoorTeleport_A,
-    required this.DoorTeleport_B,
-    required this.A_FrozenInstalled,
-    required this.B_FrozenInstalled,
-    required this.A_DoorInstalled,
-    required this.B_DoorInstalled,
-    required this.A_ExitInstalled,
-    required this.B_ExitInstalled,
-    required this.Player_A_Frozen,
-    required this.Player_B_Frozen,
-    required this.ExitTeleport_A,
-    required this.ExitTeleport_B,
   });
 
   void reverse() {
@@ -61,25 +33,6 @@ class MazeMap {
     Player_A_Coord = Player_B_Coord;
     Player_B_Coord = tempCoords;
 
-    bool tempFrozen = A_FrozenInstalled;
-    A_FrozenInstalled = B_FrozenInstalled;
-    B_FrozenInstalled = tempFrozen;
-
-    bool tempDoor = A_DoorInstalled;
-    A_DoorInstalled = B_DoorInstalled;
-    B_DoorInstalled = tempDoor;
-
-    bool tempExit = A_ExitInstalled;
-    A_ExitInstalled = B_ExitInstalled;
-    B_ExitInstalled = tempExit;
-
-    int tempFrozenCount = Player_A_Frozen;
-    Player_A_Frozen = Player_B_Frozen;
-    Player_B_Frozen = tempFrozenCount;
-
-    Coordinates tempExitTeleport = ExitTeleport_A;
-    ExitTeleport_A = ExitTeleport_B;
-    ExitTeleport_B = tempExitTeleport;
     mazeMap = mazeMap.reversed.toList();
     for (var i = 0; i < mazeMap.length; i++) {
       mazeMap[i] = mazeMap[i].reversed.toList();
@@ -87,7 +40,7 @@ class MazeMap {
     }
   }
 
-  void reversePlus() {
+  MazeMap reversePlus() {
     Player_B_Coord = Coordinates(
         isInit: Player_B_Coord.isInit,
         row: (mazeMap.length - 1) - Player_B_Coord.row,
@@ -101,81 +54,85 @@ class MazeMap {
       mazeMap[i] = mazeMap[i].reversed.toList();
       for (var j = 0; j < mazeMap[i].length; j++) {}
     }
+    return this;
   }
 
-  GameInfo getGameInfo() {
-    return GameInfo(
-        DoorTeleport_A: DoorTeleport_A,
-        DoorTeleport_B: DoorTeleport_B,
-        Frozen_trap_A: Frozen_trap_A,
-        Frozen_trap_B: Frozen_trap_B,
-        ExitTeleport_A: ExitTeleport_A,
-        ExitTeleport_B: ExitTeleport_B);
-  }
-
-  void fromGameInfo(GameInfo info) {
-    DoorTeleport_A = info.DoorTeleport_A;
-    DoorTeleport_B = info.DoorTeleport_B;
-    Frozen_trap_A = info.Frozen_trap_A;
-    Frozen_trap_B = info.Frozen_trap_B;
-    ExitTeleport_A = info.ExitTeleport_A;
-    ExitTeleport_B = info.ExitTeleport_B;
-  }
   double calculateDistance() {
-  int numRows = mazeMap.length;
-  int numCols = mazeMap[0].length;
+    int numRows = mazeMap.length;
+    int numCols = mazeMap[0].length;
 
-  int player1Row = Player_A_Coord.row;
-  int player1Col = Player_A_Coord.col;
-  int player2Row = Player_B_Coord.row;
-  int player2Col = Player_B_Coord.col;
+    int player1Row = Player_A_Coord.row;
+    int player1Col = Player_A_Coord.col;
+    int player2Row = Player_B_Coord.row;
+    int player2Col = Player_B_Coord.col;
 
-  double distance = sqrt(pow(player2Row - player1Row, 2) + pow(player2Col - player1Col, 2));
+    double distance =
+        sqrt(pow(player2Row - player1Row, 2) + pow(player2Col - player1Col, 2));
 
-  return distance;
-}
-
+    return distance;
+  }
 
   void countRadiusAroundPlayer_A(int shaddowRadius, bool withBorder) {
-  mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
-  int startRow = Player_A_Coord.row - shaddowRadius - 1 < 0 ? 0 : Player_A_Coord.row - shaddowRadius - 1;
-  int endRow = Player_A_Coord.row + shaddowRadius + 1 >= mazeMap.length ? mazeMap.length - 1 : Player_A_Coord.row + shaddowRadius + 1;
-  int startCol = Player_A_Coord.col - shaddowRadius - 1 < 0 ? 0 : Player_A_Coord.col - shaddowRadius - 1;
-  int endCol = Player_A_Coord.col + shaddowRadius + 1 >= mazeMap[0].length ? mazeMap[0].length - 1 : Player_A_Coord.col + shaddowRadius + 1;
-  for (int row = startRow; row <= endRow; row++) {
-    for (int col = startCol; col <= endCol; col++) {
-      double distance = sqrt(pow(Player_A_Coord.row - row, 2) + pow(Player_A_Coord.col - col, 2));
-      if (distance <= shaddowRadius) {
-        mazeMap[row][col].isShaddow = false;
-      } else if (withBorder && distance > shaddowRadius && distance <= shaddowRadius + 1) {
-        mazeMap[row][col].halfShaddow = true;
+    mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
+    int startRow = Player_A_Coord.row - shaddowRadius - 1 < 0
+        ? 0
+        : Player_A_Coord.row - shaddowRadius - 1;
+    int endRow = Player_A_Coord.row + shaddowRadius + 1 >= mazeMap.length
+        ? mazeMap.length - 1
+        : Player_A_Coord.row + shaddowRadius + 1;
+    int startCol = Player_A_Coord.col - shaddowRadius - 1 < 0
+        ? 0
+        : Player_A_Coord.col - shaddowRadius - 1;
+    int endCol = Player_A_Coord.col + shaddowRadius + 1 >= mazeMap[0].length
+        ? mazeMap[0].length - 1
+        : Player_A_Coord.col + shaddowRadius + 1;
+    for (int row = startRow; row <= endRow; row++) {
+      for (int col = startCol; col <= endCol; col++) {
+        double distance = sqrt(pow(Player_A_Coord.row - row, 2) +
+            pow(Player_A_Coord.col - col, 2));
+        if (distance <= shaddowRadius) {
+          mazeMap[row][col].isShaddow = false;
+        } else if (withBorder &&
+            distance > shaddowRadius &&
+            distance <= shaddowRadius + 1) {
+          mazeMap[row][col].halfShaddow = true;
+        }
       }
     }
   }
-}
 
-void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
-  mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
-  int startRow = Player_B_Coord.row - shaddowRadius - 1 < 0 ? 0 : Player_B_Coord.row - shaddowRadius - 1;
-  int endRow = Player_B_Coord.row + shaddowRadius + 1 >= mazeMap.length ? mazeMap.length - 1 : Player_B_Coord.row + shaddowRadius + 1;
-  int startCol = Player_B_Coord.col - shaddowRadius - 1 < 0 ? 0 : Player_B_Coord.col - shaddowRadius - 1;
-  int endCol = Player_B_Coord.col + shaddowRadius + 1 >= mazeMap[0].length ? mazeMap[0].length - 1 : Player_B_Coord.col + shaddowRadius + 1;
-  for (int row = startRow; row <= endRow; row++) {
-    for (int col = startCol; col <= endCol; col++) {
-      double distance = sqrt(pow(Player_B_Coord.row - row, 2) + pow(Player_B_Coord.col - col, 2));
-      if (distance <= shaddowRadius) {
-        mazeMap[row][col].isShaddow = false;
-      } else if (withBorder && distance > shaddowRadius && distance <= shaddowRadius + 1) {
-        mazeMap[row][col].halfShaddow = true;
+  void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
+    mazeMap.forEach((row) => row.forEach((node) => node.isShaddow = true));
+    int startRow = Player_B_Coord.row - shaddowRadius - 1 < 0
+        ? 0
+        : Player_B_Coord.row - shaddowRadius - 1;
+    int endRow = Player_B_Coord.row + shaddowRadius + 1 >= mazeMap.length
+        ? mazeMap.length - 1
+        : Player_B_Coord.row + shaddowRadius + 1;
+    int startCol = Player_B_Coord.col - shaddowRadius - 1 < 0
+        ? 0
+        : Player_B_Coord.col - shaddowRadius - 1;
+    int endCol = Player_B_Coord.col + shaddowRadius + 1 >= mazeMap[0].length
+        ? mazeMap[0].length - 1
+        : Player_B_Coord.col + shaddowRadius + 1;
+    for (int row = startRow; row <= endRow; row++) {
+      for (int col = startCol; col <= endCol; col++) {
+        double distance = sqrt(pow(Player_B_Coord.row - row, 2) +
+            pow(Player_B_Coord.col - col, 2));
+        if (distance <= shaddowRadius) {
+          mazeMap[row][col].isShaddow = false;
+        } else if (withBorder &&
+            distance > shaddowRadius &&
+            distance <= shaddowRadius + 1) {
+          mazeMap[row][col].halfShaddow = true;
+        }
       }
     }
   }
-}
 
-
-  bool MovePlayer_A(Direction direction) {
-    if (Player_A_Frozen != 0) {
-      Player_A_Frozen -= 1;
+  bool MovePlayer_A(Direction direction, GameInfo gameInfo) {
+    if (gameInfo.Player_A_Frozen != 0) {
+      gameInfo.Player_A_Frozen -= 1;
       return false;
     }
     message_A = '';
@@ -211,29 +168,29 @@ void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
       default:
     }
 
-    if (Frozen_trap_B.row == Player_A_Coord.row &&
-        Frozen_trap_B.col == Player_A_Coord.col) {
-      Player_A_Frozen = 8;
+    if (gameInfo.Frozen_trap_B.row == Player_A_Coord.row &&
+        gameInfo.Frozen_trap_B.col == Player_A_Coord.col) {
+      gameInfo.Player_A_Frozen = 8;
       FlameAudio.play('freeze.wav');
       message_B = 'Player was frozen';
     }
 
-    if (DoorTeleport_B.row == Player_A_Coord.row &&
-        DoorTeleport_B.col == Player_A_Coord.col &&
-        ExitTeleport_B.isInit) {
-      Player_A_Coord.row = ExitTeleport_B.row;
-      Player_A_Coord.col = ExitTeleport_B.col;
+    if (gameInfo.DoorTeleport_B.row == Player_A_Coord.row &&
+        gameInfo.DoorTeleport_B.col == Player_A_Coord.col &&
+        gameInfo.ExitTeleport_B.isInit) {
+      Player_A_Coord.row = gameInfo.ExitTeleport_B.row;
+      Player_A_Coord.col = gameInfo.ExitTeleport_B.col;
       message_A = 'Teleport trap';
       FlameAudio.play('teleport.mp3');
-      ExitTeleport_B.isInit = false;
+      gameInfo.ExitTeleport_B.isInit = false;
       return true;
     }
     return false;
   }
 
-  bool MovePlayer_B(Direction direction) {
-    if (Player_B_Frozen != 0) {
-      Player_B_Frozen -= 1;
+  bool MovePlayer_B(Direction direction, GameInfo gameInfo) {
+    if (gameInfo.Player_B_Frozen != 0) {
+      gameInfo.Player_B_Frozen -= 1;
       return false;
     }
     message_B = '';
@@ -268,21 +225,21 @@ void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
         break;
       default:
     }
-    if (Frozen_trap_A.row == Player_B_Coord.row &&
-        Frozen_trap_A.col == Player_B_Coord.col) {
-      Player_B_Frozen = 8;
+    if (gameInfo.Frozen_trap_A.row == Player_B_Coord.row &&
+        gameInfo.Frozen_trap_A.col == Player_B_Coord.col) {
+      gameInfo.Player_B_Frozen = 8;
       FlameAudio.play('freeze.wav');
       message_B = 'Player was frozen';
     }
 
-    if (DoorTeleport_A.row == Player_B_Coord.row &&
-        DoorTeleport_A.col == Player_B_Coord.col &&
-        ExitTeleport_A.isInit) {
-      Player_B_Coord.row = ExitTeleport_A.row;
-      Player_B_Coord.col = ExitTeleport_A.col;
+    if (gameInfo.DoorTeleport_A.row == Player_B_Coord.row &&
+        gameInfo.DoorTeleport_A.col == Player_B_Coord.col &&
+        gameInfo.ExitTeleport_A.isInit) {
+      Player_B_Coord.row = gameInfo.ExitTeleport_A.row;
+      Player_B_Coord.col = gameInfo.ExitTeleport_A.col;
       message_B = 'Teleport trap';
       FlameAudio.play('teleport.mp3');
-      ExitTeleport_A.isInit = false;
+      gameInfo.ExitTeleport_A.isInit = false;
       return true;
     }
     return false;
@@ -304,65 +261,65 @@ void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
     return false;
   }
 
-  void instalFrozen_A() {
-    if (!A_FrozenInstalled) {
-      Frozen_trap_A = Coordinates(
-          isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-      A_FrozenInstalled = true;
-      message_A = 'Frozen trap instaled';
-      FlameAudio.play('freeze.wav');
-    }
-  }
+  // void instalFrozen_A() {
+  //   if (!A_FrozenInstalled) {
+  //     Frozen_trap_A = Coordinates(
+  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
+  //     A_FrozenInstalled = true;
+  //     message_A = 'Frozen trap instaled';
+  //     FlameAudio.play('freeze.wav');
+  //   }
+  // }
 
-  void instalDoor_A() {
-    if (!A_DoorInstalled) {
-      DoorTeleport_A = Coordinates(
-          isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-      A_DoorInstalled = true;
-      message_A = 'Door trap instaled';
-    }
-  }
+  // void instalDoor_A() {
+  //   if (!A_DoorInstalled) {
+  //     DoorTeleport_A = Coordinates(
+  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
+  //     A_DoorInstalled = true;
+  //     message_A = 'Door trap instaled';
+  //   }
+  // }
 
-  void instalExit_A() {
-    if (!A_ExitInstalled && A_DoorInstalled) {
-      A_ExitInstalled = true;
-      ExitTeleport_A = Coordinates(
-          isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-      message_A = 'Exit trap instaled';
-    } else {
-      message_A = 'first you should to install the door';
-    }
-  }
+  // void instalExit_A() {
+  //   if (!A_ExitInstalled && A_DoorInstalled) {
+  //     A_ExitInstalled = true;
+  //     ExitTeleport_A = Coordinates(
+  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
+  //     message_A = 'Exit trap instaled';
+  //   } else {
+  //     message_A = 'first you should to install the door';
+  //   }
+  // }
 
-  void instalFrozen_B() {
-    if (!B_FrozenInstalled) {
-      Frozen_trap_B = Coordinates(
-          isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-      B_FrozenInstalled = true;
-      message_B = 'Frozen trap instaled';
-      FlameAudio.play('freeze.wav');
-    }
-  }
+  // void instalFrozen_B() {
+  //   if (!B_FrozenInstalled) {
+  //     Frozen_trap_B = Coordinates(
+  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
+  //     B_FrozenInstalled = true;
+  //     message_B = 'Frozen trap instaled';
+  //     FlameAudio.play('freeze.wav');
+  //   }
+  // }
 
-  void instalDoor_B() {
-    if (!B_DoorInstalled) {
-      DoorTeleport_B = Coordinates(
-          isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-      B_DoorInstalled = true;
-      message_B = 'Door trap instaled';
-    }
-  }
+  // void instalDoor_B() {
+  //   if (!B_DoorInstalled) {
+  //     DoorTeleport_B = Coordinates(
+  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
+  //     B_DoorInstalled = true;
+  //     message_B = 'Door trap instaled';
+  //   }
+  // }
 
-  void instalExit_B() {
-    if (!B_ExitInstalled && B_DoorInstalled) {
-      B_ExitInstalled = true;
-      ExitTeleport_B = Coordinates(
-          isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-      message_B = 'Exit trap instaled';
-    } else {
-      message_B = 'first you should to install the door';
-    }
-  }
+  // void instalExit_B() {
+  //   if (!B_ExitInstalled && B_DoorInstalled) {
+  //     B_ExitInstalled = true;
+  //     ExitTeleport_B = Coordinates(
+  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
+  //     message_B = 'Exit trap instaled';
+  //   } else {
+  //     message_B = 'first you should to install the door';
+  //   }
+  // }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -377,20 +334,6 @@ void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
       'message_B': message_B,
       'Player_A_Coord': Player_A_Coord.toMap(),
       'Player_B_Coord': Player_B_Coord.toMap(),
-      'Frozen_trap_A': Frozen_trap_A.toMap(),
-      'Frozen_trap_B': Frozen_trap_B.toMap(),
-      'DoorTeleport_A': DoorTeleport_A.toMap(),
-      'DoorTeleport_B': DoorTeleport_B.toMap(),
-      'A_FrozenInstalled': A_FrozenInstalled,
-      'B_FrozenInstalled': B_FrozenInstalled,
-      'A_DoorInstalled': A_DoorInstalled,
-      'B_DoorInstalled': B_DoorInstalled,
-      'A_ExitInstalled': A_ExitInstalled,
-      'B_ExitInstalled': B_ExitInstalled,
-      'Player_A_Frozen': Player_A_Frozen,
-      'Player_B_Frozen': Player_B_Frozen,
-      'ExitTeleport_A': ExitTeleport_A.toMap(),
-      'ExitTeleport_B': ExitTeleport_B.toMap(),
     };
   }
 
@@ -406,26 +349,6 @@ void countRadiusAroundPlayer_B(int shaddowRadius, bool withBorder) {
           Coordinates.fromMap(map['Player_A_Coord'] as Map<String, dynamic>),
       Player_B_Coord:
           Coordinates.fromMap(map['Player_B_Coord'] as Map<String, dynamic>),
-      Frozen_trap_A:
-          Coordinates.fromMap(map['Frozen_trap_A'] as Map<String, dynamic>),
-      Frozen_trap_B:
-          Coordinates.fromMap(map['Frozen_trap_B'] as Map<String, dynamic>),
-      DoorTeleport_A:
-          Coordinates.fromMap(map['DoorTeleport_A'] as Map<String, dynamic>),
-      DoorTeleport_B:
-          Coordinates.fromMap(map['DoorTeleport_B'] as Map<String, dynamic>),
-      A_FrozenInstalled: map['A_FrozenInstalled'] as bool,
-      B_FrozenInstalled: map['B_FrozenInstalled'] as bool,
-      A_DoorInstalled: map['A_DoorInstalled'] as bool,
-      B_DoorInstalled: map['B_DoorInstalled'] as bool,
-      A_ExitInstalled: map['A_ExitInstalled'] as bool,
-      B_ExitInstalled: map['B_ExitInstalled'] as bool,
-      Player_A_Frozen: map['Player_A_Frozen'] as int,
-      Player_B_Frozen: map['Player_B_Frozen'] as int,
-      ExitTeleport_A:
-          Coordinates.fromMap(map['ExitTeleport_A'] as Map<String, dynamic>),
-      ExitTeleport_B:
-          Coordinates.fromMap(map['ExitTeleport_B'] as Map<String, dynamic>),
     );
   }
 

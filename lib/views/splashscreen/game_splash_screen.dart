@@ -11,7 +11,8 @@ class GameSplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(AnimatedSplashScreen(
+    return Shell(
+      content: AnimatedSplashScreen(
       duration: 1000,
       splash: Image.asset("assets/images/maze_preview.jpg"),
       nextScreen: PauseSplashScreen(),

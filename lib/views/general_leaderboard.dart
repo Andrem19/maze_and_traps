@@ -22,7 +22,8 @@ class GeneralLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LeadersController>(builder: (controller) {
-      return Shell.getShell(Scaffold(
+      return Shell(
+      content: Scaffold(
         appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'LEADERBOARD'),
         body: controller.isLoading
             ? const Center(child: CircularProgressIndicator())

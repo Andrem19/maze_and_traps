@@ -36,7 +36,8 @@ class _PauseSplashScreenState extends State<PauseSplashScreen> {
         onTap: () async {
           controller.playDoor();
         },
-        child: Shell.getShell(Scaffold(
+        child: Shell(
+      content: Scaffold(
           body: Container(
             width: double.infinity,
             height: double.infinity,

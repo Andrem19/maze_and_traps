@@ -12,7 +12,8 @@ class MapChampions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell.getShell(
+    return Shell(
+      content: 
       GetBuilder<MapsMenuController>(
         builder: (controller) {
           return Scaffold(
