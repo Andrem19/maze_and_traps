@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class Trap {
+  int id;
   String name;
   String description;
   int damage;
@@ -10,6 +11,7 @@ class Trap {
   int cost;
   int weight;
   Trap({
+    required this.id,
     required this.name,
     required this.description,
     required this.damage,
@@ -20,6 +22,7 @@ class Trap {
   });
 
   Trap copyWith({
+    int? id,
     String? name,
     String? description,
     int? damage,
@@ -29,6 +32,7 @@ class Trap {
     int? weight,
   }) {
     return Trap(
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       damage: damage ?? this.damage,
@@ -41,6 +45,7 @@ class Trap {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'name': name,
       'description': description,
       'damage': damage,
@@ -53,6 +58,7 @@ class Trap {
 
   factory Trap.fromMap(Map<String, dynamic> map) {
     return Trap(
+      id: map['id'] as int,
       name: map['name'] as String,
       description: map['description'] as String,
       damage: map['damage'] as int,
@@ -65,11 +71,12 @@ class Trap {
 
   String toJson() => json.encode(toMap());
 
-  factory Trap.fromJson(String source) => Trap.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Trap.fromJson(String source) =>
+      Trap.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Trap(name: $name, description: $description, damage: $damage, baff: $baff, img: $img, cost: $cost, weight: $weight)';
+    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, cost: $cost, weight: $weight)';
   }
 
   @override
@@ -77,6 +84,7 @@ class Trap {
     if (identical(this, other)) return true;
   
     return 
+      other.id == id &&
       other.name == name &&
       other.description == description &&
       other.damage == damage &&
@@ -88,7 +96,8 @@ class Trap {
 
   @override
   int get hashCode {
-    return name.hashCode ^
+    return id.hashCode ^
+      name.hashCode ^
       description.hashCode ^
       damage.hashCode ^
       baff.hashCode ^

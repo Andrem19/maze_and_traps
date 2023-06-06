@@ -55,7 +55,6 @@ class MapTrainingActController extends GetxController {
     super.onInit();
     mazeMap = EditorPageMap.createStruct(TestData.createTestMap()).obs;
     gameInfo = GameInfo.createEmptyGameInfo(mainCtrl.currentGameMap!).obs;
-    gameInfo.value.myRole = 'A';
 
     mainCtrl.changeStatusInGame(true);
     await setSettings();
@@ -87,7 +86,7 @@ class MapTrainingActController extends GetxController {
 
   Future<void> timerCode() async {
     moveDirection.value = mainCtrl.moveDir;
-    mazeMap.value.MovePlayer_A(moveDirection.value, gameInfo.value);
+    MovePlayer_A(moveDirection.value);
 
     double distance = mazeMap.value.calculateDistance();
     distance = double.parse(distance.toStringAsFixed(2));
@@ -183,5 +182,57 @@ class MapTrainingActController extends GetxController {
         mainCtrl.globalSettings.default_health.toDouble();
     shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
     durationOfAct = mainCtrl.globalSettings.timer_back_for_training;
+  }
+
+  void MovePlayer_A(Direction direction) {
+    switch (direction) {
+      case Direction.up:
+        if (mazeMap.value.Player_A_Coord.row != 0) {
+          if (!mazeMap
+              .value
+              .mazeMap[mazeMap.value.Player_A_Coord.row - 1]
+                  [mazeMap.value.Player_A_Coord.col]
+              .wall) {
+            mazeMap.value.Player_A_Coord.row -= 1;
+          }
+        }
+        break;
+      case Direction.down:
+        if (mazeMap.value.Player_A_Coord.row !=
+            mazeMap.value.mazeMap.length - 1) {
+          if (!mazeMap
+              .value
+              .mazeMap[mazeMap.value.Player_A_Coord.row + 1]
+                  [mazeMap.value.Player_A_Coord.col]
+              .wall) {
+            mazeMap.value.Player_A_Coord.row += 1;
+          }
+        }
+        break;
+      case Direction.left:
+        if (mazeMap.value.Player_A_Coord.col != 0) {
+          if (!mazeMap
+              .value
+              .mazeMap[mazeMap.value.Player_A_Coord.row]
+                  [mazeMap.value.Player_A_Coord.col - 1]
+              .wall) {
+            mazeMap.value.Player_A_Coord.col -= 1;
+          }
+        }
+        break;
+      case Direction.right:
+        if (mazeMap.value.Player_A_Coord.col !=
+            mazeMap.value.mazeMap[0].length - 1) {
+          if (!mazeMap
+              .value
+              .mazeMap[mazeMap.value.Player_A_Coord.row]
+                  [mazeMap.value.Player_A_Coord.col + 1]
+              .wall) {
+            mazeMap.value.Player_A_Coord.col += 1;
+          }
+        }
+        break;
+      default:
+    }
   }
 }

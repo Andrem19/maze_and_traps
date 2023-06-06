@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:mazeandtraps/controllers/traps_controller.dart';
 
 import '../../controllers/main_game_controller.dart';
 import '../../models/trap.dart';
@@ -11,6 +12,7 @@ class TrapsShow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var trapsController = Get.find<TrapsController>();
     return GetBuilder<MainGameController>(builder: (controller) {
       List<Trap> backpack = [];
       for (var i = 0; i < 5; i++) {
@@ -30,7 +32,8 @@ class TrapsShow extends StatelessWidget {
                   return InkWell(
                       onTap: () {
                         if (element.name != 'empty') {
-                          // CustomDialog.getDialogTrapInfo(element);
+                          trapsController.traps(element);
+
                         }
                       },
                       child: Card(
@@ -44,16 +47,20 @@ class TrapsShow extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: element.img == ''? null : Opacity(
-                                opacity: 0.5,
-                                child: Image.asset(element.img
-                                ),
-                              ),
+                              child: element.img == ''
+                                  ? null
+                                  : Opacity(
+                                      opacity: 0.5,
+                                      child: Image.asset(element.img),
+                                    ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(element.name == 'empty' ? '' : element.name, style: const TextStyle(fontSize: 10),),
+                                Text(
+                                  element.name == 'empty' ? '' : element.name,
+                                  style: const TextStyle(fontSize: 10),
+                                ),
                               ],
                             )
                           ],

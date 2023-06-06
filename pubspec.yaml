@@ -79,22 +79,27 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/button.png
     - assets/images/backpack.png
     - assets/images/scrolls.png
     - assets/images/texture_Wall.png
     - assets/images/trap_default.png
     - assets/images/maze_preview.jpg
     - assets/images/maze_icon.png
-    - assets/images/snowflake.jpg
-    - assets/images/teleport.jpg
     - assets/images/texture_Background.png
-    - assets/images/texture_floor1.png
     - assets/images/texture_ButtonIdle.png
     - assets/images/control/texture_SwipeDown.png
     - assets/images/control/texture_SwipeLeft.png
     - assets/images/control/texture_SwipeRight.png
     - assets/images/control/texture_SwipeUp.png
+    - assets/images/trap_Icons/texture_FrostTrap.png
+    - assets/images/trap_Icons/texture_blindingTrap.png
+    - assets/images/trap_Icons/texture_bomb.png
+    - assets/images/trap_Icons/texture_BootOfSpeed.png
+    - assets/images/trap_Icons/texture_Ghost.png
+    - assets/images/trap_Icons/texture_HealingTrap.png
+    - assets/images/trap_Icons/texture_Knife.png
+    - assets/images/trap_Icons/texture_PoisonTrap.png
+    - assets/images/trap_Icons/texture_Teleport.png
     - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see

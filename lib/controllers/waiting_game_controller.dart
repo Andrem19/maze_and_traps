@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
+import 'package:mazeandtraps/models/gameInfoCloud.dart';
 
 import '../keys.dart';
 import '../models/game_info.dart';
@@ -107,9 +108,9 @@ class WaitingGameController extends GetxController {
           'Player_A_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
           'Player_B_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
           'GameInfo_A':
-              GameInfo.createEmptyGameInfo(mainCtrl.currentGameMap!).toJson(),
+              GameInfoCloud.createEmptyForServer().toJson(),
           'GameInfo_B':
-              GameInfo.createEmptyGameInfo(mainCtrl.currentGameMap!).toJson(),
+              GameInfoCloud.createEmptyForServer().toJson(),
           'vinner': '',
           'gameStatus': 'searching',
           'date': DateTime.now(),

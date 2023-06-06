@@ -31,8 +31,6 @@ class TestData {
     maze[maze.length - 1][0].is_A_START = true;
     return MazeMap(
         mazeMap: maze,
-        message_A: '',
-        message_B: '',
         Player_B_Coord:
             Coordinates(isInit: true, row: 0, col: maze[0].length - 1),
         Player_A_Coord: Coordinates(isInit: true, row: maze.length - 1, col: 0),);

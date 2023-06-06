@@ -12,22 +12,15 @@ enum Direction { up, down, left, right }
 
 class MazeMap {
   List<List<NodeCube>> mazeMap;
-  String message_A;
-  String message_B;
   Coordinates Player_A_Coord;
   Coordinates Player_B_Coord;
   MazeMap({
     required this.mazeMap,
-    required this.message_A,
-    required this.message_B,
     required this.Player_A_Coord,
     required this.Player_B_Coord,
   });
 
   void reverse() {
-    String tempMessage = message_A;
-    message_A = message_B;
-    message_B = tempMessage;
 
     Coordinates tempCoords = Player_A_Coord;
     Player_A_Coord = Player_B_Coord;
@@ -130,121 +123,6 @@ class MazeMap {
     }
   }
 
-  bool MovePlayer_A(Direction direction, GameInfo gameInfo) {
-    if (gameInfo.Player_A_Frozen != 0) {
-      gameInfo.Player_A_Frozen -= 1;
-      return false;
-    }
-    message_A = '';
-    switch (direction) {
-      case Direction.up:
-        if (Player_A_Coord.row != 0) {
-          if (!mazeMap[Player_A_Coord.row - 1][Player_A_Coord.col].wall) {
-            Player_A_Coord.row -= 1;
-          }
-        }
-        break;
-      case Direction.down:
-        if (Player_A_Coord.row != mazeMap.length - 1) {
-          if (!mazeMap[Player_A_Coord.row + 1][Player_A_Coord.col].wall) {
-            Player_A_Coord.row += 1;
-          }
-        }
-        break;
-      case Direction.left:
-        if (Player_A_Coord.col != 0) {
-          if (!mazeMap[Player_A_Coord.row][Player_A_Coord.col - 1].wall) {
-            Player_A_Coord.col -= 1;
-          }
-        }
-        break;
-      case Direction.right:
-        if (Player_A_Coord.col != mazeMap[0].length - 1) {
-          if (!mazeMap[Player_A_Coord.row][Player_A_Coord.col + 1].wall) {
-            Player_A_Coord.col += 1;
-          }
-        }
-        break;
-      default:
-    }
-
-    if (gameInfo.Frozen_trap_B.row == Player_A_Coord.row &&
-        gameInfo.Frozen_trap_B.col == Player_A_Coord.col) {
-      gameInfo.Player_A_Frozen = 8;
-      FlameAudio.play('freeze.wav');
-      message_B = 'Player was frozen';
-    }
-
-    if (gameInfo.DoorTeleport_B.row == Player_A_Coord.row &&
-        gameInfo.DoorTeleport_B.col == Player_A_Coord.col &&
-        gameInfo.ExitTeleport_B.isInit) {
-      Player_A_Coord.row = gameInfo.ExitTeleport_B.row;
-      Player_A_Coord.col = gameInfo.ExitTeleport_B.col;
-      message_A = 'Teleport trap';
-      FlameAudio.play('teleport.mp3');
-      gameInfo.ExitTeleport_B.isInit = false;
-      return true;
-    }
-    return false;
-  }
-
-  bool MovePlayer_B(Direction direction, GameInfo gameInfo) {
-    if (gameInfo.Player_B_Frozen != 0) {
-      gameInfo.Player_B_Frozen -= 1;
-      return false;
-    }
-    message_B = '';
-    switch (direction) {
-      case Direction.up:
-        if (Player_B_Coord.row != 0) {
-          if (!mazeMap[Player_B_Coord.row - 1][Player_B_Coord.col].wall) {
-            Player_B_Coord.row -= 1;
-          }
-        }
-        break;
-      case Direction.down:
-        if (Player_B_Coord.row != mazeMap.length - 1) {
-          if (!mazeMap[Player_B_Coord.row + 1][Player_B_Coord.col].wall) {
-            Player_B_Coord.row += 1;
-          }
-        }
-        break;
-      case Direction.left:
-        if (Player_B_Coord.col != 0) {
-          if (!mazeMap[Player_B_Coord.row][Player_B_Coord.col - 1].wall) {
-            Player_B_Coord.col -= 1;
-          }
-        }
-        break;
-      case Direction.right:
-        if (Player_B_Coord.col != mazeMap[0].length - 1) {
-          if (!mazeMap[Player_B_Coord.row][Player_B_Coord.col + 1].wall) {
-            Player_B_Coord.col += 1;
-          }
-        }
-        break;
-      default:
-    }
-    if (gameInfo.Frozen_trap_A.row == Player_B_Coord.row &&
-        gameInfo.Frozen_trap_A.col == Player_B_Coord.col) {
-      gameInfo.Player_B_Frozen = 8;
-      FlameAudio.play('freeze.wav');
-      message_B = 'Player was frozen';
-    }
-
-    if (gameInfo.DoorTeleport_A.row == Player_B_Coord.row &&
-        gameInfo.DoorTeleport_A.col == Player_B_Coord.col &&
-        gameInfo.ExitTeleport_A.isInit) {
-      Player_B_Coord.row = gameInfo.ExitTeleport_A.row;
-      Player_B_Coord.col = gameInfo.ExitTeleport_A.col;
-      message_B = 'Teleport trap';
-      FlameAudio.play('teleport.mp3');
-      gameInfo.ExitTeleport_A.isInit = false;
-      return true;
-    }
-    return false;
-  }
-
   bool checkTheFinish_A() {
     if (Player_A_Coord.row == 0 &&
         Player_A_Coord.col == mazeMap[0].length - 1) {
@@ -261,66 +139,6 @@ class MazeMap {
     return false;
   }
 
-  // void instalFrozen_A() {
-  //   if (!A_FrozenInstalled) {
-  //     Frozen_trap_A = Coordinates(
-  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-  //     A_FrozenInstalled = true;
-  //     message_A = 'Frozen trap instaled';
-  //     FlameAudio.play('freeze.wav');
-  //   }
-  // }
-
-  // void instalDoor_A() {
-  //   if (!A_DoorInstalled) {
-  //     DoorTeleport_A = Coordinates(
-  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-  //     A_DoorInstalled = true;
-  //     message_A = 'Door trap instaled';
-  //   }
-  // }
-
-  // void instalExit_A() {
-  //   if (!A_ExitInstalled && A_DoorInstalled) {
-  //     A_ExitInstalled = true;
-  //     ExitTeleport_A = Coordinates(
-  //         isInit: true, row: Player_A_Coord.row, col: Player_A_Coord.col);
-  //     message_A = 'Exit trap instaled';
-  //   } else {
-  //     message_A = 'first you should to install the door';
-  //   }
-  // }
-
-  // void instalFrozen_B() {
-  //   if (!B_FrozenInstalled) {
-  //     Frozen_trap_B = Coordinates(
-  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-  //     B_FrozenInstalled = true;
-  //     message_B = 'Frozen trap instaled';
-  //     FlameAudio.play('freeze.wav');
-  //   }
-  // }
-
-  // void instalDoor_B() {
-  //   if (!B_DoorInstalled) {
-  //     DoorTeleport_B = Coordinates(
-  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-  //     B_DoorInstalled = true;
-  //     message_B = 'Door trap instaled';
-  //   }
-  // }
-
-  // void instalExit_B() {
-  //   if (!B_ExitInstalled && B_DoorInstalled) {
-  //     B_ExitInstalled = true;
-  //     ExitTeleport_B = Coordinates(
-  //         isInit: true, row: Player_B_Coord.row, col: Player_B_Coord.col);
-  //     message_B = 'Exit trap instaled';
-  //   } else {
-  //     message_B = 'first you should to install the door';
-  //   }
-  // }
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'mazeMap': mazeMap.asMap().map((key, value) {
@@ -330,8 +148,6 @@ class MazeMap {
               return MapEntry(k.toString(), v.toMap());
             }));
       }),
-      'message_A': message_A,
-      'message_B': message_B,
       'Player_A_Coord': Player_A_Coord.toMap(),
       'Player_B_Coord': Player_B_Coord.toMap(),
     };
@@ -343,8 +159,6 @@ class MazeMap {
             (entry) => List<NodeCube>.from(
                 entry.value.entries.map((e) => NodeCube.fromMap(e.value))),
           )),
-      message_A: map['message_A'] as String,
-      message_B: map['message_B'] as String,
       Player_A_Coord:
           Coordinates.fromMap(map['Player_A_Coord'] as Map<String, dynamic>),
       Player_B_Coord:

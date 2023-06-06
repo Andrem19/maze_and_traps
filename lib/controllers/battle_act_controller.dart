@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
+import 'package:mazeandtraps/controllers/traps_controller.dart';
+import 'package:mazeandtraps/models/gameInfoCloud.dart';
 
 import '../keys.dart';
 import '../models/game_info.dart';
@@ -20,6 +22,7 @@ class BattleActController extends GetxController {
   Rx<String> gameId = ''.obs;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   MainGameController mainCtrl = Get.find<MainGameController>();
+  late TrapsController _trapsController;
   Rx<GameInfo> gameInfo = GameInfo.createEmptyGameInfo(
           Get.find<MainGameController>().currentGameMap!)
       .obs;
@@ -61,6 +64,10 @@ class BattleActController extends GetxController {
     oldSubscription?.cancel();
     _stream?.cancel();
     super.onClose();
+  }
+
+  void initialize(TrapsController trapsController) {
+    _trapsController = trapsController;
   }
 
   void countFinal(String vinner) async {
@@ -114,6 +121,7 @@ class BattleActController extends GetxController {
   }
 
   Future<void> setUpVars() async {
+    late TrapsController trapsController;
     mazeMap = mainCtrl.YourCurrentRole == 'B'
         ? mainCtrl.currentGameMap!.reversePlus().obs
         : mainCtrl.currentGameMap!.obs;
@@ -123,9 +131,9 @@ class BattleActController extends GetxController {
     mazeHight = mazeMap.value.mazeMap[0].length;
     shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
     timerDuration = mainCtrl.globalSettings.speed_1;
-    movePlayerA = mazeMap.value.MovePlayer_A;
+    // movePlayerA = mazeMap.value.MovePlayer_A;
     countRadiusAroundPlayerA = mazeMap.value.countRadiusAroundPlayer_A;
-    movePlayerB = mazeMap.value.MovePlayer_B;
+    // movePlayerB = mazeMap.value.MovePlayer_B;
     countRadiusAroundPlayerB = mazeMap.value.countRadiusAroundPlayer_B;
     checkTheFinishA = mazeMap.value.checkTheFinish_A;
     checkTheFinishB = mazeMap.value.checkTheFinish_B;
@@ -156,26 +164,16 @@ class BattleActController extends GetxController {
         if (yourRole == 'A') {
           final gameInfoB = data['GameInfo_B'];
           final playerBCoord = data['Player_B_Coord'];
-
           coordinatesOfEnemy_for_A(gameInfoB, playerBCoord);
           final gameStatus = data['gameStatus'];
-          final bUsedTeleport = data['B_used_teleport'];
-          mazeMap.value.message_A =
-              bUsedTeleport ? 'Your enemy fell in your trap teleport' : '';
-
           if (gameStatus == 'finish') {
             A_finish_game();
           }
         } else if (yourRole == 'B') {
           final gameInfoA = data['GameInfo_A'];
           final playerACoord = data['Player_A_Coord'];
-
           coordinatesOfEnemy_for_B(gameInfoA, playerACoord);
           gameStatus = data['gameStatus'];
-          final aUsedTeleport = data['A_used_teleport'];
-          mazeMap.value.message_B =
-              aUsedTeleport ? 'Your enemy fell in your trap teleport' : '';
-
           if (gameStatus == 'finish') {
             B_finish_game();
           }
@@ -197,30 +195,22 @@ class BattleActController extends GetxController {
 
   updateUI() {
     moveDirection.value = mainCtrl.moveDir;
-
+    _trapsController.checkAllTraps();
     if (yourRole == 'A') {
-      bool aUsedTeleport = movePlayerA(moveDirection.value, gameInfo.value);
+      MovePlayer(moveDirection.value);
       countRadiusAroundPlayerA(shaddowRadius, true);
-      textMessage.value = mazeMap.value.message_A;
-      mazeMap.value.message_A =
-          aUsedTeleport ? 'Your enemy fell in your trap teleport' : '';
-      if (aUsedTeleport) {
-        // changeUsedteleport();
-      }
+      // textMessage.value = mazeMap.value.message_A;
+
       final res = checkTheFinishA();
       if (res) {
         countFinal('A');
         mainCtrl.vinner = 'A';
       }
     } else if (yourRole == 'B') {
-      bool bUsedTeleport = movePlayerB(moveDirection.value, gameInfo.value);
+      MovePlayer(moveDirection.value);
       countRadiusAroundPlayerB(shaddowRadius, true);
-      textMessage.value = mazeMap.value.message_B;
-      mazeMap.value.message_B =
-          bUsedTeleport ? 'Your enemy fell in your trap teleport' : '';
-      if (bUsedTeleport) {
-        // changeUsedteleport();
-      }
+      // textMessage.value = mazeMap.value.message_B;
+
       final res = checkTheFinishB();
       if (res) {
         countFinal('B');
@@ -259,7 +249,7 @@ class BattleActController extends GetxController {
           .collection('gameBattle')
           .doc(gameId.value)
           .update({
-        'GameInfo_A': gameInfo.toJson(),
+        'GameInfo_A': gameInfo.GameInfoToCloud(yourRole).toJson(),
         'Player_A_Coord': Player_L_Coord.toJson(),
       });
     } else if (role == 'B') {
@@ -267,20 +257,23 @@ class BattleActController extends GetxController {
           .collection('gameBattle')
           .doc(gameId.value)
           .update({
-        'GameInfo_B': gameInfo.toJson(),
+        'GameInfo_B': gameInfo.GameInfoToCloud(yourRole).toJson(),
         'Player_B_Coord': Player_L_Coord.toJson(),
       });
     }
   }
 
   void coordinatesOfEnemy_for_A(String gameInfo_B, String Player_B_Coord) {
-    var gameInfo = GameInfo.fromJson(gameInfo_B);
+    var gameI = GameInfoCloud.fromJson(gameInfo_B);
+    gameInfo.value = gameI.CloudToGameInfo(yourRole, gameInfo.value);
+
     mazeMap.value.Player_B_Coord = Coordinates.fromJson(Player_B_Coord);
   }
 
   void coordinatesOfEnemy_for_B(String gameInfo_A, String Player_A_Coord) {
-    var gameInfo =
-        GameInfo.reverseGameInfo(GameInfo.fromJson(gameInfo_A), mazeMap.value);
+    var gameI = GameInfoCloud.fromJson(gameInfo_A);
+    gameInfo.value = GameInfo.reverseGameInfo(gameI.CloudToGameInfo(yourRole, gameInfo.value), mazeMap.value);
+    
     mazeMap.value.Player_A_Coord = Coordinates.fromJson(Player_A_Coord);
   }
 
@@ -315,4 +308,164 @@ class BattleActController extends GetxController {
         col: (hight - 1) - Player_Coord.col);
     return Player_L_Coord;
   }
+
+  void MovePlayer(Direction direction) {
+    Coordinates player;
+    if (yourRole == 'A') {
+      player = mazeMap.value.Player_A_Coord;
+    } else if (yourRole == 'B') {
+      player = mazeMap.value.Player_B_Coord;
+    } else {
+      return;
+    }
+    if (_trapsController.frozenDeactivation()) {
+      return;
+    }
+    switch (direction) {
+      case Direction.up:
+        if (player.row != 0) {
+          if (!mazeMap.value.mazeMap[player.row - 1][player.col].wall) {
+            player.row -= 1;
+          }
+        }
+        break;
+      case Direction.down:
+        if (player.row != mazeMap.value.mazeMap.length - 1) {
+          if (!mazeMap.value.mazeMap[player.row + 1][player.col].wall) {
+            player.row += 1;
+          }
+        }
+        break;
+      case Direction.left:
+        if (player.col != 0) {
+          if (!mazeMap.value.mazeMap[player.row][player.col - 1].wall) {
+            player.col -= 1;
+          }
+        }
+        break;
+      case Direction.right:
+        if (player.col != mazeMap.value.mazeMap[0].length - 1) {
+          if (!mazeMap.value.mazeMap[player.row][player.col + 1].wall) {
+            player.col += 1;
+          }
+        }
+        break;
+      default:
+    }
+    if (yourRole == 'A') {
+      mazeMap.value.Player_A_Coord = player;
+    } else if (yourRole == 'B') {
+      mazeMap.value.Player_B_Coord = player;
+    }
+  }
+
+  // void MovePlayer_A(Direction direction) {
+  //   if (_trapsController.frozenDeactivation()) {
+  //     return;
+  //   }
+  //   switch (direction) {
+  //     case Direction.up:
+  //       if (mazeMap.value.Player_A_Coord.row != 0) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_A_Coord.row - 1]
+  //                 [mazeMap.value.Player_A_Coord.col]
+  //             .wall) {
+  //           mazeMap.value.Player_A_Coord.row -= 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.down:
+  //       if (mazeMap.value.Player_A_Coord.row !=
+  //           mazeMap.value.mazeMap.length - 1) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_A_Coord.row + 1]
+  //                 [mazeMap.value.Player_A_Coord.col]
+  //             .wall) {
+  //           mazeMap.value.Player_A_Coord.row += 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.left:
+  //       if (mazeMap.value.Player_A_Coord.col != 0) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_A_Coord.row]
+  //                 [mazeMap.value.Player_A_Coord.col - 1]
+  //             .wall) {
+  //           mazeMap.value.Player_A_Coord.col -= 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.right:
+  //       if (mazeMap.value.Player_A_Coord.col !=
+  //           mazeMap.value.mazeMap[0].length - 1) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_A_Coord.row]
+  //                 [mazeMap.value.Player_A_Coord.col + 1]
+  //             .wall) {
+  //           mazeMap.value.Player_A_Coord.col += 1;
+  //         }
+  //       }
+  //       break;
+  //     default:
+  //   }
+  // }
+
+  // void MovePlayer_B(Direction direction) {
+  //   if (_trapsController.frozenDeactivation()) {
+  //     return;
+  //   }
+  //   switch (direction) {
+  //     case Direction.up:
+  //       if (mazeMap.value.Player_B_Coord.row != 0) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_B_Coord.row - 1]
+  //                 [mazeMap.value.Player_B_Coord.col]
+  //             .wall) {
+  //           mazeMap.value.Player_B_Coord.row -= 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.down:
+  //       if (mazeMap.value.Player_B_Coord.row !=
+  //           mazeMap.value.mazeMap.length - 1) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_B_Coord.row + 1]
+  //                 [mazeMap.value.Player_B_Coord.col]
+  //             .wall) {
+  //           mazeMap.value.Player_B_Coord.row += 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.left:
+  //       if (mazeMap.value.Player_B_Coord.col != 0) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_B_Coord.row]
+  //                 [mazeMap.value.Player_B_Coord.col - 1]
+  //             .wall) {
+  //           mazeMap.value.Player_B_Coord.col -= 1;
+  //         }
+  //       }
+  //       break;
+  //     case Direction.right:
+  //       if (mazeMap.value.Player_B_Coord.col !=
+  //           mazeMap.value.mazeMap[0].length - 1) {
+  //         if (!mazeMap
+  //             .value
+  //             .mazeMap[mazeMap.value.Player_B_Coord.row]
+  //                 [mazeMap.value.Player_B_Coord.col + 1]
+  //             .wall) {
+  //           mazeMap.value.Player_B_Coord.col += 1;
+  //         }
+  //       }
+  //       break;
+  //     default:
+  //   }
+  // }
 }

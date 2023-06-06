@@ -154,6 +154,7 @@ class TrapsAndShopController extends GetxController {
     } else {
       for (var i = 0; i < 12; i++) {
         Trap trap = Trap(
+            id: 0,
             name: 'empty',
             description: '',
             damage: 0,
@@ -176,6 +177,7 @@ class TrapsAndShopController extends GetxController {
     } else {
       for (var i = 0; i < 12; i++) {
         Trap trap = Trap(
+            id: 0,
             name: 'empty',
             description: '',
             damage: 0,
@@ -308,7 +310,6 @@ class TrapsAndShopController extends GetxController {
       if (weightP == 2) {
         weightP = 3;
       }
-      
 
       weight += 1;
       await firebaseFirestore.collection('users').doc(main.userUid).update({
