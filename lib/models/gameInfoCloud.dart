@@ -37,15 +37,17 @@ class GameInfoCloud {
     );
   }
 
-  GameInfo CloudToGameInfo(String role, GameInfo oldGI) {
+  GameInfo CloudToGameInfo(String role, GameInfo oldGI, String scrollOwner) {
     if (role == 'A') {
       return GameInfo(
+          scrolOwner: scrollOwner,
           Teleport_A: oldGI.Teleport_A,
           Teleport_B: teleport,
           Frozen_trap_A: oldGI.Frozen_trap_A,
           Frozen_trap_B: frozen);
     } else {
       return GameInfo(
+          scrolOwner: scrollOwner,
           Teleport_A: teleport,
           Teleport_B: oldGI.Teleport_B,
           Frozen_trap_A: frozen,

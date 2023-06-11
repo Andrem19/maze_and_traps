@@ -11,8 +11,7 @@ class EndGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shell(
-      content: 
-      Scaffold(
+      content: Scaffold(
         body: GetBuilder<MainGameController>(
           builder: (controller) {
             return Center(
@@ -31,12 +30,14 @@ class EndGameScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  controller.randomRival ? Text(
-                    controller.YourCurrentRole == controller.vinner
-                        ? '+ 2 points'
-                        : '- 1 point',
-                    style: const TextStyle(fontSize: 18),
-                  ) : SizedBox(),
+                  controller.randomRival
+                      ? Text(
+                          controller.YourCurrentRole == controller.vinner
+                              ? '+ 2 points'
+                              : '- 1 point',
+                          style: const TextStyle(fontSize: 18),
+                        )
+                      : SizedBox(),
                   ElevatedButton(
                     onPressed: () {
                       controller.deleteGameInstant();

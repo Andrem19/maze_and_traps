@@ -9,6 +9,7 @@ import '../models/maze_map.dart';
 import '../models/node.dart';
 import 'compare_coord.dart';
 class CreateStuffWidget extends StatelessWidget {
+  final double opacityValue = 0.7;
   final Coordinates playerACoord;
   final Coordinates playerBCoord;
   final NodeCube nodeProto;
@@ -43,6 +44,11 @@ class CreateStuffWidget extends StatelessWidget {
         return Player_B.getPlayer(Colors.green, Color(0xFF306D31));
       }
     } else {
+      if (nodeProto.row == 17 && nodeProto.col == 10 && gameInfo.scrolOwner == 'none') {
+        return Container(
+            child: Image.asset('assets/images/scrolls.png'),
+          );
+      }
       if (!nodeProto.isShaddow &&
           !Compare.compareCoord(playerACoord, nodeProto)) {
         if ((myRole == 'A' && Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto)) ||

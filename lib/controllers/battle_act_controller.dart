@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -36,6 +37,7 @@ class BattleActController extends GetxController {
   Rx<String> timerText = ''.obs;
 
   String gameStatus = '';
+  String scrollOwner = 'none';
   String yourRole = 'A';
   Rx<String> textMessage = ''.obs;
   Rx<Direction> moveDirection = Direction.up.obs;
@@ -59,10 +61,12 @@ class BattleActController extends GetxController {
   @override
   void onClose() async {
     await playerNotReady();
+    rewardCount(scrollOwner);
     mainCtrl.deleteGameInstant();
     mainCtrl.changeStatusInGame(false);
     oldSubscription?.cancel();
     _stream?.cancel();
+    listner.cancel();
     super.onClose();
   }
 
@@ -79,7 +83,6 @@ class BattleActController extends GetxController {
           .update({
         'vinner': vinner,
       });
-      listner.cancel();
       Get.offNamed(Routes.END_GAME_SCREEN);
     } on FirebaseException catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(
@@ -131,9 +134,7 @@ class BattleActController extends GetxController {
     mazeHight = mazeMap.value.mazeMap[0].length;
     shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
     timerDuration = mainCtrl.globalSettings.speed_1;
-    // movePlayerA = mazeMap.value.MovePlayer_A;
     countRadiusAroundPlayerA = mazeMap.value.countRadiusAroundPlayer_A;
-    // movePlayerB = mazeMap.value.MovePlayer_B;
     countRadiusAroundPlayerB = mazeMap.value.countRadiusAroundPlayer_B;
     checkTheFinishA = mazeMap.value.checkTheFinish_A;
     checkTheFinishB = mazeMap.value.checkTheFinish_B;
@@ -151,6 +152,25 @@ class BattleActController extends GetxController {
     update();
   }
 
+  void rewardCount(String scrollOwner) async {
+    if (yourRole != scrollOwner) {
+      return;
+    }
+    var doc = await firebaseFirestore
+        .collection('wisdomScrolls')
+        .doc('TO3pay0R0byjSLMinIXq')
+        .get();
+    var data = doc.data();
+    List<dynamic> scrollsCollection = data!['listOfScrolls'];
+    mainCtrl.scrollsList
+        .add(scrollsCollection[Random().nextInt(scrollsCollection.length)]);
+    mainCtrl.scrolls.value = mainCtrl.scrollsList.length;
+    mainCtrl.update();
+    await firebaseFirestore.collection('users').doc(mainCtrl.userUid).update({
+      'scrolls': mainCtrl.scrollsList,
+    });
+  }
+
   void gameEngine() async {
     await setUpVars();
     userControl();
@@ -164,7 +184,8 @@ class BattleActController extends GetxController {
         if (yourRole == 'A') {
           final gameInfoB = data['GameInfo_B'];
           final playerBCoord = data['Player_B_Coord'];
-          coordinatesOfEnemy_for_A(gameInfoB, playerBCoord);
+          scrollOwner = data['scrollOwner'];
+          coordinatesOfEnemy_for_A(gameInfoB, playerBCoord, scrollOwner);
           final gameStatus = data['gameStatus'];
           if (gameStatus == 'finish') {
             A_finish_game();
@@ -172,7 +193,8 @@ class BattleActController extends GetxController {
         } else if (yourRole == 'B') {
           final gameInfoA = data['GameInfo_A'];
           final playerACoord = data['Player_A_Coord'];
-          coordinatesOfEnemy_for_B(gameInfoA, playerACoord);
+          scrollOwner = data['scrollOwner'];
+          coordinatesOfEnemy_for_B(gameInfoA, playerACoord, scrollOwner);
           gameStatus = data['gameStatus'];
           if (gameStatus == 'finish') {
             B_finish_game();
@@ -217,7 +239,9 @@ class BattleActController extends GetxController {
         mainCtrl.vinner = 'B';
       }
     }
-
+    if (scrollOwner == 'none') {
+      checkAndTakeScroll();
+    }
     changeState(
         yourRole == 'A'
             ? mazeMap.value.Player_A_Coord
@@ -239,6 +263,34 @@ class BattleActController extends GetxController {
     });
     // cancel the previous subscription to _stream
     oldSubscription.cancel();
+  }
+
+  void checkAndTakeScroll() async {
+    if (yourRole == 'A') {
+      if (mazeMap.value.Player_A_Coord.row == 17 &&
+          mazeMap.value.Player_A_Coord.col == 10) {
+        print(
+            '${mazeMap.value.Player_A_Coord.row} : ${mazeMap.value.Player_A_Coord.col}');
+        await firebaseFirestore
+            .collection('gameBattle')
+            .doc(gameId.value)
+            .update({
+          'scrollOwner': 'A',
+        });
+      }
+    } else if (yourRole == 'B') {
+      if (mazeMap.value.Player_B_Coord.row == 17 &&
+          mazeMap.value.Player_B_Coord.col == 10) {
+        print(
+            '${mazeMap.value.Player_A_Coord.row} : ${mazeMap.value.Player_A_Coord.col}');
+        await firebaseFirestore
+            .collection('gameBattle')
+            .doc(gameId.value)
+            .update({
+          'scrollOwner': 'B',
+        });
+      }
+    }
   }
 
   void changeState(
@@ -263,17 +315,22 @@ class BattleActController extends GetxController {
     }
   }
 
-  void coordinatesOfEnemy_for_A(String gameInfo_B, String Player_B_Coord) {
+  void coordinatesOfEnemy_for_A(
+      String gameInfo_B, String Player_B_Coord, String scrollOwner) {
     var gameI = GameInfoCloud.fromJson(gameInfo_B);
-    gameInfo.value = gameI.CloudToGameInfo(yourRole, gameInfo.value);
+    gameInfo.value =
+        gameI.CloudToGameInfo(yourRole, gameInfo.value, scrollOwner);
 
     mazeMap.value.Player_B_Coord = Coordinates.fromJson(Player_B_Coord);
   }
 
-  void coordinatesOfEnemy_for_B(String gameInfo_A, String Player_A_Coord) {
+  void coordinatesOfEnemy_for_B(
+      String gameInfo_A, String Player_A_Coord, String scrollOwner) {
     var gameI = GameInfoCloud.fromJson(gameInfo_A);
-    gameInfo.value = GameInfo.reverseGameInfo(gameI.CloudToGameInfo(yourRole, gameInfo.value), mazeMap.value);
-    
+    gameInfo.value = GameInfo.reverseGameInfo(
+        gameI.CloudToGameInfo(yourRole, gameInfo.value, scrollOwner),
+        mazeMap.value);
+
     mazeMap.value.Player_A_Coord = Coordinates.fromJson(Player_A_Coord);
   }
 

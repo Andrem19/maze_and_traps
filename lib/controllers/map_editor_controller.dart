@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/models/game_info.dart';
+import 'package:mazeandtraps/services/generate_maze.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../keys.dart';
 import '../models/maze_map.dart';
 import '../services/check_maze_valid.dart';
-import '../services/editor_page.dart';
 import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
@@ -25,7 +25,7 @@ class MapEditorController extends GetxController {
   TextEditingController mapNameController = TextEditingController();
 
   late Rx<MazeMap> _mazeMap =
-      EditorPageMap.createStruct(TestData.createTestMap()).obs;
+      TestData.createStruct(TestData.createTestMap()).obs;
 
   MazeMap get mazeMap => _mazeMap.value;
 
@@ -199,7 +199,7 @@ class MapEditorController extends GetxController {
   }
 
   void createNewMap() {
-    _mazeMap = EditorPageMap.createStruct(TestData.createTestMap()).obs;
+    _mazeMap = MazeGenerator.createNewMaze(TestData.createTestMap()).obs;
     Get.toNamed(Routes.MAP_EDITOR);
   }
 }

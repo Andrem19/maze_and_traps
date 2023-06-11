@@ -94,6 +94,7 @@ class WaitingGameController extends GetxController {
       try {
         var doc = await firebaseFirestore.collection('gameBattle').add({
           'randomRival': randomRival,
+          'scrollOwner': 'none',
           'IcantPlay': false,
           'MapName': mainCtrl.currentMapName,
           'Map_Id': mainCtrl.currentMapId,
@@ -168,7 +169,7 @@ class WaitingGameController extends GetxController {
           gameStatus.value = 'game';
           Get.offNamed(Routes.BATTLE_ACT);
           firebaseFirestore
-              .collection('gameList')
+              .collection('gameBattle')
               .doc(mainCtrl.currentmultiplayerGameId)
               .update({
             'gameStatus': 'game',

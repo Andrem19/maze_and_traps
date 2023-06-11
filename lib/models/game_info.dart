@@ -7,11 +7,13 @@ import 'maze_map.dart';
 import 'maze_map.dart';
 
 class GameInfo {
+  String scrolOwner;
   Coordinates Teleport_A;
   Coordinates Teleport_B;
   Coordinates Frozen_trap_A;
   Coordinates Frozen_trap_B;
   GameInfo({
+    required this.scrolOwner,
     required this.Teleport_A,
     required this.Teleport_B,
     required this.Frozen_trap_A,
@@ -20,6 +22,7 @@ class GameInfo {
 
   static GameInfo createEmptyGameInfo(MazeMap map) {
     return GameInfo(
+      scrolOwner: 'none',
       Frozen_trap_A: Coordinates(isInit: false, row: 0, col: 0),
       Frozen_trap_B: Coordinates(isInit: false, row: 0, col: 0),
       Teleport_A: Coordinates(isInit: false, row: 0, col: 0),
@@ -66,12 +69,14 @@ class GameInfo {
   }
 
   GameInfo copyWith({
+    String? scrolOwner,
     Coordinates? Teleport_A,
     Coordinates? Teleport_B,
     Coordinates? Frozen_trap_A,
     Coordinates? Frozen_trap_B,
   }) {
     return GameInfo(
+      scrolOwner: scrolOwner ?? this.scrolOwner,
       Teleport_A: Teleport_A ?? this.Teleport_A,
       Teleport_B: Teleport_B ?? this.Teleport_B,
       Frozen_trap_A: Frozen_trap_A ?? this.Frozen_trap_A,
@@ -81,6 +86,7 @@ class GameInfo {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'scrolOwner': scrolOwner,
       'Teleport_A': Teleport_A.toMap(),
       'Teleport_B': Teleport_B.toMap(),
       'Frozen_trap_A': Frozen_trap_A.toMap(),
@@ -90,14 +96,11 @@ class GameInfo {
 
   factory GameInfo.fromMap(Map<String, dynamic> map) {
     return GameInfo(
-      Teleport_A:
-          Coordinates.fromMap(map['Teleport_A'] as Map<String, dynamic>),
-      Teleport_B:
-          Coordinates.fromMap(map['Teleport_B'] as Map<String, dynamic>),
-      Frozen_trap_A:
-          Coordinates.fromMap(map['Frozen_trap_A'] as Map<String, dynamic>),
-      Frozen_trap_B:
-          Coordinates.fromMap(map['Frozen_trap_B'] as Map<String, dynamic>),
+      scrolOwner: map['scrolOwner'] as String,
+      Teleport_A: Coordinates.fromMap(map['Teleport_A'] as Map<String,dynamic>),
+      Teleport_B: Coordinates.fromMap(map['Teleport_B'] as Map<String,dynamic>),
+      Frozen_trap_A: Coordinates.fromMap(map['Frozen_trap_A'] as Map<String,dynamic>),
+      Frozen_trap_B: Coordinates.fromMap(map['Frozen_trap_B'] as Map<String,dynamic>),
     );
   }
 
@@ -108,24 +111,27 @@ class GameInfo {
 
   @override
   String toString() {
-    return 'GameInfo(Teleport_A: $Teleport_A, Teleport_B: $Teleport_B, Frozen_trap_A: $Frozen_trap_A, Frozen_trap_B: $Frozen_trap_B)';
+    return 'GameInfo(scrolOwner: $scrolOwner, Teleport_A: $Teleport_A, Teleport_B: $Teleport_B, Frozen_trap_A: $Frozen_trap_A, Frozen_trap_B: $Frozen_trap_B)';
   }
 
   @override
   bool operator ==(covariant GameInfo other) {
     if (identical(this, other)) return true;
-
-    return other.Teleport_A == Teleport_A &&
-        other.Teleport_B == Teleport_B &&
-        other.Frozen_trap_A == Frozen_trap_A &&
-        other.Frozen_trap_B == Frozen_trap_B;
+  
+    return 
+      other.scrolOwner == scrolOwner &&
+      other.Teleport_A == Teleport_A &&
+      other.Teleport_B == Teleport_B &&
+      other.Frozen_trap_A == Frozen_trap_A &&
+      other.Frozen_trap_B == Frozen_trap_B;
   }
 
   @override
   int get hashCode {
-    return Teleport_A.hashCode ^
-        Teleport_B.hashCode ^
-        Frozen_trap_A.hashCode ^
-        Frozen_trap_B.hashCode;
+    return scrolOwner.hashCode ^
+      Teleport_A.hashCode ^
+      Teleport_B.hashCode ^
+      Frozen_trap_A.hashCode ^
+      Frozen_trap_B.hashCode;
   }
 }

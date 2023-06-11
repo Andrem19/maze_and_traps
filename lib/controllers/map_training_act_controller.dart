@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../keys.dart';
 import '../models/game_info.dart';
 import '../models/maze_map.dart';
-import '../services/editor_page.dart';
 import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
@@ -48,12 +47,12 @@ class MapTrainingActController extends GetxController {
 
   Rx<Direction> moveDirection = Direction.up.obs;
   Rx<MazeMap> mazeMap =
-      EditorPageMap.createStruct(TestData.createTestMap()).obs;
+      TestData.createStruct(TestData.createTestMap()).obs;
 
   @override
   Future<void> onInit() async {
     super.onInit();
-    mazeMap = EditorPageMap.createStruct(TestData.createTestMap()).obs;
+    mazeMap = TestData.createStruct(TestData.createTestMap()).obs;
     gameInfo = GameInfo.createEmptyGameInfo(mainCtrl.currentGameMap!).obs;
 
     mainCtrl.changeStatusInGame(true);
