@@ -185,19 +185,19 @@ class BattleActController extends GetxController {
           final gameInfoB = data['GameInfo_B'];
           final playerBCoord = data['Player_B_Coord'];
           scrollOwner = data['scrollOwner'];
-          coordinatesOfEnemy_for_A(gameInfoB, playerBCoord, scrollOwner);
+          updateCoordinates(gameInfoB, playerBCoord, scrollOwner, yourRole);
           final gameStatus = data['gameStatus'];
           if (gameStatus == 'finish') {
-            A_finish_game();
+            finish_game(yourRole);
           }
         } else if (yourRole == 'B') {
           final gameInfoA = data['GameInfo_A'];
           final playerACoord = data['Player_A_Coord'];
           scrollOwner = data['scrollOwner'];
-          coordinatesOfEnemy_for_B(gameInfoA, playerACoord, scrollOwner);
+          updateCoordinates(gameInfoA, playerACoord, scrollOwner, yourRole);
           gameStatus = data['gameStatus'];
           if (gameStatus == 'finish') {
-            B_finish_game();
+            finish_game(yourRole);
           }
         }
         update();
@@ -315,38 +315,24 @@ class BattleActController extends GetxController {
     }
   }
 
-  void coordinatesOfEnemy_for_A(
-      String gameInfo_B, String Player_B_Coord, String scrollOwner) {
-    var gameI = GameInfoCloud.fromJson(gameInfo_B);
-    gameInfo.value =
-        gameI.CloudToGameInfo(yourRole, gameInfo.value, scrollOwner);
+  void updateCoordinates(String gameInfoS, String playerCoord, String scrollOwner, String currentPlayerRole) {
+    var gameI = GameInfoCloud.fromJson(gameInfoS);
+    gameInfo.value = gameI.CloudToGameInfo(currentPlayerRole, gameInfo.value, scrollOwner);
 
-    mazeMap.value.Player_B_Coord = Coordinates.fromJson(Player_B_Coord);
-  }
+    var playerCoordValue = Coordinates.fromJson(playerCoord);
+    if (currentPlayerRole == "A") {
+        mazeMap.value.Player_B_Coord = playerCoordValue;
+    } else if (currentPlayerRole == "B") {
+        gameInfo.value = GameInfo.reverseGameInfo(gameInfo.value, mazeMap.value);
+        mazeMap.value.Player_A_Coord = playerCoordValue;
+    }
+}
 
-  void coordinatesOfEnemy_for_B(
-      String gameInfo_A, String Player_A_Coord, String scrollOwner) {
-    var gameI = GameInfoCloud.fromJson(gameInfo_A);
-    gameInfo.value = GameInfo.reverseGameInfo(
-        gameI.CloudToGameInfo(yourRole, gameInfo.value, scrollOwner),
-        mazeMap.value);
-
-    mazeMap.value.Player_A_Coord = Coordinates.fromJson(Player_A_Coord);
-  }
-
-  void B_finish_game() async {
+  void finish_game(String player) async {
     await firebaseFirestore
         .collection('gameBattle')
         .doc(gameId.value)
-        .update({'Player_B_ready': false});
-    Get.offNamed(Routes.END_GAME_SCREEN);
-  }
-
-  void A_finish_game() async {
-    await firebaseFirestore
-        .collection('gameBattle')
-        .doc(gameId.value)
-        .update({'Player_A_ready': false});
+        .update({'Player_${player}_ready': false});
     Get.offNamed(Routes.END_GAME_SCREEN);
   }
 
@@ -415,114 +401,4 @@ class BattleActController extends GetxController {
       mazeMap.value.Player_B_Coord = player;
     }
   }
-
-  // void MovePlayer_A(Direction direction) {
-  //   if (_trapsController.frozenDeactivation()) {
-  //     return;
-  //   }
-  //   switch (direction) {
-  //     case Direction.up:
-  //       if (mazeMap.value.Player_A_Coord.row != 0) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_A_Coord.row - 1]
-  //                 [mazeMap.value.Player_A_Coord.col]
-  //             .wall) {
-  //           mazeMap.value.Player_A_Coord.row -= 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.down:
-  //       if (mazeMap.value.Player_A_Coord.row !=
-  //           mazeMap.value.mazeMap.length - 1) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_A_Coord.row + 1]
-  //                 [mazeMap.value.Player_A_Coord.col]
-  //             .wall) {
-  //           mazeMap.value.Player_A_Coord.row += 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.left:
-  //       if (mazeMap.value.Player_A_Coord.col != 0) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_A_Coord.row]
-  //                 [mazeMap.value.Player_A_Coord.col - 1]
-  //             .wall) {
-  //           mazeMap.value.Player_A_Coord.col -= 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.right:
-  //       if (mazeMap.value.Player_A_Coord.col !=
-  //           mazeMap.value.mazeMap[0].length - 1) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_A_Coord.row]
-  //                 [mazeMap.value.Player_A_Coord.col + 1]
-  //             .wall) {
-  //           mazeMap.value.Player_A_Coord.col += 1;
-  //         }
-  //       }
-  //       break;
-  //     default:
-  //   }
-  // }
-
-  // void MovePlayer_B(Direction direction) {
-  //   if (_trapsController.frozenDeactivation()) {
-  //     return;
-  //   }
-  //   switch (direction) {
-  //     case Direction.up:
-  //       if (mazeMap.value.Player_B_Coord.row != 0) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_B_Coord.row - 1]
-  //                 [mazeMap.value.Player_B_Coord.col]
-  //             .wall) {
-  //           mazeMap.value.Player_B_Coord.row -= 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.down:
-  //       if (mazeMap.value.Player_B_Coord.row !=
-  //           mazeMap.value.mazeMap.length - 1) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_B_Coord.row + 1]
-  //                 [mazeMap.value.Player_B_Coord.col]
-  //             .wall) {
-  //           mazeMap.value.Player_B_Coord.row += 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.left:
-  //       if (mazeMap.value.Player_B_Coord.col != 0) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_B_Coord.row]
-  //                 [mazeMap.value.Player_B_Coord.col - 1]
-  //             .wall) {
-  //           mazeMap.value.Player_B_Coord.col -= 1;
-  //         }
-  //       }
-  //       break;
-  //     case Direction.right:
-  //       if (mazeMap.value.Player_B_Coord.col !=
-  //           mazeMap.value.mazeMap[0].length - 1) {
-  //         if (!mazeMap
-  //             .value
-  //             .mazeMap[mazeMap.value.Player_B_Coord.row]
-  //                 [mazeMap.value.Player_B_Coord.col + 1]
-  //             .wall) {
-  //           mazeMap.value.Player_B_Coord.col += 1;
-  //         }
-  //       }
-  //       break;
-  //     default:
-  //   }
-  // }
 }

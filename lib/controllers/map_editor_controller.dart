@@ -199,7 +199,7 @@ class MapEditorController extends GetxController {
   }
 
   void createNewMap() {
-    _mazeMap = MazeGenerator.createNewMaze(TestData.createTestMap()).obs;
+    _mazeMap = MazeGenerator.createMaze(TestData.createTestMap()).obs;
     Get.toNamed(Routes.MAP_EDITOR);
   }
 }
