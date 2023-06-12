@@ -242,9 +242,9 @@ class MainGameController extends GetxController {
         scrollsList.value = data['scrolls'];
         wantToPlay.value = data['wantToPlay'];
         allMyTraps.value =
-            TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame);
+            TrapsGenerator.upTo(TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame), 16) ;
         backpackSet.value =
-            TrapsGenerator.toListTraps(data['mySetOfTraps'], allTrapsInTheGame);
+            TrapsGenerator.upTo(TrapsGenerator.toListTraps(data['mySetOfTraps'], allTrapsInTheGame), 5);
         scrolls.value = scrollsList.length;
       } else {
         registerNewUser();

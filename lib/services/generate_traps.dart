@@ -12,6 +12,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_Icons/texture_FrostTrap.png',
           cost: 3,
+          used: false,
           weight: 2),
       Trap(
           id: 2,
@@ -22,6 +23,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 3,
+          used: false,
           weight: 3),
       Trap(
           id: 3,
@@ -31,6 +33,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 3,
+          used: false,
           weight: 3),
       Trap(
           id: 4,
@@ -41,6 +44,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 12,
+          used: false,
           weight: 5),
       Trap(
           id: 5,
@@ -51,6 +55,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 5,
+          used: false,
           weight: 2),
       Trap(
           id: 6,
@@ -61,6 +66,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 12,
+          used: false,
           weight: 5),
       Trap(
           id: 7,
@@ -71,6 +77,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 8,
+          used: false,
           weight: 3),
       Trap(
           id: 8,
@@ -81,6 +88,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 2,
+          used: false,
           weight: 1),
       Trap(
           id: 9,
@@ -91,6 +99,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 10,
+          used: false,
           weight: 3),
       Trap(
           id: 10,
@@ -100,6 +109,7 @@ class TrapsGenerator {
           baff: 25,
           img: 'assets/images/trap_default.png',
           cost: 12,
+          used: false,
           weight: 5),
       Trap(
           id: 11,
@@ -110,6 +120,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 12,
+          used: false,
           weight: 5),
       Trap(
           id: 12,
@@ -119,6 +130,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 8,
+          used: false,
           weight: 3),
       Trap(
           id: 13,
@@ -128,6 +140,7 @@ class TrapsGenerator {
           baff: 0,
           img: 'assets/images/trap_default.png',
           cost: 8,
+          used: false,
           weight: 3),
     ];
     return upTo(traps, 16);
@@ -142,7 +155,8 @@ class TrapsGenerator {
         listToReturn.add(trap);
       }
     }
-    return upTo(listToReturn, 12);
+    // return upTo(listToReturn, 12);
+    return listToReturn;
   }
 
   static List<dynamic> toListDynamic(List<Trap> traps) {
@@ -168,6 +182,7 @@ class TrapsGenerator {
             baff: 0,
             img: '',
             cost: 0,
+            used: false,
             weight: 0);
         traps.add(trap);
         if (traps.length >= num) {

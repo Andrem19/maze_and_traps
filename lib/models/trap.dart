@@ -10,6 +10,7 @@ class Trap {
   String img;
   int cost;
   int weight;
+  bool used;
   Trap({
     required this.id,
     required this.name,
@@ -19,6 +20,7 @@ class Trap {
     required this.img,
     required this.cost,
     required this.weight,
+    required this.used,
   });
 
   Trap copyWith({
@@ -30,6 +32,7 @@ class Trap {
     String? img,
     int? cost,
     int? weight,
+    bool? used,
   }) {
     return Trap(
       id: id ?? this.id,
@@ -40,6 +43,7 @@ class Trap {
       img: img ?? this.img,
       cost: cost ?? this.cost,
       weight: weight ?? this.weight,
+      used: used ?? this.used,
     );
   }
 
@@ -53,6 +57,7 @@ class Trap {
       'img': img,
       'cost': cost,
       'weight': weight,
+      'used': used,
     };
   }
 
@@ -66,6 +71,7 @@ class Trap {
       img: map['img'] as String,
       cost: map['cost'] as int,
       weight: map['weight'] as int,
+      used: map['used'] as bool,
     );
   }
 
@@ -76,7 +82,7 @@ class Trap {
 
   @override
   String toString() {
-    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, cost: $cost, weight: $weight)';
+    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, cost: $cost, weight: $weight, used: $used)';
   }
 
   @override
@@ -91,7 +97,8 @@ class Trap {
       other.baff == baff &&
       other.img == img &&
       other.cost == cost &&
-      other.weight == weight;
+      other.weight == weight &&
+      other.used == used;
   }
 
   @override
@@ -103,6 +110,7 @@ class Trap {
       baff.hashCode ^
       img.hashCode ^
       cost.hashCode ^
-      weight.hashCode;
+      weight.hashCode ^
+      used.hashCode;
   }
 }

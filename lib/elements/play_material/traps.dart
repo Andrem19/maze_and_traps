@@ -14,28 +14,34 @@ class TrapsShow extends StatelessWidget {
   Widget build(BuildContext context) {
     var trapsController = Get.find<TrapsController>();
     return GetBuilder<MainGameController>(builder: (controller) {
-      List<Trap> backpack = [];
-      for (var i = 0; i < 5; i++) {
-        backpack.add(controller.backpackSet[i]);
-      }
+      // List<Trap> backpack = [];
+      // for (var i = 0; i < 5; i++) {
+      //   backpack.add(controller.backpackSet[i]);
+      // }
       return Center(
-        child: Opacity(
-          opacity: 0.7,
-          child: Container(
-              color: Colors.transparent,
-              width: 300,
-              alignment: Alignment.topCenter,
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 5,
-                children: backpack.map((element) {
-                  return InkWell(
-                      onTap: () {
-                        if (element.name != 'empty') {
-                          trapsController.traps(element);
-
-                        }
-                      },
+        child: Container(
+            color: Colors.transparent,
+            width: Get.size.height * 0.6,
+            alignment: Alignment.topCenter,
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 5,
+              children: controller.backpackSet.map((element) {
+                return InkWell(
+                    onTap: element.used
+                        ? null
+                        : () {
+                            if (element.name != 'empty') {
+                              trapsController.traps(element);
+                              controller.backpackSet
+                                  .where((p0) => p0.name == element.name)
+                                  .first
+                                  .used = true;
+                              controller.update();
+                            }
+                          },
+                    child: Opacity(
+                      opacity: element.used ? 0.6 : 1,
                       child: Card(
                         child: Stack(
                           children: [
@@ -65,10 +71,10 @@ class TrapsShow extends StatelessWidget {
                             )
                           ],
                         ),
-                      ));
-                }).toList(),
-              )),
-        ),
+                      ),
+                    ));
+              }).toList(),
+            )),
       );
     });
   }

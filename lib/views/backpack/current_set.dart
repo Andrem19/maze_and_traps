@@ -23,7 +23,7 @@ class CurrentSet {
             alignment: Alignment.topCenter,
             child: GridView.count(
               shrinkWrap: true,
-              crossAxisCount: 4,
+              crossAxisCount: 5,
               children: controller.backpackSet.value.map((element) {
                 return InkWell(
                   onTap: () {

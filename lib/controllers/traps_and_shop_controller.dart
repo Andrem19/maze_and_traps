@@ -65,6 +65,13 @@ class TrapsAndShopController extends GetxController {
   }
 
   void backpackOnAccept(Trap element, Trap data) {
+    if (main.backpackSet.where((p0) => p0.name != 'empty').toList().length >= 5) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text('You can have 5 traps max in the backpack'),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
     int indexData = main.backpackSet.indexWhere((e) => data.name == e.name);
     int indexElement =
         main.backpackSet.indexWhere((e) => element.name == e.name);
@@ -133,7 +140,7 @@ class TrapsAndShopController extends GetxController {
   }
 
   void cutLastIfEmptyAllMyTrap() {
-    if (main.allMyTraps.length > 12) {
+    if (main.allMyTraps.length > 16) {
       if (main.allMyTraps[main.allMyTraps.length - 1].name == 'empty') {
         main.allMyTraps.removeAt(main.allMyTraps.length - 1);
       }
@@ -141,7 +148,7 @@ class TrapsAndShopController extends GetxController {
   }
 
   void cutLastIfEmptyBackpack() {
-    if (main.backpackSet.length > 12) {
+    if (main.backpackSet.length > 5) {
       if (main.backpackSet[main.backpackSet.length - 1].name == 'empty') {
         main.backpackSet.removeAt(main.backpackSet.length - 1);
       }
@@ -149,10 +156,10 @@ class TrapsAndShopController extends GetxController {
   }
 
   void addLastWhenMoveBackpack() {
-    if (main.backpackSet.length >= 12) {
+    if (main.backpackSet.length >= 5) {
       return;
     } else {
-      for (var i = 0; i < 12; i++) {
+      for (var i = 0; i < 5; i++) {
         Trap trap = Trap(
             id: 0,
             name: 'empty',
@@ -161,9 +168,10 @@ class TrapsAndShopController extends GetxController {
             baff: 0,
             img: '',
             cost: 0,
+            used: false,
             weight: 0);
         main.backpackSet.add(trap);
-        if (main.backpackSet.length >= 12) {
+        if (main.backpackSet.length >= 5) {
           break;
         }
       }
@@ -172,7 +180,7 @@ class TrapsAndShopController extends GetxController {
   }
 
   void addLastWhenMoveAllTraps() {
-    if (main.allMyTraps.length >= 12) {
+    if (main.allMyTraps.length >= 16) {
       return;
     } else {
       for (var i = 0; i < 12; i++) {
@@ -184,6 +192,7 @@ class TrapsAndShopController extends GetxController {
             baff: 0,
             img: '',
             cost: 0,
+            used: false,
             weight: 0);
         main.allMyTraps.add(trap);
         if (main.allMyTraps.length >= 12) {
@@ -302,7 +311,7 @@ class TrapsAndShopController extends GetxController {
           await firebaseFirestore.collection('users').doc(main.userUid).get();
       var data = doc.data();
       int weight = data!['weight'];
-      int weightP = data!['weightPrice'];
+      int weightP = data['weightPrice'];
       weightP = (weightP + (weightP / 4)).toInt();
       if (weightP == 3) {
         weightP = 4;
@@ -320,22 +329,4 @@ class TrapsAndShopController extends GetxController {
       countWeight();
     }
   }
-
-  // void testScrolls() async {
-  //   var doc = await firebaseFirestore
-  //       .collection('wisdomScrolls')
-  //       .doc('TO3pay0R0byjSLMinIXq')
-  //       .get();
-
-  //   var data = doc.data();
-  //   var listOfScrolls = data!['listOfScrolls'] as List<dynamic>;
-  //   for (var i = 0; i < listOfScrolls.length; i++) {
-  //     print(listOfScrolls[i]);
-  //   }
-  //   listOfScrolls.add('test test test');
-  //   await firebaseFirestore
-  //       .collection('wisdomScrolls')
-  //       .doc('TO3pay0R0byjSLMinIXq')
-  //       .update({'listOfScrolls': listOfScrolls});
-  // }
 }

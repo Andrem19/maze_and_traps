@@ -20,6 +20,7 @@ class TrapsController extends GetxController {
   @override
   void onInit() {
     loadAudioAssets();
+    allTrapsToNotUsed();
     super.onInit();
   }
 
@@ -103,5 +104,11 @@ class TrapsController extends GetxController {
       default:
     }
     await FlameAudio.play('sfx_TrapSet.mp3');
+  }
+
+  void allTrapsToNotUsed() {
+    main.backpackSet.forEach((element) {
+      element.used = false;
+    });
   }
 }
