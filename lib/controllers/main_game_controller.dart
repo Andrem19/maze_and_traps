@@ -46,7 +46,7 @@ class MainGameController extends GetxController {
 
   bool IsUserInGame = false;
   bool randomRival = false;
-  String YourCurrentRole = 'A';
+  RxString YourCurrentRole = 'A'.obs;
   String currentMapName = '';
   String currentmultiplayerGameId = '';
   String currentMapId = '';
@@ -55,7 +55,7 @@ class MainGameController extends GetxController {
   RxBool wantToPlay = false.obs;
   RxDouble player_A_Life = 55.0.obs;
   RxDouble player_B_Life = 55.0.obs;
-  String vinner = '';
+  RxString vinner = ''.obs;
 
   @override
   void onInit() async {
@@ -241,10 +241,12 @@ class MainGameController extends GetxController {
         userUid = data['uid'];
         scrollsList.value = data['scrolls'];
         wantToPlay.value = data['wantToPlay'];
-        allMyTraps.value =
-            TrapsGenerator.upTo(TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame), 16) ;
-        backpackSet.value =
-            TrapsGenerator.upTo(TrapsGenerator.toListTraps(data['mySetOfTraps'], allTrapsInTheGame), 5);
+        allMyTraps.value = TrapsGenerator.upTo(
+            TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame),
+            16);
+        backpackSet.value = TrapsGenerator.upTo(
+            TrapsGenerator.toListTraps(data['mySetOfTraps'], allTrapsInTheGame),
+            5);
         scrolls.value = scrollsList.length;
       } else {
         registerNewUser();
@@ -310,7 +312,7 @@ class MainGameController extends GetxController {
         }
         currentmultiplayerGameId = theGameIdInviteMe;
         currentMapName = data['MapName'];
-        YourCurrentRole = 'B';
+        YourCurrentRole = 'B'.obs;
       }
       Get.toNamed(Routes.WAITING_PAGE);
     } on FirebaseException catch (error) {

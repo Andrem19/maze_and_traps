@@ -36,7 +36,7 @@ class PlayMenuController extends GetxController {
         }
         print(3);
         mainCtrl.changeStatusInGame(true);
-        mainCtrl.YourCurrentRole = 'A';
+        mainCtrl.YourCurrentRole = 'A'.obs;
         mainCtrl.playerWhoIInvite_ID = doc.docs[0].id;
         mainCtrl.randomRival = false;
 

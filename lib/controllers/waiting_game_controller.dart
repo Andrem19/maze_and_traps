@@ -82,7 +82,7 @@ class WaitingGameController extends GetxController {
       }
       mainCtrl.currentmultiplayerGameId = playerList.docs[0].id;
       mainCtrl.currentMapName = data['MapName'];
-      mainCtrl.YourCurrentRole = 'B';
+      mainCtrl.YourCurrentRole = 'B'.obs;
       startGameStream(playerList.docs[0].id);
     }
   }
@@ -106,6 +106,8 @@ class WaitingGameController extends GetxController {
           'Player_B_ready': false,
           'B_used_trap': false,
           'A_used_trap': false,
+          'Player_A_Life': mainCtrl.globalSettings.default_health,
+          'Player_B_Life': mainCtrl.globalSettings.default_health,
           'Player_A_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
           'Player_B_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
           'GameInfo_A':
@@ -117,7 +119,7 @@ class WaitingGameController extends GetxController {
           'date': DateTime.now(),
         });
         print(doc.id);
-        mainCtrl.YourCurrentRole = 'A';
+        mainCtrl.YourCurrentRole = 'A'.obs;
         nameOfMap.value = mainCtrl.currentMapName ?? '';
         mainCtrl.currentmultiplayerGameId = doc.id;
         startGameStream(doc.id);

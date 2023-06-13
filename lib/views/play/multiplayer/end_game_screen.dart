@@ -19,12 +19,12 @@ class EndGameScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    controller.YourCurrentRole == controller.vinner
+                    controller.YourCurrentRole.value == controller.vinner.value
                         ? 'YOU WON'
                         : 'YOU LOSE',
                     style: TextStyle(
                       fontSize: 25,
-                      color: controller.YourCurrentRole == controller.vinner
+                      color: controller.YourCurrentRole.value == controller.vinner.value
                           ? Colors.green
                           : Colors.red,
                       fontWeight: FontWeight.bold,
@@ -32,7 +32,7 @@ class EndGameScreen extends StatelessWidget {
                   ),
                   controller.randomRival
                       ? Text(
-                          controller.YourCurrentRole == controller.vinner
+                          controller.YourCurrentRole.value == controller.vinner.value
                               ? '+ 2 points'
                               : '- 1 point',
                           style: const TextStyle(fontSize: 18),
@@ -41,7 +41,7 @@ class EndGameScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       controller.deleteGameInstant();
-                      Get.offNamed(Routes.GENERAL_MENU);
+                      Get.offAllNamed(Routes.GENERAL_MENU);
                     },
                     child: const Text('To Main Screen'),
                   ),

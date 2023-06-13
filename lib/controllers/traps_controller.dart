@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ import '../models/trap.dart';
 
 class TrapsController extends GetxController {
   late BattleActController _battleActController;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   MainGameController main = Get.find<MainGameController>();
 
   int playerFrozen = 0;
@@ -109,6 +111,33 @@ class TrapsController extends GetxController {
   void allTrapsToNotUsed() {
     main.backpackSet.forEach((element) {
       element.used = false;
+    });
+  }
+
+  void damage(int damage) {
+    if (main.YourCurrentRole == 'A') {
+      main.player_A_Life.value -= damage;
+      if (main.player_A_Life.value < 0) {
+        main.player_A_Life.value = 0;
+      }
+      changeLifeOnServer(
+          _battleActController.yourRole, main.player_A_Life.value.toInt());
+    } else {
+      main.player_B_Life.value -= damage;
+      if (main.player_B_Life.value < 0) {
+        main.player_B_Life.value = 0;
+      }
+      changeLifeOnServer(
+          _battleActController.yourRole, main.player_B_Life.value.toInt());
+    }
+  }
+
+  void changeLifeOnServer(String role, int amount) async {
+    await firebaseFirestore
+        .collection('gameBattle')
+        .doc(_battleActController.gameId.value)
+        .update({
+      'Player_${role}_Life': amount,
     });
   }
 }

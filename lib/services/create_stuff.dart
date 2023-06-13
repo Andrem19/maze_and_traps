@@ -26,7 +26,7 @@ class CreateStuffWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var main = Get.find<MainGameController>();
-    String myRole = main.YourCurrentRole;
+    String myRole = main.YourCurrentRole.value;
     if (Compare.compareCoord(playerACoord, nodeProto)) {
       if (main.YourCurrentRole == 'A') {
         return Player_A.getPlayer(Colors.green, Color(0xFF306D31));
