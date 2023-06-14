@@ -110,6 +110,8 @@ class WaitingGameController extends GetxController {
           'Player_B_Life': mainCtrl.globalSettings.default_health,
           'Player_A_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
           'Player_B_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
+          'Player_A_caught': false,
+          'Player_B_caught': false,
           'GameInfo_A':
               GameInfoCloud.createEmptyForServer().toJson(),
           'GameInfo_B':

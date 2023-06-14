@@ -37,12 +37,12 @@ class GameInfo {
           row: (map.mazeMap.length - 1) - info.Frozen_trap_A.row,
           col: (map.mazeMap[0].length - 1) - info.Frozen_trap_A.col);
     }
-    if (info.Frozen_trap_B.isInit) {
-      info.Frozen_trap_B = Coordinates(
-          isInit: info.Frozen_trap_B.isInit,
-          row: (map.mazeMap.length - 1) - info.Frozen_trap_B.row,
-          col: (map.mazeMap[0].length - 1) - info.Frozen_trap_B.col);
-    }
+    // if (info.Frozen_trap_B.isInit) {
+    //   info.Frozen_trap_B = Coordinates(
+    //       isInit: info.Frozen_trap_B.isInit,
+    //       row: (map.mazeMap.length - 1) - info.Frozen_trap_B.row,
+    //       col: (map.mazeMap[0].length - 1) - info.Frozen_trap_B.col);
+    // }
 
     if (info.Teleport_A.isInit) {
       info.Teleport_A = Coordinates(
@@ -51,12 +51,12 @@ class GameInfo {
           col: (map.mazeMap[0].length - 1) - info.Teleport_A.col);
     }
 
-    if (info.Teleport_B.isInit) {
-      info.Teleport_B = Coordinates(
-          isInit: info.Teleport_B.isInit,
-          row: (map.mazeMap.length - 1) - info.Teleport_B.row,
-          col: (map.mazeMap[0].length - 1) - info.Teleport_B.col);
-    }
+    // if (info.Teleport_B.isInit) {
+    //   info.Teleport_B = Coordinates(
+    //       isInit: info.Teleport_B.isInit,
+    //       row: (map.mazeMap.length - 1) - info.Teleport_B.row,
+    //       col: (map.mazeMap[0].length - 1) - info.Teleport_B.col);
+    // }
     return info;
   }
 

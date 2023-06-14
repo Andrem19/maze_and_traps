@@ -40,6 +40,7 @@ class BattleActController extends GetxController {
   String scrollOwner = 'none';
   String yourRole = 'A';
   Rx<String> textMessage = ''.obs;
+  int messageCounter = 0;
   Rx<Direction> moveDirection = Direction.up.obs;
   int shaddowRadius = 3;
   int timerDuration = 1200;
@@ -106,46 +107,49 @@ class BattleActController extends GetxController {
     String enemy_role = yourRole == 'A' ? 'B' : 'A';
     try {
       var doc = await firebaseFirestore
-        .collection('gameBattle')
-        .doc(gameId.value)
-        .get();
-    if (doc.exists) {
-      var data = doc.data();
-      String gameVinner = data!['vinner'];
-      if (gameVinner == yourRole) {
-        vinner = yourRole;
-        await firebaseFirestore
-            .collection('users')
-            .doc(mainCtrl.userUid)
-            .update({
-          'points': mainCtrl.points.value + 2,
-        });
-        mainCtrl.points += 2;
-      } else if (gameVinner == enemy_role) {
-        vinner = enemy_role;
-        await firebaseFirestore
-            .collection('users')
-            .doc(mainCtrl.userUid)
-            .update({
-          'points': mainCtrl.points.value - 1,
-        });
-        mainCtrl.points -= 1;
-      } else if (gameVinner != yourRole && gameVinner != enemy_role) {
-        vinner = enemy_role;
-        await firebaseFirestore
-            .collection('users')
-            .doc(mainCtrl.userUid)
-            .update({
-          'points': mainCtrl.points.value - 1,
-        });
-        mainCtrl.points -= 1;
+          .collection('gameBattle')
+          .doc(gameId.value)
+          .get();
+      if (doc.exists) {
+        var data = doc.data();
+        String gameVinner = data!['vinner'];
+        if (gameVinner == yourRole) {
+          vinner = yourRole;
+          await firebaseFirestore
+              .collection('users')
+              .doc(mainCtrl.userUid)
+              .update({
+            'points': mainCtrl.points.value + 2,
+          });
+          mainCtrl.points += 2;
+        } else if (gameVinner == enemy_role) {
+          vinner = enemy_role;
+          await firebaseFirestore
+              .collection('users')
+              .doc(mainCtrl.userUid)
+              .update({
+            'points': mainCtrl.points.value - 1,
+          });
+          mainCtrl.points -= 1;
+        } else if (gameVinner != yourRole && gameVinner != enemy_role) {
+          vinner = enemy_role;
+          await firebaseFirestore
+              .collection('users')
+              .doc(mainCtrl.userUid)
+              .update({
+            'points': mainCtrl.points.value - 1,
+          });
+          mainCtrl.points -= 1;
+        }
       }
-    }
-    await firebaseFirestore.collection('gameBattle').doc(gameId.value).update({
-      'gameStatus': 'finish',
-      'vinner': vinner,
-      'Player_${yourRole}_ready': false,
-    });
+      await firebaseFirestore
+          .collection('gameBattle')
+          .doc(gameId.value)
+          .update({
+        'gameStatus': 'finish',
+        'vinner': vinner,
+        'Player_${yourRole}_ready': false,
+      });
     } on FirebaseException catch (error) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(error.code),
@@ -176,6 +180,10 @@ class BattleActController extends GetxController {
     countRadiusAroundPlayerB = mazeMap.value.countRadiusAroundPlayer_B;
     checkTheFinishA = mazeMap.value.checkTheFinish_A;
     checkTheFinishB = mazeMap.value.checkTheFinish_B;
+    mainCtrl.player_A_Life.value =
+        mainCtrl.globalSettings.default_health.toDouble();
+    mainCtrl.player_B_Life.value =
+        mainCtrl.globalSettings.default_health.toDouble();
     if (yourRole == 'A') {
       mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
       changeState(mazeMap.value.Player_A_Coord, gameInfo.value, yourRole);
@@ -224,8 +232,12 @@ class BattleActController extends GetxController {
           final playerBCoord = data['Player_B_Coord'];
           scrollOwner = data['scrollOwner'];
           mainCtrl.player_B_Life.value = data['Player_B_Life'];
+          bool B_Caught = data['Player_B_caught'];
           updateCoordinates(gameInfoB, playerBCoord, scrollOwner, yourRole);
           final gameStatus = data['gameStatus'];
+          if (B_Caught) {
+            textMessage.value = setUpMessageAfterTrap();
+          }
           if (gameStatus == 'finish') {
             finish_game(yourRole);
           }
@@ -234,8 +246,12 @@ class BattleActController extends GetxController {
           final playerACoord = data['Player_A_Coord'];
           scrollOwner = data['scrollOwner'];
           mainCtrl.player_A_Life.value = data['Player_A_Life'];
+          bool A_Caught = data['Player_A_caught'];
           updateCoordinates(gameInfoA, playerACoord, scrollOwner, yourRole);
           gameStatus = data['gameStatus'];
+          if (A_Caught) {
+            textMessage.value = setUpMessageAfterTrap();
+          }
           if (gameStatus == 'finish') {
             finish_game(yourRole);
           }
@@ -256,12 +272,16 @@ class BattleActController extends GetxController {
   }
 
   updateUI() {
+    if (messageCounter > 0) {
+      messageCounter--;
+    } else {
+      textMessage.value = '';
+    }
     moveDirection.value = mainCtrl.moveDir;
     _trapsController.checkAllTraps();
     if (yourRole == 'A') {
       MovePlayer(moveDirection.value);
       countRadiusAroundPlayerA(shaddowRadius, true);
-      // textMessage.value = mazeMap.value.message_A;
 
       final res = checkTheFinishA();
       if (res || mainCtrl.player_B_Life <= 0) {
@@ -271,7 +291,6 @@ class BattleActController extends GetxController {
     } else if (yourRole == 'B') {
       MovePlayer(moveDirection.value);
       countRadiusAroundPlayerB(shaddowRadius, true);
-      // textMessage.value = mazeMap.value.message_B;
 
       final res = checkTheFinishB();
       if (res || mainCtrl.player_A_Life <= 0) {
@@ -442,5 +461,20 @@ class BattleActController extends GetxController {
     } else if (yourRole == 'B') {
       mazeMap.value.Player_B_Coord = player;
     }
+  }
+
+  String setUpMessageAfterTrap() {
+    changePlayerCaughtOnServer();
+    double distance =
+        double.parse(mazeMap.value.calculateDistance().toStringAsFixed(2));
+    messageCounter = 4;
+    return 'The enemy fell into your trap. Distance between you: $distance';
+  }
+
+  void changePlayerCaughtOnServer() async {
+    String enemy_role = yourRole == 'A' ? 'B' : 'A';
+    await firebaseFirestore.collection('gameBattle').doc(gameId.value).update({
+      'Player_${enemy_role}_caught': false,
+    });
   }
 }

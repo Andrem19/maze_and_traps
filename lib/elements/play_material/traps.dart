@@ -14,10 +14,6 @@ class TrapsShow extends StatelessWidget {
   Widget build(BuildContext context) {
     var trapsController = Get.find<TrapsController>();
     return GetBuilder<MainGameController>(builder: (controller) {
-      // List<Trap> backpack = [];
-      // for (var i = 0; i < 5; i++) {
-      //   backpack.add(controller.backpackSet[i]);
-      // }
       return Center(
         child: Container(
             color: Colors.transparent,
@@ -34,8 +30,7 @@ class TrapsShow extends StatelessWidget {
                             if (element.name != 'empty') {
                               trapsController.traps(element);
                               controller.backpackSet
-                                  .where((p0) => p0.name == element.name)
-                                  .first
+                                  .firstWhere((p0) => p0.name == element.name)
                                   .used = true;
                               controller.update();
                             }

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:get/get.dart';
@@ -18,6 +20,7 @@ class TrapsController extends GetxController {
 
   int playerFrozen = 0;
   bool frozenActivate = false;
+  bool teleportActivate = false;
 
   @override
   void onInit() {
@@ -28,7 +31,7 @@ class TrapsController extends GetxController {
 
   @override
   void onClose() {
-    deleteFromCache();
+    // deleteFromCache();
     super.onClose();
   }
 
@@ -37,12 +40,11 @@ class TrapsController extends GetxController {
   }
 
   Future<void> loadAudioAssets() async {
-    await FlameAudio.audioCache.loadAll(['sfx_FrostTrap.mp3']);
+    await FlameAudio.audioCache
+        .loadAll(['sfx_FrostTrap.mp3', 'sfx_teleport.mp3']);
   }
 
-  void deleteFromCache() async {
-    await FlameAudio.audioCache.clear('sfx_FrostTrap.mp3');
-  }
+  //Frozen
 
   void frozenInstall(int trapId) {
     if (main.backpackSet.any((obj) => obj.id == trapId)) {
@@ -52,16 +54,20 @@ class TrapsController extends GetxController {
             row: _battleActController.mazeMap.value.Player_A_Coord.row,
             col: _battleActController.mazeMap.value.Player_A_Coord.col);
       } else {
-        _battleActController.gameInfo.value.Frozen_trap_B = Coordinates(
-            isInit: true,
-            row: _battleActController.mazeMap.value.Player_B_Coord.row,
-            col: _battleActController.mazeMap.value.Player_B_Coord.col);
+        _battleActController.gameInfo.value.Frozen_trap_B = swapCoordinates(
+            Coordinates(
+                isInit: true,
+                row: _battleActController.mazeMap.value.Player_B_Coord.row,
+                col: _battleActController.mazeMap.value.Player_B_Coord.col),
+            _battleActController.mazeWidth,
+            _battleActController.mazeHight);
       }
     }
   }
 
   Future<void> checkAllTraps() async {
     frozenCheck();
+    teleportCheck();
   }
 
   void frozenCheck() async {
@@ -72,6 +78,7 @@ class TrapsController extends GetxController {
             _battleActController.gameInfo.value.Frozen_trap_B) {
           frozenActivate = true;
           playerFrozen = 8;
+          IamCaught();
           await FlameAudio.play('sfx_FrostTrap.mp3');
         }
       }
@@ -82,6 +89,7 @@ class TrapsController extends GetxController {
             _battleActController.gameInfo.value.Frozen_trap_A) {
           frozenActivate = true;
           playerFrozen = 8;
+          IamCaught();
           await FlameAudio.play('sfx_FrostTrap.mp3');
         }
       }
@@ -97,11 +105,68 @@ class TrapsController extends GetxController {
     }
     return playerFrozen > 0 ? true : false;
   }
+  //Teleport
+
+  void installTeleport(int trapId) {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      if (_battleActController.yourRole == 'A') {
+        _battleActController.gameInfo.value.Teleport_A = Coordinates(
+            isInit: true,
+            row: _battleActController.mazeMap.value.Player_A_Coord.row,
+            col: _battleActController.mazeMap.value.Player_A_Coord.col);
+      } else {
+        _battleActController.gameInfo.value.Teleport_B = swapCoordinates(
+            Coordinates(
+                isInit: true,
+                row: _battleActController.mazeMap.value.Player_B_Coord.row,
+                col: _battleActController.mazeMap.value.Player_B_Coord.col),
+            _battleActController.mazeWidth,
+            _battleActController.mazeHight);
+      }
+    }
+  }
+
+  void teleportCheck() async {
+    if (_battleActController.yourRole == 'A') {
+      if (_battleActController.gameInfo.value.Teleport_B.isInit &&
+          teleportActivate == false) {
+        if (_battleActController.mazeMap.value.Player_A_Coord ==
+            _battleActController.gameInfo.value.Teleport_B) {
+          teleportActivate = true;
+          teleportAction();
+          await FlameAudio.play('sfx_teleport.mp3');
+        }
+      }
+    } else {
+      if (_battleActController.gameInfo.value.Teleport_A.isInit &&
+          teleportActivate == false) {
+        if (_battleActController.mazeMap.value.Player_B_Coord ==
+            _battleActController.gameInfo.value.Teleport_A) {
+          teleportActivate = true;
+          teleportAction();
+          await FlameAudio.play('sfx_teleport.mp3');
+        }
+      }
+    }
+  }
+
+  void teleportAction() async {
+    if (_battleActController.yourRole == 'A') {
+      _battleActController.mazeMap.value.Player_A_Coord = randCoord();
+    } else {
+      _battleActController.mazeMap.value.Player_B_Coord = randCoord();
+    }
+    IamCaught();
+    await FlameAudio.play('sfx_teleport.mp3');
+  }
 
   void traps(Trap trap) async {
     switch (trap.id) {
       case 1:
         frozenInstall(1);
+        break;
+      case 2:
+        installTeleport(2);
         break;
       default:
     }
@@ -139,5 +204,54 @@ class TrapsController extends GetxController {
         .update({
       'Player_${role}_Life': amount,
     });
+  }
+
+  Coordinates generateRandomCoord() {
+    var rand = Random();
+    int row = 0;
+    int col = 0;
+    if (_battleActController.yourRole == 'A') {
+      row = rand.nextInt(_battleActController.mazeHight -
+          _battleActController.mazeMap.value.Player_A_Coord.row);
+    } else {
+      row = rand.nextInt(_battleActController.mazeHight -
+          _battleActController.mazeMap.value.Player_B_Coord.row);
+    }
+    col = rand.nextInt(_battleActController.mazeWidth);
+    return Coordinates(isInit: true, row: row, col: col);
+  }
+
+  Coordinates randCoord() {
+    Coordinates res = generateRandomCoord();
+    if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
+      randCoord();
+    }
+    return res;
+  }
+
+  Coordinates swapCoordinates(Coordinates Player_Coord, int width, int hight) {
+    var Player_L_Coord = Coordinates(
+        isInit: Player_Coord.isInit,
+        row: (width - 1) - Player_Coord.row,
+        col: (hight - 1) - Player_Coord.col);
+    return Player_L_Coord;
+  }
+
+  void IamCaught() async {
+    if (_battleActController.yourRole == 'A') {
+      await firebaseFirestore
+          .collection('gameBattle')
+          .doc(_battleActController.gameId.value)
+          .update({
+        'Player_A_caught': true,
+      });
+    } else {
+      await firebaseFirestore
+          .collection('gameBattle')
+          .doc(_battleActController.gameId.value)
+          .update({
+        'Player_B_caught': true,
+      });
+    }
   }
 }
