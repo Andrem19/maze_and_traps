@@ -1,6 +1,20 @@
 import '../models/trap.dart';
 
 class TrapsGenerator {
+  static Trap frozen = getTraps().where((t) => t.name == 'Frozen').first;
+  static Trap teleport = getTraps().where((t) => t.name == 'Teleport').first;
+  static Trap bomb = getTraps().where((t) => t.name == 'Bomb').first;
+  static Trap knife = getTraps().where((t) => t.name == 'Knife').first;
+  static Trap speed15 = getTraps().where((t) => t.name == 'Speed increase x 1.5').first;
+  static Trap speed2 = getTraps().where((t) => t.name == 'Speed increase x 2').first;
+  static Trap ghost = getTraps().where((t) => t.name == 'Go through the wall').first;
+  static Trap blindness = getTraps().where((t) => t.name == 'Blindness').first;
+  static Trap poison = getTraps().where((t) => t.name == 'Poison').first;
+  static Trap healing = getTraps().where((t) => t.name == 'Healing').first;
+  static Trap meteor = getTraps().where((t) => t.name == 'Meteor').first;
+  static Trap invisibility = getTraps().where((t) => t.name == 'Invisibility').first;
+  static Trap builder = getTraps().where((t) => t.name == 'Builder').first;
+
   static List<Trap> getTraps() {
     var traps = [
       Trap(
@@ -11,6 +25,7 @@ class TrapsGenerator {
           damage: 5,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_FrostTrap.png',
+          audio: 'sfx_FrostTrap.mp3',
           cost: 3,
           used: false,
           weight: 2),
@@ -22,6 +37,7 @@ class TrapsGenerator {
           damage: 10,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Teleport.png',
+          audio: 'sfx_teleport.mp3',
           cost: 3,
           used: false,
           weight: 3),
@@ -32,6 +48,7 @@ class TrapsGenerator {
           damage: 20,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_bomb.png',
+          audio: 'sfx_Bomb.mp3',
           cost: 3,
           used: false,
           weight: 3),
@@ -43,6 +60,7 @@ class TrapsGenerator {
           damage: 30,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Knife.png',
+          audio: 'sfx_KnifeTrap.mp3',
           cost: 12,
           used: false,
           weight: 5),
@@ -54,6 +72,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_BootOfSpeed.png',
+          audio: '',
           cost: 5,
           used: false,
           weight: 2),
@@ -65,6 +84,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_BootOfSpeed.png',
+          audio: '',
           cost: 12,
           used: false,
           weight: 5),
@@ -76,6 +96,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Ghost.png',
+          audio: '',
           cost: 8,
           used: false,
           weight: 3),
@@ -87,6 +108,7 @@ class TrapsGenerator {
           damage: 10,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_blindingTrap.png',
+          audio: '',
           cost: 2,
           used: false,
           weight: 1),
@@ -98,6 +120,7 @@ class TrapsGenerator {
           damage: 15,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_PoisonTrap.png',
+          audio: '',
           cost: 10,
           used: false,
           weight: 3),
@@ -108,6 +131,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 25,
           img: 'assets/images/trap_Icons/texture_HealingTrap.png',
+          audio: '',
           cost: 12,
           used: false,
           weight: 5),
@@ -119,6 +143,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_default.png',
+          audio: '',
           cost: 12,
           used: false,
           weight: 5),
@@ -129,6 +154,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_default.png',
+          audio: '',
           cost: 8,
           used: false,
           weight: 3),
@@ -139,6 +165,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_default.png',
+          audio: '',
           cost: 8,
           used: false,
           weight: 3),
@@ -181,6 +208,7 @@ class TrapsGenerator {
             damage: 0,
             baff: 0,
             img: '',
+            audio: '',
             cost: 0,
             used: false,
             weight: 0);

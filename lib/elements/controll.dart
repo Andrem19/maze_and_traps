@@ -25,7 +25,7 @@ class Control extends StatelessWidget {
                     controller.moveDir = Direction.up;
                     controller.playButton();
                   },
-                  child: Image.asset('assets/images/control/UpDamageIcon.png', height: radiusCircle,)
+                  child:currentDirection(Icon(Icons.arrow_circle_up)),
                 )
               ],
             ),
@@ -40,7 +40,7 @@ class Control extends StatelessWidget {
                     controller.moveDir = Direction.left;
                     controller.playButton();
                   },
-                  child: Image.asset('assets/images/control/texture_LeftRed.png', height: radiusCircle,)
+                  child: currentDirection(Icon(Icons.arrow_circle_left)),
                 ),
                 SizedBox(
                   width: 5,
@@ -67,7 +67,7 @@ class Control extends StatelessWidget {
                     controller.moveDir = Direction.right;
                     controller.playButton();
                   },
-                  child: Image.asset('assets/images/control/texture_RightRed.png', height: radiusCircle,)
+                  child: currentDirection(Icon(Icons.arrow_circle_right)),
                 )
               ],
             ),
@@ -82,7 +82,7 @@ class Control extends StatelessWidget {
                     controller.moveDir = Direction.down;
                     controller.playButton();
                   },
-                  child: Image.asset('assets/images/control/texture_DownRed.png', height: radiusCircle,)
+                  child: currentDirection(Icon(Icons.arrow_circle_down)),
                 )
               ],
             )

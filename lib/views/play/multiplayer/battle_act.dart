@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/battle_act_controller.dart';
 
 import '../../../controllers/main_game_controller.dart';
+import '../../../elements/controll.dart';
 import '../../../elements/play_material/cube_widget_A.dart';
 import '../../../elements/play_material/traps.dart';
 import '../../../elements/shell.dart';
@@ -167,7 +168,7 @@ class BattleAct extends StatelessWidget {
               right: 0,
               child: controller.showSkills.value ? TrapsShow() : SizedBox(),
             ),
-            // Positioned(bottom: 15, right: 15, child: Control()),
+            kIsWeb ? Positioned(bottom: 15, right: 15, child: Control()) : SizedBox(),
           ],
         );
       }),

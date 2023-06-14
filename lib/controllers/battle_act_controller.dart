@@ -172,8 +172,8 @@ class BattleActController extends GetxController {
         : mainCtrl.currentGameMap!.obs;
     gameId.value = mainCtrl.currentmultiplayerGameId;
     yourRole = mainCtrl.YourCurrentRole.value;
-    mazeWidth = mazeMap.value.mazeMap.length;
-    mazeHight = mazeMap.value.mazeMap[0].length;
+    mazeHight = mazeMap.value.mazeMap.length;
+    mazeWidth = mazeMap.value.mazeMap[0].length;
     shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
     timerDuration = mainCtrl.globalSettings.speed_1;
     countRadiusAroundPlayerA = mazeMap.value.countRadiusAroundPlayer_A;
@@ -408,8 +408,8 @@ class BattleActController extends GetxController {
   Coordinates swapCoordinates(Coordinates Player_Coord, int width, int hight) {
     var Player_L_Coord = Coordinates(
         isInit: Player_Coord.isInit,
-        row: (width - 1) - Player_Coord.row,
-        col: (hight - 1) - Player_Coord.col);
+        row: (hight - 1) - Player_Coord.row,
+        col: (width - 1) - Player_Coord.col);
     return Player_L_Coord;
   }
 

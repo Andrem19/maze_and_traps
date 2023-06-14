@@ -8,6 +8,7 @@ class Trap {
   int damage;
   int baff;
   String img;
+  String audio;
   int cost;
   int weight;
   bool used;
@@ -18,6 +19,7 @@ class Trap {
     required this.damage,
     required this.baff,
     required this.img,
+    required this.audio,
     required this.cost,
     required this.weight,
     required this.used,
@@ -30,6 +32,7 @@ class Trap {
     int? damage,
     int? baff,
     String? img,
+    String? audio,
     int? cost,
     int? weight,
     bool? used,
@@ -41,6 +44,7 @@ class Trap {
       damage: damage ?? this.damage,
       baff: baff ?? this.baff,
       img: img ?? this.img,
+      audio: audio ?? this.audio,
       cost: cost ?? this.cost,
       weight: weight ?? this.weight,
       used: used ?? this.used,
@@ -55,6 +59,7 @@ class Trap {
       'damage': damage,
       'baff': baff,
       'img': img,
+      'audio': audio,
       'cost': cost,
       'weight': weight,
       'used': used,
@@ -69,6 +74,7 @@ class Trap {
       damage: map['damage'] as int,
       baff: map['baff'] as int,
       img: map['img'] as String,
+      audio: map['audio'] as String,
       cost: map['cost'] as int,
       weight: map['weight'] as int,
       used: map['used'] as bool,
@@ -82,7 +88,7 @@ class Trap {
 
   @override
   String toString() {
-    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, cost: $cost, weight: $weight, used: $used)';
+    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, audio: $audio, cost: $cost, weight: $weight, used: $used)';
   }
 
   @override
@@ -96,6 +102,7 @@ class Trap {
       other.damage == damage &&
       other.baff == baff &&
       other.img == img &&
+      other.audio == audio &&
       other.cost == cost &&
       other.weight == weight &&
       other.used == used;
@@ -109,6 +116,7 @@ class Trap {
       damage.hashCode ^
       baff.hashCode ^
       img.hashCode ^
+      audio.hashCode ^
       cost.hashCode ^
       weight.hashCode ^
       used.hashCode;

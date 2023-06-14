@@ -167,6 +167,7 @@ class TrapsAndShopController extends GetxController {
             damage: 0,
             baff: 0,
             img: '',
+            audio: '',
             cost: 0,
             used: false,
             weight: 0);
@@ -191,6 +192,7 @@ class TrapsAndShopController extends GetxController {
             damage: 0,
             baff: 0,
             img: '',
+            audio: '',
             cost: 0,
             used: false,
             weight: 0);
