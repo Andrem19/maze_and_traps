@@ -98,6 +98,11 @@ flutter:
     - assets/images/trap_Icons/texture_Ghost.png
     - assets/images/trap_Icons/texture_HealingTrap.png
     - assets/images/trap_Icons/texture_Knife.png
+    - assets/images/trap_Icons/texture_Knifes.png
+    - assets/images/trap_Icons/texture_Meteor.png
+    - assets/images/trap_Icons/texture_Invisibility.png
+    - assets/images/trap_Icons/texture_Builder.png
+    - assets/images/trap_Icons/texture_BootsofSpeed2.png
     - assets/images/trap_Icons/texture_PoisonTrap.png
     - assets/images/trap_Icons/texture_Teleport.png
     - assets/audio/

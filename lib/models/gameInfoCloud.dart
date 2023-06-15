@@ -10,11 +10,29 @@ class GameInfoCloud {
   Coordinates teleport;
   Coordinates bomb;
   Coordinates knifes;
+  Coordinates speed_1;
+  Coordinates speed_2;
+  Coordinates through_wall;
+  Coordinates blindness;
+  Coordinates poison;
+  Coordinates healing;
+  Coordinates meteor;
+  Coordinates invisibility;
+  Coordinates builder;
   GameInfoCloud({
     required this.frozen,
     required this.teleport,
     required this.bomb,
     required this.knifes,
+    required this.speed_1,
+    required this.speed_2,
+    required this.through_wall,
+    required this.blindness,
+    required this.poison,
+    required this.healing,
+    required this.meteor,
+    required this.invisibility,
+    required this.builder,
   });
 
   GameInfoCloud copyWith({
@@ -22,12 +40,30 @@ class GameInfoCloud {
     Coordinates? teleport,
     Coordinates? bomb,
     Coordinates? knifes,
+    Coordinates? speed_1,
+    Coordinates? speed_2,
+    Coordinates? through_wall,
+    Coordinates? blindness,
+    Coordinates? poison,
+    Coordinates? healing,
+    Coordinates? meteor,
+    Coordinates? invisibility,
+    Coordinates? builder,
   }) {
     return GameInfoCloud(
       frozen: frozen ?? this.frozen,
       teleport: teleport ?? this.teleport,
       bomb: bomb ?? this.bomb,
       knifes: knifes ?? this.knifes,
+      speed_1: speed_1 ?? this.speed_1,
+      speed_2: speed_2 ?? this.speed_2,
+      through_wall: through_wall ?? this.through_wall,
+      blindness: blindness ?? this.blindness,
+      poison: poison ?? this.poison,
+      healing: healing ?? this.healing,
+      meteor: meteor ?? this.meteor,
+      invisibility: invisibility ?? this.invisibility,
+      builder: builder ?? this.builder,
     );
   }
 
@@ -37,6 +73,15 @@ class GameInfoCloud {
       'teleport': teleport.toMap(),
       'bomb': bomb.toMap(),
       'knifes': knifes.toMap(),
+      'speed_1': speed_1.toMap(),
+      'speed_2': speed_2.toMap(),
+      'through_wall': through_wall.toMap(),
+      'blindness': blindness.toMap(),
+      'poison': poison.toMap(),
+      'healing': healing.toMap(),
+      'meteor': meteor.toMap(),
+      'invisibility': invisibility.toMap(),
+      'builder': builder.toMap(),
     };
   }
 
@@ -46,6 +91,15 @@ class GameInfoCloud {
       teleport: Coordinates(isInit: false, row: 0, col: 0),
       bomb: Coordinates(isInit: false, row: 0, col: 0),
       knifes: Coordinates(isInit: false, row: 0, col: 0),
+      speed_1: Coordinates(isInit: false, row: 0, col: 0),
+      speed_2: Coordinates(isInit: false, row: 0, col: 0),
+      through_wall: Coordinates(isInit: false, row: 0, col: 0),
+      blindness: Coordinates(isInit: false, row: 0, col: 0),
+      poison: Coordinates(isInit: false, row: 0, col: 0),
+      healing: Coordinates(isInit: false, row: 0, col: 0),
+      meteor: Coordinates(isInit: false, row: 0, col: 0),
+      invisibility: Coordinates(isInit: false, row: 0, col: 0),
+      builder: Coordinates(isInit: false, row: 0, col: 0),
     );
   }
 
@@ -61,6 +115,24 @@ class GameInfoCloud {
           Bomb_B: bomb,
           Knifes_A: oldGI.Knifes_A,
           Knifes_B: knifes,
+          Speed_increase_1_5_A: oldGI.Speed_increase_1_5_A,
+          Speed_increase_1_5_B: speed_1,
+          Speed_increase_2_A: oldGI.Speed_increase_1_5_A,
+          Speed_increase_2_B: speed_2,
+          Go_through_the_wall_A: oldGI.Go_through_the_wall_A,
+          Go_through_the_wall_B: through_wall,
+          Blindness_A: oldGI.Blindness_A,
+          Blindness_B: blindness,
+          Poison_A: oldGI.Poison_A,
+          Poison_B: poison,
+          Healing_A: oldGI.Healing_A,
+          Healing_B: healing,
+          Meteor_A: oldGI.Meteor_A,
+          Meteor_B: meteor,
+          Invisibility_A: oldGI.Invisibility_A,
+          Invisibility_B: invisibility,
+          Builder_A: oldGI.Blindness_A,
+          Builder_B: builder,
           );
     } else {
       return GameInfo(
@@ -72,7 +144,25 @@ class GameInfoCloud {
           Bomb_A: bomb,
           Bomb_B: oldGI.Bomb_B,
           Knifes_A: knifes,
-          Knifes_B: oldGI.Knifes_B
+          Knifes_B: oldGI.Knifes_B,
+          Speed_increase_1_5_A: speed_1,
+          Speed_increase_1_5_B: oldGI.Speed_increase_1_5_B,
+          Speed_increase_2_A: speed_2,
+          Speed_increase_2_B: oldGI.Speed_increase_1_5_B,
+          Go_through_the_wall_A: through_wall,
+          Go_through_the_wall_B: oldGI.Go_through_the_wall_B,
+          Blindness_A: blindness,
+          Blindness_B: oldGI.Blindness_B,
+          Poison_A: poison,
+          Poison_B: oldGI.Poison_B,
+          Healing_A: healing,
+          Healing_B: oldGI.Healing_B,
+          Meteor_A: meteor,
+          Meteor_B: oldGI.Meteor_B,
+          Invisibility_A: invisibility,
+          Invisibility_B: oldGI.Invisibility_B,
+          Builder_A: builder,
+          Builder_B: oldGI.Blindness_B,
           );
     }
   }
@@ -83,6 +173,15 @@ class GameInfoCloud {
       teleport: Coordinates.fromMap(map['teleport'] as Map<String,dynamic>),
       bomb: Coordinates.fromMap(map['bomb'] as Map<String,dynamic>),
       knifes: Coordinates.fromMap(map['knifes'] as Map<String,dynamic>),
+      speed_1: Coordinates.fromMap(map['speed_1'] as Map<String,dynamic>),
+      speed_2: Coordinates.fromMap(map['speed_2'] as Map<String,dynamic>),
+      through_wall: Coordinates.fromMap(map['through_wall'] as Map<String,dynamic>),
+      blindness: Coordinates.fromMap(map['blindness'] as Map<String,dynamic>),
+      poison: Coordinates.fromMap(map['poison'] as Map<String,dynamic>),
+      healing: Coordinates.fromMap(map['healing'] as Map<String,dynamic>),
+      meteor: Coordinates.fromMap(map['meteor'] as Map<String,dynamic>),
+      invisibility: Coordinates.fromMap(map['invisibility'] as Map<String,dynamic>),
+      builder: Coordinates.fromMap(map['builder'] as Map<String,dynamic>),
     );
   }
 
@@ -93,7 +192,7 @@ class GameInfoCloud {
 
   @override
   String toString() {
-    return 'GameInfoCloud(frozen: $frozen, teleport: $teleport, bomb: $bomb, knifes: $knifes)';
+    return 'GameInfoCloud(frozen: $frozen, teleport: $teleport, bomb: $bomb, knifes: $knifes, speed_1: $speed_1, speed_2: $speed_2, through_wall: $through_wall, blindness: $blindness, poison: $poison, healing: $healing, meteor: $meteor, invisibility: $invisibility, builder: $builder)';
   }
 
   @override
@@ -104,7 +203,16 @@ class GameInfoCloud {
       other.frozen == frozen &&
       other.teleport == teleport &&
       other.bomb == bomb &&
-      other.knifes == knifes;
+      other.knifes == knifes &&
+      other.speed_1 == speed_1 &&
+      other.speed_2 == speed_2 &&
+      other.through_wall == through_wall &&
+      other.blindness == blindness &&
+      other.poison == poison &&
+      other.healing == healing &&
+      other.meteor == meteor &&
+      other.invisibility == invisibility &&
+      other.builder == builder;
   }
 
   @override
@@ -112,6 +220,15 @@ class GameInfoCloud {
     return frozen.hashCode ^
       teleport.hashCode ^
       bomb.hashCode ^
-      knifes.hashCode;
+      knifes.hashCode ^
+      speed_1.hashCode ^
+      speed_2.hashCode ^
+      through_wall.hashCode ^
+      blindness.hashCode ^
+      poison.hashCode ^
+      healing.hashCode ^
+      meteor.hashCode ^
+      invisibility.hashCode ^
+      builder.hashCode;
   }
 }

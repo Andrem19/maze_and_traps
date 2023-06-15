@@ -8,6 +8,7 @@ class Trap {
   int damage;
   int baff;
   String img;
+  String img_2;
   String audio;
   int cost;
   int weight;
@@ -19,6 +20,7 @@ class Trap {
     required this.damage,
     required this.baff,
     required this.img,
+    required this.img_2,
     required this.audio,
     required this.cost,
     required this.weight,
@@ -32,6 +34,7 @@ class Trap {
     int? damage,
     int? baff,
     String? img,
+    String? img_2,
     String? audio,
     int? cost,
     int? weight,
@@ -44,6 +47,7 @@ class Trap {
       damage: damage ?? this.damage,
       baff: baff ?? this.baff,
       img: img ?? this.img,
+      img_2: img_2 ?? this.img_2,
       audio: audio ?? this.audio,
       cost: cost ?? this.cost,
       weight: weight ?? this.weight,
@@ -59,6 +63,7 @@ class Trap {
       'damage': damage,
       'baff': baff,
       'img': img,
+      'img_2': img_2,
       'audio': audio,
       'cost': cost,
       'weight': weight,
@@ -74,6 +79,7 @@ class Trap {
       damage: map['damage'] as int,
       baff: map['baff'] as int,
       img: map['img'] as String,
+      img_2: map['img_2'] as String,
       audio: map['audio'] as String,
       cost: map['cost'] as int,
       weight: map['weight'] as int,
@@ -88,7 +94,7 @@ class Trap {
 
   @override
   String toString() {
-    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, audio: $audio, cost: $cost, weight: $weight, used: $used)';
+    return 'Trap(id: $id, name: $name, description: $description, damage: $damage, baff: $baff, img: $img, img_2: $img_2, audio: $audio, cost: $cost, weight: $weight, used: $used)';
   }
 
   @override
@@ -102,6 +108,7 @@ class Trap {
       other.damage == damage &&
       other.baff == baff &&
       other.img == img &&
+      other.img_2 == img_2 &&
       other.audio == audio &&
       other.cost == cost &&
       other.weight == weight &&
@@ -116,6 +123,7 @@ class Trap {
       damage.hashCode ^
       baff.hashCode ^
       img.hashCode ^
+      img_2.hashCode ^
       audio.hashCode ^
       cost.hashCode ^
       weight.hashCode ^

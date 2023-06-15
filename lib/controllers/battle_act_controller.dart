@@ -44,6 +44,8 @@ class BattleActController extends GetxController {
   Rx<Direction> moveDirection = Direction.up.obs;
   int shaddowRadius = 3;
   int timerDuration = 1200;
+  int A_Caught_Old = 0;
+  int B_Caught_Old = 0;
   var _stream;
   var oldSubscription;
 
@@ -53,7 +55,7 @@ class BattleActController extends GetxController {
   RxBool right = false.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     mainCtrl.changeStatusInGame(true);
     gameEngine();
     super.onInit();
@@ -232,10 +234,12 @@ class BattleActController extends GetxController {
           final playerBCoord = data['Player_B_Coord'];
           scrollOwner = data['scrollOwner'];
           mainCtrl.player_B_Life.value = data['Player_B_Life'];
-          bool B_Caught = data['Player_B_caught'];
+          int B_Caught_New = data['Player_B_caught'];
           updateCoordinates(gameInfoB, playerBCoord, scrollOwner, yourRole);
           final gameStatus = data['gameStatus'];
-          if (B_Caught) {
+          if (B_Caught_New != B_Caught_Old && B_Caught_New != 0) {
+            B_Caught_Old = B_Caught_New;
+            changeInit(B_Caught_New, yourRole);
             textMessage.value = setUpMessageAfterTrap();
           }
           if (gameStatus == 'finish') {
@@ -246,10 +250,12 @@ class BattleActController extends GetxController {
           final playerACoord = data['Player_A_Coord'];
           scrollOwner = data['scrollOwner'];
           mainCtrl.player_A_Life.value = data['Player_A_Life'];
-          bool A_Caught = data['Player_A_caught'];
+          int A_Caught_New = data['Player_A_caught'];
           updateCoordinates(gameInfoA, playerACoord, scrollOwner, yourRole);
           gameStatus = data['gameStatus'];
-          if (A_Caught) {
+          if (A_Caught_New != A_Caught_Old && A_Caught_New != 0) {
+            A_Caught_Old = A_Caught_New;
+            changeInit(A_Caught_New, yourRole);
             textMessage.value = setUpMessageAfterTrap();
           }
           if (gameStatus == 'finish') {
@@ -328,14 +334,13 @@ class BattleActController extends GetxController {
     if (yourRole == 'A') {
       if (mazeMap.value.Player_A_Coord.row == 17 &&
           mazeMap.value.Player_A_Coord.col == 10) {
-        print(
-            '${mazeMap.value.Player_A_Coord.row} : ${mazeMap.value.Player_A_Coord.col}');
         await firebaseFirestore
             .collection('gameBattle')
             .doc(gameId.value)
             .update({
           'scrollOwner': 'A',
         });
+        await FlameAudio.play('sfx_scroll.mp3');
       }
     } else if (yourRole == 'B') {
       if (mazeMap.value.Player_B_Coord.row == 17 &&
@@ -348,6 +353,7 @@ class BattleActController extends GetxController {
             .update({
           'scrollOwner': 'B',
         });
+        await FlameAudio.play('sfx_scroll.mp3');
       }
     }
   }
@@ -464,17 +470,99 @@ class BattleActController extends GetxController {
   }
 
   String setUpMessageAfterTrap() {
-    changePlayerCaughtOnServer();
     double distance =
         double.parse(mazeMap.value.calculateDistance().toStringAsFixed(2));
     messageCounter = 4;
     return 'The enemy fell into your trap. Distance between you: $distance';
   }
 
-  void changePlayerCaughtOnServer() async {
-    String enemy_role = yourRole == 'A' ? 'B' : 'A';
-    await firebaseFirestore.collection('gameBattle').doc(gameId.value).update({
-      'Player_${enemy_role}_caught': false,
-    });
+  void changeInit(int id, String role) {
+    if (role == 'A') {
+      switch (id) {
+        case 1:
+          gameInfo.value.Frozen_trap_A.isInit = false;
+          break;
+        case 2:
+          gameInfo.value.Teleport_A.isInit = false;
+          break;
+        case 3:
+          gameInfo.value.Bomb_A.isInit = false;
+          break;
+        case 4:
+          gameInfo.value.Knifes_A.isInit = false;
+          break;
+        case 5:
+          gameInfo.value.Speed_increase_1_5_A.isInit = false;
+          break;
+        case 6:
+          gameInfo.value.Speed_increase_2_A.isInit = false;
+          break;
+        case 7:
+          gameInfo.value.Go_through_the_wall_A.isInit = false;
+          break;
+        case 8:
+          gameInfo.value.Blindness_A.isInit = false;
+          break;
+        case 9:
+          gameInfo.value.Poison_A.isInit = false;
+          break;
+        case 10:
+          gameInfo.value.Healing_A.isInit = false;
+          break;
+        case 11:
+          gameInfo.value.Meteor_A.isInit = false;
+          break;
+        case 12:
+          gameInfo.value.Invisibility_A.isInit = false;
+          break;
+        case 13:
+          gameInfo.value.Builder_A.isInit = false;
+          break;
+        default:
+      }
+    } else {
+      switch (id) {
+        case 1:
+          gameInfo.value.Frozen_trap_B.isInit = false;
+          break;
+        case 2:
+          gameInfo.value.Teleport_B.isInit = false;
+          break;
+        case 3:
+          gameInfo.value.Bomb_B.isInit = false;
+          break;
+        case 4:
+          gameInfo.value.Knifes_B.isInit = false;
+          break;
+        case 5:
+          gameInfo.value.Speed_increase_1_5_B.isInit = false;
+          break;
+        case 6:
+          gameInfo.value.Speed_increase_2_B.isInit = false;
+          break;
+        case 7:
+          gameInfo.value.Go_through_the_wall_B.isInit = false;
+          break;
+        case 8:
+          gameInfo.value.Blindness_B.isInit = false;
+          break;
+        case 9:
+          gameInfo.value.Poison_B.isInit = false;
+          break;
+        case 10:
+          gameInfo.value.Healing_B.isInit = false;
+          break;
+        case 11:
+          gameInfo.value.Meteor_B.isInit = false;
+          break;
+        case 12:
+          gameInfo.value.Invisibility_B.isInit = false;
+          break;
+        case 13:
+          gameInfo.value.Builder_B.isInit = false;
+          break;
+        default:
+      }
+    }
   }
 }

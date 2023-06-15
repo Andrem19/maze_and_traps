@@ -29,10 +29,10 @@ class TrapsShow extends StatelessWidget {
                         : () {
                             if (element.name != 'empty') {
                               trapsController.traps(element);
-                              controller.backpackSet
-                                  .firstWhere((p0) => p0.name == element.name)
-                                  .used = true;
-                              controller.update();
+                              // controller.backpackSet
+                              //     .firstWhere((p0) => p0.name == element.name)
+                              //     .used = true;
+                              // controller.update();
                             }
                           },
                     child: Opacity(

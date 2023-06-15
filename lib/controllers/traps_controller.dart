@@ -8,10 +8,7 @@ import 'package:get/get.dart';
 
 import 'package:mazeandtraps/controllers/battle_act_controller.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
-import 'package:mazeandtraps/models/game_info.dart';
 import 'package:mazeandtraps/models/maze_map.dart';
-import 'package:mazeandtraps/models/node.dart';
-import 'package:mazeandtraps/services/compare_coord.dart';
 
 import '../models/trap.dart';
 import '../services/generate_traps.dart';
@@ -26,6 +23,7 @@ class TrapsController extends GetxController {
   bool teleportActivate = false;
   bool bombActivate = false;
   bool knifesActivate = false;
+  int knifes = 2;
 
   @override
   void onInit() {
@@ -122,7 +120,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           frozenActivate = true;
           playerFrozen = 8;
-          IamCaught();
+          IamCaught(1);
           callback();
         }
       }
@@ -131,7 +129,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           teleportActivate = true;
           teleportAction();
-          IamCaught();
+          IamCaught(2);
           callback();
         }
       }
@@ -141,7 +139,7 @@ class TrapsController extends GetxController {
           bombActivate = true;
           damage(TrapsGenerator.bomb.damage);
           generateMeteor();
-          IamCaught();
+          IamCaught(3);
           callback();
         }
       }
@@ -150,7 +148,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           knifesActivate = true;
           damage(TrapsGenerator.knife.damage);
-          IamCaught();
+          IamCaught(4);
           callback();
         }
       }
@@ -184,6 +182,7 @@ class TrapsController extends GetxController {
             (position) => _battleActController.yourRole == 'A'
                 ? _battleActController.gameInfo.value.Frozen_trap_A = position
                 : _battleActController.gameInfo.value.Frozen_trap_B = position);
+        setTrapUsed(1);
         break;
       case 2:
         installTrap(
@@ -191,6 +190,7 @@ class TrapsController extends GetxController {
             (position) => _battleActController.yourRole == 'A'
                 ? _battleActController.gameInfo.value.Teleport_A = position
                 : _battleActController.gameInfo.value.Teleport_B = position);
+        setTrapUsed(2);
         break;
       case 3:
         installTrap(
@@ -198,6 +198,7 @@ class TrapsController extends GetxController {
             (position) => _battleActController.yourRole == 'A'
                 ? _battleActController.gameInfo.value.Bomb_A = position
                 : _battleActController.gameInfo.value.Bomb_B = position);
+        setTrapUsed(3);
         break;
       case 4:
         installTrap(
@@ -205,10 +206,20 @@ class TrapsController extends GetxController {
             (position) => _battleActController.yourRole == 'A'
                 ? _battleActController.gameInfo.value.Knifes_A = position
                 : _battleActController.gameInfo.value.Knifes_B = position);
+        if (knifes == 1) {
+          setTrapUsed(4);
+        } else {
+          knifes--;
+        }
         break;
       default:
     }
+    main.update();
     await FlameAudio.play('sfx_TrapSet.mp3');
+  }
+
+  void setTrapUsed(int id) {
+    main.backpackSet.firstWhere((p0) => p0.id == id).used = true;
   }
 
   void allTrapsToNotUsed() {
@@ -250,15 +261,23 @@ class TrapsController extends GetxController {
     int row = 0;
     int col = 0;
     if (_battleActController.yourRole == 'A') {
-      row = rand.nextInt(_battleActController.mazeHight - _battleActController.mazeMap.value.Player_A_Coord.row+1) + _battleActController.mazeMap.value.Player_A_Coord.row-1;
+      row = rand.nextInt(_battleActController.mazeHight -
+              _battleActController.mazeMap.value.Player_A_Coord.row +
+              1) +
+          _battleActController.mazeMap.value.Player_A_Coord.row -
+          1;
     } else {
-      row = rand.nextInt(_battleActController.mazeHight - _battleActController.mazeMap.value.Player_B_Coord.row+1) + _battleActController.mazeMap.value.Player_B_Coord.row-1;
+      row = rand.nextInt(_battleActController.mazeHight -
+              _battleActController.mazeMap.value.Player_B_Coord.row +
+              1) +
+          _battleActController.mazeMap.value.Player_B_Coord.row -
+          1;
     }
     col = rand.nextInt(_battleActController.mazeWidth);
     return Coordinates(isInit: true, row: row, col: col);
   }
 
-   Coordinates generateRandomCoordforMeteor() {
+  Coordinates generateRandomCoordforMeteor() {
     var rand = Random();
     int row = rand.nextInt(_battleActController.mazeHight);
     int col = rand.nextInt(_battleActController.mazeWidth);
@@ -272,6 +291,7 @@ class TrapsController extends GetxController {
     }
     return res;
   }
+
   Coordinates randCoordForMeteor() {
     Coordinates res = generateRandomCoordforMeteor();
     if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
@@ -288,20 +308,20 @@ class TrapsController extends GetxController {
     return Player_L_Coord;
   }
 
-  void IamCaught() async {
+  void IamCaught(int id) async {
     if (_battleActController.yourRole == 'A') {
       await firebaseFirestore
           .collection('gameBattle')
           .doc(_battleActController.gameId.value)
           .update({
-        'Player_A_caught': true,
+        'Player_A_caught': id,
       });
     } else {
       await firebaseFirestore
           .collection('gameBattle')
           .doc(_battleActController.gameId.value)
           .update({
-        'Player_B_caught': true,
+        'Player_B_caught': id,
       });
     }
   }

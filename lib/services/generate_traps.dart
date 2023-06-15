@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:mazeandtraps/models/game_info.dart';
+
 import '../models/trap.dart';
 
 class TrapsGenerator {
@@ -5,14 +8,18 @@ class TrapsGenerator {
   static Trap teleport = getTraps().where((t) => t.name == 'Teleport').first;
   static Trap bomb = getTraps().where((t) => t.name == 'Bomb').first;
   static Trap knife = getTraps().where((t) => t.name == 'Knife').first;
-  static Trap speed15 = getTraps().where((t) => t.name == 'Speed increase x 1.5').first;
-  static Trap speed2 = getTraps().where((t) => t.name == 'Speed increase x 2').first;
-  static Trap ghost = getTraps().where((t) => t.name == 'Go through the wall').first;
+  static Trap speed15 =
+      getTraps().where((t) => t.name == 'Speed increase x 1.5').first;
+  static Trap speed2 =
+      getTraps().where((t) => t.name == 'Speed increase x 2').first;
+  static Trap ghost =
+      getTraps().where((t) => t.name == 'Go through the wall').first;
   static Trap blindness = getTraps().where((t) => t.name == 'Blindness').first;
   static Trap poison = getTraps().where((t) => t.name == 'Poison').first;
   static Trap healing = getTraps().where((t) => t.name == 'Healing').first;
   static Trap meteor = getTraps().where((t) => t.name == 'Meteor').first;
-  static Trap invisibility = getTraps().where((t) => t.name == 'Invisibility').first;
+  static Trap invisibility =
+      getTraps().where((t) => t.name == 'Invisibility').first;
   static Trap builder = getTraps().where((t) => t.name == 'Builder').first;
 
   static List<Trap> getTraps() {
@@ -25,6 +32,7 @@ class TrapsGenerator {
           damage: 5,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_FrostTrap.png',
+          img_2: '',
           audio: 'sfx_FrostTrap.mp3',
           cost: 3,
           used: false,
@@ -37,6 +45,7 @@ class TrapsGenerator {
           damage: 10,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Teleport.png',
+          img_2: '',
           audio: 'sfx_teleport.mp3',
           cost: 3,
           used: false,
@@ -48,6 +57,7 @@ class TrapsGenerator {
           damage: 20,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_bomb.png',
+          img_2: '',
           audio: 'sfx_Bomb.mp3',
           cost: 3,
           used: false,
@@ -60,6 +70,7 @@ class TrapsGenerator {
           damage: 30,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Knife.png',
+          img_2: 'assets/images/trap_Icons/texture_Knifes.png',
           audio: 'sfx_KnifeTrap.mp3',
           cost: 12,
           used: false,
@@ -72,6 +83,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_BootOfSpeed.png',
+          img_2: '',
           audio: '',
           cost: 5,
           used: false,
@@ -83,7 +95,8 @@ class TrapsGenerator {
               'Give yourself a quick boost of speed 100%, leaving your rival in the dust.',
           damage: 0,
           baff: 0,
-          img: 'assets/images/trap_Icons/texture_BootOfSpeed.png',
+          img: 'assets/images/trap_Icons/texture_BootsofSpeed2.png',
+          img_2: '',
           audio: '',
           cost: 12,
           used: false,
@@ -96,6 +109,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_Ghost.png',
+          img_2: '',
           audio: '',
           cost: 8,
           used: false,
@@ -108,6 +122,7 @@ class TrapsGenerator {
           damage: 10,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_blindingTrap.png',
+          img_2: '',
           audio: '',
           cost: 2,
           used: false,
@@ -120,6 +135,7 @@ class TrapsGenerator {
           damage: 15,
           baff: 0,
           img: 'assets/images/trap_Icons/texture_PoisonTrap.png',
+          img_2: '',
           audio: '',
           cost: 10,
           used: false,
@@ -131,6 +147,7 @@ class TrapsGenerator {
           damage: 0,
           baff: 25,
           img: 'assets/images/trap_Icons/texture_HealingTrap.png',
+          img_2: '',
           audio: '',
           cost: 12,
           used: false,
@@ -142,7 +159,8 @@ class TrapsGenerator {
               'A meteor shower falls from the sky all over the map, inflicting a random defeat on different cells',
           damage: 0,
           baff: 0,
-          img: 'assets/images/trap_default.png',
+          img: 'assets/images/trap_Icons/texture_Meteor.png',
+          img_2: '',
           audio: '',
           cost: 12,
           used: false,
@@ -153,7 +171,8 @@ class TrapsGenerator {
           description: 'You become invisible for 20 seconds',
           damage: 0,
           baff: 0,
-          img: 'assets/images/trap_default.png',
+          img: 'assets/images/trap_Icons/texture_Invisibility.png',
+          img_2: '',
           audio: '',
           cost: 8,
           used: false,
@@ -164,7 +183,8 @@ class TrapsGenerator {
           description: 'Builds an illusion of a wall that lasts 15 seconds',
           damage: 0,
           baff: 0,
-          img: 'assets/images/trap_default.png',
+          img: 'assets/images/trap_Icons/texture_Builder.png',
+          img_2: '',
           audio: '',
           cost: 8,
           used: false,
@@ -172,6 +192,8 @@ class TrapsGenerator {
     ];
     return upTo(traps, 16);
   }
+
+  
 
   static List<Trap> toListTraps(List<dynamic> traps, List<Trap> allTraps) {
     List<Trap> listToReturn = [];
@@ -208,6 +230,7 @@ class TrapsGenerator {
             damage: 0,
             baff: 0,
             img: '',
+            img_2: '',
             audio: '',
             cost: 0,
             used: false,
