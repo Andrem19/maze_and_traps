@@ -77,13 +77,16 @@ class _NodeWidgetState extends State<NodeWidget> {
       );
     } else {
       _myStuffWidget = MyStuffWidget(
-              playerACoord: widget.playerACoord,
-              playerBCoord: widget.playerBCoord,
-              nodeProto: widget.nodeProto,
-              gameInfo: widget.gameInfo,
-            );
-            return _myStuffWidget!;
+        playerACoord: widget.playerACoord,
+        playerBCoord: widget.playerBCoord,
+        nodeProto: widget.nodeProto,
+        gameInfo: widget.gameInfo,
+      );
+      return _myStuffWidget!;
     }
-    return newWidget;
+    return widget.nodeProto.additionalStuff != null
+        ? widget.nodeProto.additionalStuff!()
+        : newWidget;
+    // return newWidget;
   }
 }

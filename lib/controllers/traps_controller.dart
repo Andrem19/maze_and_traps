@@ -3,12 +3,14 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:mazeandtraps/controllers/battle_act_controller.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/models/game_info.dart';
 import 'package:mazeandtraps/models/maze_map.dart';
+import 'package:mazeandtraps/models/node.dart';
 import 'package:mazeandtraps/services/compare_coord.dart';
 
 import '../models/trap.dart';
@@ -85,9 +87,8 @@ class TrapsController extends GetxController {
           () async {
         await FlameAudio.play(TrapsGenerator.bomb.audio);
       });
-      checkTrap(
-          'knifes', _battleActController.gameInfo.value.Knifes_B, knifesActivate,
-          () async {
+      checkTrap('knifes', _battleActController.gameInfo.value.Knifes_B,
+          knifesActivate, () async {
         await FlameAudio.play(TrapsGenerator.knife.audio);
       });
     } else {
@@ -104,9 +105,8 @@ class TrapsController extends GetxController {
           () async {
         await FlameAudio.play(TrapsGenerator.bomb.audio);
       });
-      checkTrap(
-          'knifes', _battleActController.gameInfo.value.Knifes_A, knifesActivate,
-          () async {
+      checkTrap('knifes', _battleActController.gameInfo.value.Knifes_A,
+          knifesActivate, () async {
         await FlameAudio.play(TrapsGenerator.knife.audio);
       });
     }
@@ -140,6 +140,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           bombActivate = true;
           damage(TrapsGenerator.bomb.damage);
+          generateMeteor();
           IamCaught();
           callback();
         }
@@ -249,11 +250,18 @@ class TrapsController extends GetxController {
     int row = 0;
     int col = 0;
     if (_battleActController.yourRole == 'A') {
-      row = rand.nextInt(_battleActController.mazeMap.value.Player_A_Coord.row);
+      row = rand.nextInt(_battleActController.mazeHight - _battleActController.mazeMap.value.Player_A_Coord.row+1) + _battleActController.mazeMap.value.Player_A_Coord.row-1;
     } else {
-      row = rand.nextInt(_battleActController.mazeMap.value.Player_B_Coord.row);
+      row = rand.nextInt(_battleActController.mazeHight - _battleActController.mazeMap.value.Player_B_Coord.row+1) + _battleActController.mazeMap.value.Player_B_Coord.row-1;
     }
     col = rand.nextInt(_battleActController.mazeWidth);
+    return Coordinates(isInit: true, row: row, col: col);
+  }
+
+   Coordinates generateRandomCoordforMeteor() {
+    var rand = Random();
+    int row = rand.nextInt(_battleActController.mazeHight);
+    int col = rand.nextInt(_battleActController.mazeWidth);
     return Coordinates(isInit: true, row: row, col: col);
   }
 
@@ -261,6 +269,13 @@ class TrapsController extends GetxController {
     Coordinates res = generateRandomCoord();
     if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
       randCoord();
+    }
+    return res;
+  }
+  Coordinates randCoordForMeteor() {
+    Coordinates res = generateRandomCoordforMeteor();
+    if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
+      randCoordForMeteor();
     }
     return res;
   }
@@ -289,5 +304,27 @@ class TrapsController extends GetxController {
         'Player_B_caught': true,
       });
     }
+  }
+
+  Widget returnMeteor() {
+    return Image.asset(TrapsGenerator.bomb.img);
+  }
+
+  void generateMeteor() {
+    int count =
+        _battleActController.mazeHight * _battleActController.mazeWidth ~/ 4;
+    for (var i = 0; i < count; i++) {
+      var coord = randCoordForMeteor();
+      _battleActController.mazeMap.value.mazeMap[coord.row][coord.col]
+          .additionalStuff = returnMeteor;
+    }
+  }
+
+  void allAditionalStuffToNull() {
+    _battleActController.mazeMap.value.mazeMap.forEach((element) {
+      element.forEach((el) {
+        el.additionalStuff = null;
+      });
+    });
   }
 }

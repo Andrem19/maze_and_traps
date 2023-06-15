@@ -10,7 +10,6 @@ import '../models/maze_map.dart';
 import '../models/node.dart';
 import 'compare_coord.dart';
 
-
 // class CreateStuffWidget extends StatelessWidget {
 //   final double opacityValue = 0.7;
 //   final Coordinates playerACoord;
@@ -52,49 +51,49 @@ import 'compare_coord.dart';
 //             child: Image.asset('assets/images/scrolls.png'),
 //           );
 //       }
-      
-//       if (!nodeProto.isShaddow 
-//           && !Compare.compareCoord(playerACoord, nodeProto) 
+
+//       if (!nodeProto.isShaddow
+//           && !Compare.compareCoord(playerACoord, nodeProto)
 //           && !Compare.compareCoord(playerBCoord, nodeProto)) {
 //         if ((myRole == 'A' && Compare.compareCoord(gameInfo.Teleport_A, nodeProto)) ||
 //             (myRole == 'B' && Compare.compareCoord(gameInfo.Teleport_B, nodeProto))) {
 //           return Container(
 //             child: Image.asset(TrapsGenerator.teleport.img),
 //           );
-//         } 
-//       } 
-      
-//       if (!nodeProto.isShaddow 
-//         && !Compare.compareCoord(playerACoord, nodeProto) 
+//         }
+//       }
+
+//       if (!nodeProto.isShaddow
+//         && !Compare.compareCoord(playerACoord, nodeProto)
 //         && !Compare.compareCoord(playerBCoord, nodeProto)) {
 //         if ((myRole == 'A' && Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto)) ||
 //             (myRole == 'B' && Compare.compareCoord(gameInfo.Frozen_trap_B, nodeProto))) {
 //           return Container(
 //             child: Image.asset(TrapsGenerator.frozen.img),
 //           );
-//         } 
+//         }
 //       }
 
-//       if (!nodeProto.isShaddow 
-//         && !Compare.compareCoord(playerACoord, nodeProto) 
+//       if (!nodeProto.isShaddow
+//         && !Compare.compareCoord(playerACoord, nodeProto)
 //         && !Compare.compareCoord(playerBCoord, nodeProto)) {
 //         if ((myRole == 'A' && Compare.compareCoord(gameInfo.Bomb_A, nodeProto)) ||
 //             (myRole == 'B' && Compare.compareCoord(gameInfo.Bomb_B, nodeProto))) {
 //           return Container(
 //             child: Image.asset(TrapsGenerator.bomb.img),
 //           );
-//         } 
+//         }
 //       }
 
-//       if (!nodeProto.isShaddow 
-//         && !Compare.compareCoord(playerACoord, nodeProto) 
+//       if (!nodeProto.isShaddow
+//         && !Compare.compareCoord(playerACoord, nodeProto)
 //         && !Compare.compareCoord(playerBCoord, nodeProto)) {
 //         if ((myRole == 'A' && Compare.compareCoord(gameInfo.Knifes_A, nodeProto)) ||
 //             (myRole == 'B' && Compare.compareCoord(gameInfo.Knifes_B, nodeProto))) {
 //           return Container(
 //             child: Image.asset(TrapsGenerator.knife.img),
 //           );
-//         } 
+//         }
 //       }
 //     }
 //     return SizedBox();
@@ -126,19 +125,23 @@ class CreateStuffWidget extends StatelessWidget {
     } else if (Compare.compareCoord(playerBCoord, nodeProto)) {
       return getPlayerBasedOnRole(main, myRole, nodeProto, false);
     } else {
-      if (nodeProto.row == 17 && nodeProto.col == 10 && gameInfo.scrolOwner == 'none') {
+      if (nodeProto.row == 17 &&
+          nodeProto.col == 10 &&
+          gameInfo.scrolOwner == 'none') {
         return Container(
-            child: Image.asset('assets/images/scrolls.png'),
-          );
+          child: Image.asset('assets/images/scrolls.png'),
+        );
       }
 
-      Widget? widgetToReturn = checkIfTrapShouldBeRendered(main, myRole, nodeProto, gameInfo);
+      Widget? widgetToReturn =
+          checkIfTrapShouldBeRendered(main, myRole, nodeProto, gameInfo);
 
       return widgetToReturn ?? SizedBox();
     }
   }
 
-  Widget getPlayerBasedOnRole(MainGameController main, String myRole, NodeCube nodeProto, bool isPlayerA) {
+  Widget getPlayerBasedOnRole(MainGameController main, String myRole,
+      NodeCube nodeProto, bool isPlayerA) {
     if (main.YourCurrentRole == 'A') {
       return isPlayerA
           ? Player_A.getPlayer(Colors.green, Color(0xFF306D31))
@@ -154,20 +157,24 @@ class CreateStuffWidget extends StatelessWidget {
     }
   }
 
-  Widget checkIfTrapShouldBeRendered(
-      MainGameController main, String myRole, NodeCube nodeProto, GameInfo gameInfo) {
+  Widget checkIfTrapShouldBeRendered(MainGameController main, String myRole,
+      NodeCube nodeProto, GameInfo gameInfo) {
     if (!nodeProto.isShaddow &&
         !Compare.compareCoord(playerACoord, nodeProto) &&
         !Compare.compareCoord(playerBCoord, nodeProto)) {
-      if ((myRole == 'A' && Compare.compareCoord(gameInfo.Teleport_A, nodeProto)) ||
-          (myRole == 'B' && Compare.compareCoord(gameInfo.Teleport_B, nodeProto))) {
+      if ((myRole == 'A' &&
+              Compare.compareCoord(gameInfo.Teleport_A, nodeProto)) ||
+          (myRole == 'B' &&
+              Compare.compareCoord(gameInfo.Teleport_B, nodeProto))) {
         return Container(
           child: Image.asset(TrapsGenerator.teleport.img),
         );
       }
 
-      if ((myRole == 'A' && Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto)) ||
-          (myRole == 'B' && Compare.compareCoord(gameInfo.Frozen_trap_B, nodeProto))) {
+      if ((myRole == 'A' &&
+              Compare.compareCoord(gameInfo.Frozen_trap_A, nodeProto)) ||
+          (myRole == 'B' &&
+              Compare.compareCoord(gameInfo.Frozen_trap_B, nodeProto))) {
         return Container(
           child: Image.asset(TrapsGenerator.frozen.img),
         );
@@ -180,15 +187,19 @@ class CreateStuffWidget extends StatelessWidget {
         );
       }
 
-      if ((myRole == 'A' && Compare.compareCoord(gameInfo.Knifes_A, nodeProto)) ||
-          (myRole == 'B' && Compare.compareCoord(gameInfo.Knifes_B, nodeProto))) {
+      if ((myRole == 'A' &&
+              Compare.compareCoord(gameInfo.Knifes_A, nodeProto)) ||
+          (myRole == 'B' &&
+              Compare.compareCoord(gameInfo.Knifes_B, nodeProto))) {
         return Container(
           child: Image.asset(TrapsGenerator.knife.img),
         );
       }
+      return nodeProto.additionalStuff == null 
+          ? SizedBox()
+          : nodeProto.additionalStuff!();
     }
 
     return SizedBox();
   }
 }
-

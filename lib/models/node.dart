@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 class NodeCube {
   int row;
   int col;
@@ -10,6 +12,7 @@ class NodeCube {
   bool editAlowd;
   bool is_A_START;
   bool is_B_START;
+  Widget Function()? additionalStuff;
   NodeCube({
     required this.row,
     required this.col,
