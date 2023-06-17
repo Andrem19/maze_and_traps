@@ -24,6 +24,7 @@ class TrapsController extends GetxController {
   bool bombActivate = false;
   bool knifesActivate = false;
   int knifes = 2;
+  int showTrapWhenCaught = 0;
 
   @override
   void onInit() {
@@ -71,6 +72,16 @@ class TrapsController extends GetxController {
   }
 
   Future<void> checkAllTraps() async {
+    if (showTrapWhenCaught == 1) {
+      _battleActController.mazeMap.value.mazeMap.forEach((element) {
+        element.forEach((el) {
+          el.additionalStuff = null;
+        });
+      });
+      showTrapWhenCaught--;
+    } else if (showTrapWhenCaught > 0) {
+      showTrapWhenCaught--;
+    }
     if (_battleActController.yourRole == 'A') {
       checkTrap('frozen', _battleActController.gameInfo.value.Frozen_trap_B,
           frozenActivate, () async {
@@ -120,6 +131,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           frozenActivate = true;
           playerFrozen = 8;
+          showTrapOnceWhenCaught(TrapsGenerator.frozen.img);
           IamCaught(1);
           callback();
         }
@@ -128,6 +140,7 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           teleportActivate = true;
+          showTrapOnceWhenCaught(TrapsGenerator.teleport.img);
           teleportAction();
           IamCaught(2);
           callback();
@@ -137,8 +150,8 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           bombActivate = true;
+          showTrapOnceWhenCaught(TrapsGenerator.bomb.img);
           damage(TrapsGenerator.bomb.damage);
-          generateMeteor();
           IamCaught(3);
           callback();
         }
@@ -147,6 +160,7 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           knifesActivate = true;
+          showTrapOnceWhenCaught(TrapsGenerator.knife.img);
           damage(TrapsGenerator.knife.damage);
           IamCaught(4);
           callback();
@@ -338,6 +352,15 @@ class TrapsController extends GetxController {
       _battleActController.mazeMap.value.mazeMap[coord.row][coord.col]
           .additionalStuff = returnMeteor;
     }
+  }
+
+  void showTrapOnceWhenCaught(String trapImg) {
+    showTrapWhenCaught = 3;
+    Coordinates coord = _battleActController.yourRole == 'A'
+        ? _battleActController.mazeMap.value.Player_A_Coord
+        : _battleActController.mazeMap.value.Player_B_Coord;
+    _battleActController.mazeMap.value.mazeMap[coord.row][coord.col]
+        .additionalStuff = () => Image.asset(trapImg);
   }
 
   void allAditionalStuffToNull() {
