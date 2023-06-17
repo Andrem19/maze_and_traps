@@ -271,7 +271,7 @@ class BattleActController extends GetxController {
   }
 
   void userControl() {
-    _stream = Stream.periodic(Duration(milliseconds: 1000), (_) => updateUI())
+    _stream = Stream.periodic(Duration(milliseconds: timerDuration), (_) => updateUI())
         .listen((event) {
       update();
     });
@@ -287,7 +287,13 @@ class BattleActController extends GetxController {
     _trapsController.checkAllTraps();
     if (yourRole == 'A') {
       MovePlayer(moveDirection.value);
-      countRadiusAroundPlayerA(shaddowRadius, true);
+      if (_trapsController.playerBlind <= 0) {
+        countRadiusAroundPlayerA(shaddowRadius, true);
+      } else {
+        _trapsController.playerBlind--;
+        mazeMap.value.mazeMap
+            .forEach((row) => row.forEach((node) => node.isShaddow = true));
+      }
 
       final res = checkTheFinishA();
       if (res || mainCtrl.player_B_Life <= 0) {
@@ -296,7 +302,14 @@ class BattleActController extends GetxController {
       }
     } else if (yourRole == 'B') {
       MovePlayer(moveDirection.value);
-      countRadiusAroundPlayerB(shaddowRadius, true);
+      if (_trapsController.playerBlind <= 0) {
+        countRadiusAroundPlayerB(shaddowRadius, true);
+      } else {
+        _trapsController.playerBlind--;
+        mazeMap.value.mazeMap
+            .forEach((row) => row.forEach((node) => node.isShaddow = true));
+      }
+      
 
       final res = checkTheFinishB();
       if (res || mainCtrl.player_A_Life <= 0) {

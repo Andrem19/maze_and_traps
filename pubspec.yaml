@@ -105,6 +105,7 @@ flutter:
     - assets/images/trap_Icons/texture_BootsofSpeed2.png
     - assets/images/trap_Icons/texture_PoisonTrap.png
     - assets/images/trap_Icons/texture_Teleport.png
+    - assets/images/trap_Icons/texture_BigMeteor.png
     - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see

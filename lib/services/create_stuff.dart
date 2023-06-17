@@ -105,11 +105,9 @@ class CreateStuffWidget extends StatelessWidget {
           child: Image.asset(TrapsGenerator.knife.img),
         );
       }
-      return nodeProto.additionalStuff == null 
+    }
+    return nodeProto.additionalStuff == null 
           ? SizedBox()
           : nodeProto.additionalStuff!();
-    }
-
-    return SizedBox();
   }
 }

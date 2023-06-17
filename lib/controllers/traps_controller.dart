@@ -19,10 +19,13 @@ class TrapsController extends GetxController {
   MainGameController main = Get.find<MainGameController>();
 
   int playerFrozen = 0;
+  int playerBlind = 0;
   bool frozenActivate = false;
   bool teleportActivate = false;
   bool bombActivate = false;
   bool knifesActivate = false;
+  bool meteorActivate = false;
+  bool blindnessActivate = false;
   int knifes = 2;
   int showTrapWhenCaught = 0;
 
@@ -100,6 +103,14 @@ class TrapsController extends GetxController {
           knifesActivate, () async {
         await FlameAudio.play(TrapsGenerator.knife.audio);
       });
+      checkTrap('meteor', _battleActController.gameInfo.value.Meteor_B,
+          meteorActivate, () async {
+        await FlameAudio.play(TrapsGenerator.meteor.audio);
+      });
+      checkTrap('blindness', _battleActController.gameInfo.value.Blindness_B,
+          blindnessActivate, () async {
+        await FlameAudio.play(TrapsGenerator.blindness.audio);
+      });
     } else {
       checkTrap('frozen', _battleActController.gameInfo.value.Frozen_trap_A,
           frozenActivate, () async {
@@ -117,6 +128,14 @@ class TrapsController extends GetxController {
       checkTrap('knifes', _battleActController.gameInfo.value.Knifes_A,
           knifesActivate, () async {
         await FlameAudio.play(TrapsGenerator.knife.audio);
+      });
+      checkTrap('meteor', _battleActController.gameInfo.value.Meteor_A,
+          meteorActivate, () async {
+        await FlameAudio.play(TrapsGenerator.meteor.audio);
+      });
+      checkTrap('blindness', _battleActController.gameInfo.value.Blindness_A,
+          blindnessActivate, () async {
+        await FlameAudio.play(TrapsGenerator.blindness.audio);
       });
     }
   }
@@ -165,6 +184,22 @@ class TrapsController extends GetxController {
           IamCaught(4);
           callback();
         }
+      }
+    } else if (trapType == 'meteor') {
+      if (trapLoc.isInit && !trapActivate) {
+        meteorActivate = true;
+        IamCaught(11);
+        callback();
+        showTrapOnceWhenCaught(TrapsGenerator.meteor.img_2);
+        damage(TrapsGenerator.meteor.damage);
+      }
+    } else if (trapType == 'blindness') {
+      if (trapLoc.isInit && !trapActivate) {
+        blindnessActivate = true;
+        playerBlind = 12;
+        IamCaught(8);
+        callback();
+        showTrapOnceWhenCaught(TrapsGenerator.blindness.img);
       }
     }
   }
@@ -226,10 +261,29 @@ class TrapsController extends GetxController {
           knifes--;
         }
         break;
+      case 8:
+        useBlindness(8);
+        setTrapUsed(8);
+        break;
+      case 11:
+        useSingleMeteore(11);
+        setTrapUsed(11);
+        break;
+      case 5:
+        useSpeed_1(5);
+        setTrapUsed(5);
+        break;
+      case 6:
+        useSpeed_2(6);
+        setTrapUsed(6);
+        break;
       default:
     }
     main.update();
-    await FlameAudio.play('sfx_TrapSet.mp3');
+    if (trap.id != 5 && trap.id != 6) {
+      await FlameAudio.play('sfx_TrapSet.mp3');
+    }
+    
   }
 
   void setTrapUsed(int id) {
@@ -369,5 +423,35 @@ class TrapsController extends GetxController {
         el.additionalStuff = null;
       });
     });
+  }
+
+  void useSingleMeteore(int trapId) {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.yourRole == 'A'
+          ? _battleActController.gameInfo.value.Meteor_A.isInit = true
+          : _battleActController.gameInfo.value.Meteor_B.isInit = true;
+    }
+  }
+
+  void useBlindness(int trapId) {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.yourRole == 'A'
+          ? _battleActController.gameInfo.value.Blindness_A.isInit = true
+          : _battleActController.gameInfo.value.Blindness_B.isInit = true;
+    }
+  }
+
+  void useSpeed_1(int trapId) async {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.changeStreamInterval(TrapsGenerator.speed15.baff);
+      await FlameAudio.play(TrapsGenerator.speed15.audio);
+    }
+  }
+
+  void useSpeed_2(int trapId) async {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.changeStreamInterval(TrapsGenerator.speed2.baff);
+      await FlameAudio.play(TrapsGenerator.speed2.audio);
+    }
   }
 }
