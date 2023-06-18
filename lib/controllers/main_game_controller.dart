@@ -56,6 +56,7 @@ class MainGameController extends GetxController {
   RxBool wantToPlay = false.obs;
   RxDouble player_A_Life = 55.0.obs;
   RxDouble player_B_Life = 55.0.obs;
+  RxDouble enemyLife = 55.0.obs;
   RxString vinner = ''.obs;
 
   @override
@@ -124,7 +125,7 @@ class MainGameController extends GetxController {
     String uid = uuid.v4();
     String part = uid.substring(30);
     String secrTok = uuid.v4();
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 300; i++) {
       scrollsList.add('scroll');
     }
 

@@ -4,11 +4,12 @@ import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/map_training_act_controller.dart';
 
 class Player_A {
-  static getPlayer(Color color, Color borderColor) {
+  static getPlayer(Color color, Color borderColor, double? enemyLife) {
     var cont = Get.find<MainGameController>();
+    double life = enemyLife?? cont.player_B_Life.value;
     double onePerc = (Get.size.height / 35) / 100;
     double onePercHealth = cont.globalSettings.default_health.toDouble() / 100;
-    double num = 101 - (cont.player_A_Life.value / onePercHealth);
+    double num = 101 - (life / onePercHealth);
     double height = onePerc * num;
     return GetBuilder<MainGameController>(builder: (controller) {
       return Stack(
@@ -43,7 +44,7 @@ class Player_A {
           ),
           Center(
             child: Text(
-              '${controller.player_A_Life.value.toInt()}',
+              '${enemyLife != null ? enemyLife.toInt() : controller.player_A_Life.value.toInt()}',
               style: TextStyle(fontSize: 10),
             ),
           )

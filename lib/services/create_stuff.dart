@@ -54,15 +54,15 @@ class CreateStuffWidget extends StatelessWidget {
       NodeCube nodeProto, bool isPlayerA) {
     if (main.YourCurrentRole == 'A') {
       return isPlayerA
-          ? Player_A.getPlayer(Colors.green, Color(0xFF306D31))
+          ? Player_A.getPlayer(Colors.green, Color(0xFF306D31), main.player_A_Life.value)
           : !nodeProto.isShaddow
-              ? Player_A.getPlayer(Colors.red, Color(0xFF6E1E18))
+              ? Player_A.getPlayer(Colors.red, Color(0xFF6E1E18), main.enemyLife.value)
               : SizedBox();
     } else {
       return !isPlayerA && !nodeProto.isShaddow
-          ? Player_B.getPlayer(Colors.green, Color(0xFF306D31))
+          ? Player_B.getPlayer(Colors.green, Color(0xFF306D31), main.player_B_Life.value)
           : isPlayerA && !nodeProto.isShaddow
-              ? Player_B.getPlayer(Colors.red, Color(0xFF6E1E18))
+              ? Player_B.getPlayer(Colors.red, Color(0xFF6E1E18), main.enemyLife.value)
               : SizedBox();
     }
   }
@@ -103,6 +103,15 @@ class CreateStuffWidget extends StatelessWidget {
               Compare.compareCoord(gameInfo.Knifes_B, nodeProto))) {
         return Container(
           child: Image.asset(TrapsGenerator.knife.img),
+        );
+      }
+
+      if ((myRole == 'A' &&
+              Compare.compareCoord(gameInfo.Poison_A, nodeProto)) ||
+          (myRole == 'B' &&
+              Compare.compareCoord(gameInfo.Poison_B, nodeProto))) {
+        return Container(
+          child: Image.asset(TrapsGenerator.poison.img),
         );
       }
     }

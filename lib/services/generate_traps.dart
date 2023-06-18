@@ -13,7 +13,7 @@ class TrapsGenerator {
   static Trap speed2 =
       getTraps().where((t) => t.name == 'Speed increase x 2').first;
   static Trap ghost =
-      getTraps().where((t) => t.name == 'Go through the wall').first;
+      getTraps().where((t) => t.name == 'Ghost').first;
   static Trap blindness = getTraps().where((t) => t.name == 'Blindness').first;
   static Trap poison = getTraps().where((t) => t.name == 'Poison').first;
   static Trap healing = getTraps().where((t) => t.name == 'Healing').first;
@@ -103,7 +103,7 @@ class TrapsGenerator {
           weight: 6),
       Trap(
           id: 7,
-          name: 'Go through the wall',
+          name: 'Ghost',
           description:
               'Skip an obstacle by teleporting yourself through solid walls.',
           damage: 0,

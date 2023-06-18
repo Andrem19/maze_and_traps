@@ -233,7 +233,7 @@ class BattleActController extends GetxController {
           final gameInfoB = data['GameInfo_B'];
           final playerBCoord = data['Player_B_Coord'];
           scrollOwner = data['scrollOwner'];
-          mainCtrl.player_B_Life.value = data['Player_B_Life'];
+          mainCtrl.enemyLife.value = data['Player_B_Life'];
           int B_Caught_New = data['Player_B_caught'];
           updateCoordinates(gameInfoB, playerBCoord, scrollOwner, yourRole);
           final gameStatus = data['gameStatus'];
@@ -249,7 +249,7 @@ class BattleActController extends GetxController {
           final gameInfoA = data['GameInfo_A'];
           final playerACoord = data['Player_A_Coord'];
           scrollOwner = data['scrollOwner'];
-          mainCtrl.player_A_Life.value = data['Player_A_Life'];
+          mainCtrl.enemyLife.value = data['Player_A_Life'];
           int A_Caught_New = data['Player_A_caught'];
           updateCoordinates(gameInfoA, playerACoord, scrollOwner, yourRole);
           gameStatus = data['gameStatus'];
@@ -271,7 +271,8 @@ class BattleActController extends GetxController {
   }
 
   void userControl() {
-    _stream = Stream.periodic(Duration(milliseconds: timerDuration), (_) => updateUI())
+    _stream = Stream.periodic(
+            Duration(milliseconds: timerDuration), (_) => updateUI())
         .listen((event) {
       update();
     });
@@ -309,7 +310,6 @@ class BattleActController extends GetxController {
         mazeMap.value.mazeMap
             .forEach((row) => row.forEach((node) => node.isShaddow = true));
       }
-      
 
       final res = checkTheFinishB();
       if (res || mainCtrl.player_A_Life <= 0) {
@@ -396,14 +396,15 @@ class BattleActController extends GetxController {
   void updateCoordinates(String gameInfoS, String playerCoord,
       String scrollOwner, String currentPlayerRole) {
     var gameI = GameInfoCloud.fromJson(gameInfoS);
-    gameInfo.value =
+    var gameData =
         gameI.CloudToGameInfo(currentPlayerRole, gameInfo.value, scrollOwner);
 
     var playerCoordValue = Coordinates.fromJson(playerCoord);
     if (currentPlayerRole == "A") {
+      gameInfo.value = gameData;
       mazeMap.value.Player_B_Coord = playerCoordValue;
     } else if (currentPlayerRole == "B") {
-      gameInfo.value = GameInfo.reverseGameInfo(gameInfo.value, mazeMap.value);
+      gameInfo.value = GameInfo.reverseGameInfo(gameData, mazeMap.value);
       mazeMap.value.Player_A_Coord = playerCoordValue;
     }
   }
@@ -447,33 +448,40 @@ class BattleActController extends GetxController {
     switch (direction) {
       case Direction.up:
         if (player.row != 0) {
-          if (!mazeMap.value.mazeMap[player.row - 1][player.col].wall) {
+          if (!mazeMap.value.mazeMap[player.row - 1][player.col].wall ||
+              _trapsController.playerGhost > 0) {
             player.row -= 1;
           }
         }
         break;
       case Direction.down:
         if (player.row != mazeMap.value.mazeMap.length - 1) {
-          if (!mazeMap.value.mazeMap[player.row + 1][player.col].wall) {
+          if (!mazeMap.value.mazeMap[player.row + 1][player.col].wall ||
+              _trapsController.playerGhost > 0) {
             player.row += 1;
           }
         }
         break;
       case Direction.left:
         if (player.col != 0) {
-          if (!mazeMap.value.mazeMap[player.row][player.col - 1].wall) {
+          if (!mazeMap.value.mazeMap[player.row][player.col - 1].wall ||
+              _trapsController.playerGhost > 0) {
             player.col -= 1;
           }
         }
         break;
       case Direction.right:
         if (player.col != mazeMap.value.mazeMap[0].length - 1) {
-          if (!mazeMap.value.mazeMap[player.row][player.col + 1].wall) {
+          if (!mazeMap.value.mazeMap[player.row][player.col + 1].wall ||
+              _trapsController.playerGhost > 0) {
             player.col += 1;
           }
         }
         break;
       default:
+    }
+    if (_trapsController.playerGhost > 0) {
+      _trapsController.playerGhost--;
     }
     if (yourRole == 'A') {
       mazeMap.value.Player_A_Coord = player;
