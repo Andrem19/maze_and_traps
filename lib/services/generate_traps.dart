@@ -18,6 +18,7 @@ class TrapsGenerator {
   static Trap poison = getTraps().where((t) => t.name == 'Poison').first;
   static Trap healing = getTraps().where((t) => t.name == 'Healing').first;
   static Trap meteor = getTraps().where((t) => t.name == 'Meteor').first;
+  static Trap meteorRain = getTraps().where((t) => t.name == 'Meteor Rain').first;
   static Trap invisibility =
       getTraps().where((t) => t.name == 'Invisibility').first;
   static Trap builder = getTraps().where((t) => t.name == 'Builder').first;
@@ -159,7 +160,7 @@ class TrapsGenerator {
               'Meteor strikes the enemy wherever he is',
           damage: 15,
           baff: 0,
-          img: 'assets/images/trap_Icons/texture_Meteor.png',
+          img: 'assets/images/trap_Icons/texture_BigMeteor.png',
           img_2: 'assets/images/trap_Icons/texture_BigMeteor.png',
           audio: 'sfx_Meteor.mp3',
           cost: 12,
@@ -187,6 +188,18 @@ class TrapsGenerator {
           img_2: '',
           audio: 'sfx_Building.mp3',
           cost: 8,
+          used: false,
+          weight: 3),
+      Trap(
+          id: 14,
+          name: 'Meteor Rain',
+          description: 'Rain of meteors cover full maze',
+          damage: 15,
+          baff: 0,
+          img: 'assets/images/trap_Icons/texture_Meteor.png',
+          img_2: '',
+          audio: 'sfx_Meteor.mp3',
+          cost: 7,
           used: false,
           weight: 3),
     ];

@@ -47,6 +47,7 @@ class MainGameController extends GetxController {
 
   bool IsUserInGame = false;
   bool randomRival = false;
+  int enemyInvisible = 0;
   RxString YourCurrentRole = 'A'.obs;
   String currentMapName = '';
   String currentmultiplayerGameId = '';

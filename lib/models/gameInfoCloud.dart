@@ -17,6 +17,7 @@ class GameInfoCloud {
   Coordinates poison;
   Coordinates healing;
   Coordinates meteor;
+  Coordinates meteorRain;
   Coordinates invisibility;
   Coordinates builder;
   GameInfoCloud({
@@ -31,6 +32,7 @@ class GameInfoCloud {
     required this.poison,
     required this.healing,
     required this.meteor,
+    required this.meteorRain,
     required this.invisibility,
     required this.builder,
   });
@@ -47,6 +49,7 @@ class GameInfoCloud {
     Coordinates? poison,
     Coordinates? healing,
     Coordinates? meteor,
+    Coordinates? meteorRain,
     Coordinates? invisibility,
     Coordinates? builder,
   }) {
@@ -62,6 +65,7 @@ class GameInfoCloud {
       poison: poison ?? this.poison,
       healing: healing ?? this.healing,
       meteor: meteor ?? this.meteor,
+      meteorRain: meteorRain ?? this.meteorRain,
       invisibility: invisibility ?? this.invisibility,
       builder: builder ?? this.builder,
     );
@@ -80,6 +84,7 @@ class GameInfoCloud {
       'poison': poison.toMap(),
       'healing': healing.toMap(),
       'meteor': meteor.toMap(),
+      'meteorRain': meteorRain.toMap(),
       'invisibility': invisibility.toMap(),
       'builder': builder.toMap(),
     };
@@ -98,6 +103,7 @@ class GameInfoCloud {
       poison: Coordinates(isInit: false, row: 0, col: 0),
       healing: Coordinates(isInit: false, row: 0, col: 0),
       meteor: Coordinates(isInit: false, row: 0, col: 0),
+      meteorRain: Coordinates(isInit: false, row: 0, col: 0),
       invisibility: Coordinates(isInit: false, row: 0, col: 0),
       builder: Coordinates(isInit: false, row: 0, col: 0),
     );
@@ -129,6 +135,8 @@ class GameInfoCloud {
           Healing_B: healing,
           Meteor_A: oldGI.Meteor_A,
           Meteor_B: meteor,
+          MeteorRain_A: oldGI.MeteorRain_A,
+          MeteorRain_B: meteorRain,
           Invisibility_A: oldGI.Invisibility_A,
           Invisibility_B: invisibility,
           Builder_A: oldGI.Blindness_A,
@@ -159,6 +167,8 @@ class GameInfoCloud {
           Healing_B: oldGI.Healing_B,
           Meteor_A: meteor,
           Meteor_B: oldGI.Meteor_B,
+          MeteorRain_A: meteorRain,
+          MeteorRain_B: oldGI.MeteorRain_B,
           Invisibility_A: invisibility,
           Invisibility_B: oldGI.Invisibility_B,
           Builder_A: builder,
@@ -180,6 +190,7 @@ class GameInfoCloud {
       poison: Coordinates.fromMap(map['poison'] as Map<String,dynamic>),
       healing: Coordinates.fromMap(map['healing'] as Map<String,dynamic>),
       meteor: Coordinates.fromMap(map['meteor'] as Map<String,dynamic>),
+      meteorRain: Coordinates.fromMap(map['meteorRain'] as Map<String,dynamic>),
       invisibility: Coordinates.fromMap(map['invisibility'] as Map<String,dynamic>),
       builder: Coordinates.fromMap(map['builder'] as Map<String,dynamic>),
     );
@@ -192,7 +203,7 @@ class GameInfoCloud {
 
   @override
   String toString() {
-    return 'GameInfoCloud(frozen: $frozen, teleport: $teleport, bomb: $bomb, knifes: $knifes, speed_1: $speed_1, speed_2: $speed_2, through_wall: $through_wall, blindness: $blindness, poison: $poison, healing: $healing, meteor: $meteor, invisibility: $invisibility, builder: $builder)';
+    return 'GameInfoCloud(frozen: $frozen, teleport: $teleport, bomb: $bomb, knifes: $knifes, speed_1: $speed_1, speed_2: $speed_2, through_wall: $through_wall, blindness: $blindness, poison: $poison, healing: $healing, meteor: $meteor, meteorRain: $meteorRain, invisibility: $invisibility, builder: $builder)';
   }
 
   @override
@@ -211,6 +222,7 @@ class GameInfoCloud {
       other.poison == poison &&
       other.healing == healing &&
       other.meteor == meteor &&
+      other.meteorRain == meteorRain &&
       other.invisibility == invisibility &&
       other.builder == builder;
   }
@@ -228,6 +240,7 @@ class GameInfoCloud {
       poison.hashCode ^
       healing.hashCode ^
       meteor.hashCode ^
+      meteorRain.hashCode ^
       invisibility.hashCode ^
       builder.hashCode;
   }

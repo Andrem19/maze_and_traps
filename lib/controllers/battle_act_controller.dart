@@ -240,7 +240,7 @@ class BattleActController extends GetxController {
           if (B_Caught_New != B_Caught_Old && B_Caught_New != 0) {
             B_Caught_Old = B_Caught_New;
             changeInit(B_Caught_New, yourRole);
-            textMessage.value = setUpMessageAfterTrap();
+            textMessage.value = setUpMessageAfterTrap(B_Caught_New);
           }
           if (gameStatus == 'finish') {
             finish_game(yourRole);
@@ -256,7 +256,7 @@ class BattleActController extends GetxController {
           if (A_Caught_New != A_Caught_Old && A_Caught_New != 0) {
             A_Caught_Old = A_Caught_New;
             changeInit(A_Caught_New, yourRole);
-            textMessage.value = setUpMessageAfterTrap();
+            textMessage.value = setUpMessageAfterTrap(A_Caught_New);
           }
           if (gameStatus == 'finish') {
             finish_game(yourRole);
@@ -490,10 +490,13 @@ class BattleActController extends GetxController {
     }
   }
 
-  String setUpMessageAfterTrap() {
+  String setUpMessageAfterTrap(int trapId) {
     double distance =
         double.parse(mazeMap.value.calculateDistance().toStringAsFixed(2));
     messageCounter = 4;
+    if (trapId == 12) {
+      return 'You are invisible for the enemy next 20 sec';
+    }
     return 'The enemy fell into your trap. Distance between you: $distance';
   }
 

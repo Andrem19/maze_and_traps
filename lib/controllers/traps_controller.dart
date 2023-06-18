@@ -22,6 +22,7 @@ class TrapsController extends GetxController {
   int playerFrozen = 0;
   int playerBlind = 0;
   int playerGhost = 0;
+  int fakeWall = 0;
   bool frozenActivate = false;
   bool teleportActivate = false;
   bool bombActivate = false;
@@ -30,8 +31,12 @@ class TrapsController extends GetxController {
   bool blindnessActivate = false;
   bool poisonActivate = false;
   bool ghostActivate = false;
+  bool inviseActivate = false;
+  bool builderActivate = false;
+  bool meteorRainActivate = false;
   int knifes = 2;
   int showTrapWhenCaught = 0;
+  Coordinates fakeWallCoord = Coordinates(isInit: false, row: 0, col: 0);
 
   @override
   void onInit() {
@@ -55,7 +60,7 @@ class TrapsController extends GetxController {
 
   List<String> getAudioSet() {
     List<String> audioSet = [];
-    main.backpackSet.forEach((element) {
+    main.allTrapsInTheGame.forEach((element) {
       if (element.audio != '') {
         audioSet.add(element.audio);
       }
@@ -89,6 +94,16 @@ class TrapsController extends GetxController {
     } else if (showTrapWhenCaught > 0) {
       showTrapWhenCaught--;
     }
+    if (main.enemyInvisible > 0) {
+      main.enemyInvisible--;
+    }
+    if (fakeWall > 1) {
+      fakeWall--;
+    } else if (fakeWall == 1) {
+      _battleActController.mazeMap.value
+          .mazeMap[fakeWallCoord.row][fakeWallCoord.col].wall = false;
+      fakeWall--;
+    }
     if (_battleActController.yourRole == 'A') {
       checkTrap('frozen', _battleActController.gameInfo.value.Frozen_trap_B,
           frozenActivate, () async {
@@ -118,6 +133,20 @@ class TrapsController extends GetxController {
       checkTrap('poison', _battleActController.gameInfo.value.Poison_B,
           poisonActivate, () async {
         await FlameAudio.play(TrapsGenerator.poison.audio);
+      });
+      checkTrap(
+          'invisibility',
+          _battleActController.gameInfo.value.Invisibility_B,
+          inviseActivate, () async {
+        await FlameAudio.play(TrapsGenerator.invisibility.audio);
+      });
+      checkTrap('builder', _battleActController.gameInfo.value.Builder_B,
+          builderActivate, () async {
+        await FlameAudio.play(TrapsGenerator.builder.audio);
+      });
+      checkTrap('meteorRain', _battleActController.gameInfo.value.MeteorRain_B,
+          meteorRainActivate, () async {
+        await FlameAudio.play(TrapsGenerator.meteorRain.audio);
       });
     } else {
       checkTrap('frozen', _battleActController.gameInfo.value.Frozen_trap_A,
@@ -149,6 +178,20 @@ class TrapsController extends GetxController {
           poisonActivate, () async {
         await FlameAudio.play(TrapsGenerator.poison.audio);
       });
+      checkTrap(
+          'invisibility',
+          _battleActController.gameInfo.value.Invisibility_A,
+          inviseActivate, () async {
+        await FlameAudio.play(TrapsGenerator.invisibility.audio);
+      });
+      checkTrap('builder', _battleActController.gameInfo.value.Builder_A,
+          builderActivate, () async {
+        await FlameAudio.play(TrapsGenerator.builder.audio);
+      });
+      checkTrap('meteorRain', _battleActController.gameInfo.value.MeteorRain_A,
+          meteorRainActivate, () async {
+        await FlameAudio.play(TrapsGenerator.meteorRain.audio);
+      });
     }
   }
 
@@ -162,7 +205,7 @@ class TrapsController extends GetxController {
         if (playerLoc == trapLoc) {
           frozenActivate = true;
           playerFrozen = 8;
-          showTrapOnceWhenCaught(TrapsGenerator.frozen.img);
+          showTrapOnceWhenCaught(TrapsGenerator.frozen.img, 3);
           IamCaught(1);
           callback();
         }
@@ -171,7 +214,7 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           teleportActivate = true;
-          showTrapOnceWhenCaught(TrapsGenerator.teleport.img);
+          showTrapOnceWhenCaught(TrapsGenerator.teleport.img, 3);
           teleportAction();
           IamCaught(2);
           callback();
@@ -181,7 +224,7 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           bombActivate = true;
-          showTrapOnceWhenCaught(TrapsGenerator.bomb.img);
+          showTrapOnceWhenCaught(TrapsGenerator.bomb.img, 3);
           damage(TrapsGenerator.bomb.damage);
           IamCaught(3);
           callback();
@@ -191,7 +234,7 @@ class TrapsController extends GetxController {
       if (trapLoc.isInit && !trapActivate) {
         if (playerLoc == trapLoc) {
           knifesActivate = true;
-          showTrapOnceWhenCaught(TrapsGenerator.knife.img);
+          showTrapOnceWhenCaught(TrapsGenerator.knife.img, 3);
           damage(TrapsGenerator.knife.damage);
           IamCaught(4);
           callback();
@@ -202,7 +245,7 @@ class TrapsController extends GetxController {
         meteorActivate = true;
         IamCaught(11);
         callback();
-        showTrapOnceWhenCaught(TrapsGenerator.meteor.img_2);
+        showTrapOnceWhenCaught(TrapsGenerator.meteor.img_2, 3);
         damage(TrapsGenerator.meteor.damage);
       }
     } else if (trapType == 'blindness') {
@@ -211,7 +254,7 @@ class TrapsController extends GetxController {
         playerBlind = 12;
         IamCaught(8);
         callback();
-        showTrapOnceWhenCaught(TrapsGenerator.blindness.img);
+        showTrapOnceWhenCaught(TrapsGenerator.blindness.img, 3);
       }
     } else if (trapType == 'poison') {
       if (trapLoc.isInit && !trapActivate) {
@@ -220,8 +263,31 @@ class TrapsController extends GetxController {
           poisonDamage(TrapsGenerator.poison.damage);
           IamCaught(9);
           callback();
-          showTrapOnceWhenCaught(TrapsGenerator.poison.img);
+          showTrapOnceWhenCaught(TrapsGenerator.poison.img, 3);
         }
+      }
+    } else if (trapType == 'invisibility') {
+      if (trapLoc.isInit && !trapActivate) {
+        inviseActivate = true;
+        main.enemyInvisible = 20;
+        IamCaught(12);
+      }
+    } else if (trapType == 'builder') {
+      if (trapLoc.isInit && !trapActivate) {
+        builderActivate = true;
+        fakeWall = 12;
+        fakeWallCoord = trapLoc;
+        _battleActController
+            .mazeMap.value.mazeMap[trapLoc.row][trapLoc.col].wall = true;
+        callback();
+        IamCaught(13);
+      }
+    } else if (trapType == 'meteorRain') {
+      if (trapLoc.isInit && !trapActivate) {
+        meteorRainActivate = true;
+        callback();
+        generateMeteorRain();
+        IamCaught(14);
       }
     }
   }
@@ -315,10 +381,32 @@ class TrapsController extends GetxController {
         useSingleMeteore(11);
         setTrapUsed(11);
         break;
+      case 12:
+        invisibility(12);
+        setTrapUsed(12);
+        break;
+      case 13:
+        installTrap(
+            13,
+            (position) => _battleActController.yourRole == 'A'
+                ? _battleActController.gameInfo.value.Builder_A = position
+                : _battleActController.gameInfo.value.Builder_B = position);
+        showTrapOnceWhenCaught('assets/images/texture_Wall.png', 15);
+        setTrapUsed(13);
+        break;
+      case 14:
+        meteorRain(14);
+        setTrapUsed(14);
+        break;
       default:
     }
     main.update();
-    if (trap.id != 5 && trap.id != 6) {
+    if (trap.id != 5 &&
+        trap.id != 6 &&
+        trap.id != 7 &&
+        trap.id != 10 &&
+        trap.id != 12 &&
+        trap.id != 14) {
       await FlameAudio.play('sfx_TrapSet.mp3');
     }
   }
@@ -399,9 +487,9 @@ class TrapsController extends GetxController {
 
   Coordinates randCoordForMeteor() {
     Coordinates res = generateRandomCoordforMeteor();
-    if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
-      randCoordForMeteor();
-    }
+    // if (_battleActController.mazeMap.value.mazeMap[res.row][res.col].wall) {
+    // randCoordForMeteor();
+    // }
     return res;
   }
 
@@ -432,21 +520,28 @@ class TrapsController extends GetxController {
   }
 
   Widget returnMeteor() {
-    return Image.asset(TrapsGenerator.bomb.img);
+    return Image.asset(TrapsGenerator.meteorRain.img);
   }
 
-  void generateMeteor() {
+  void generateMeteorRain() {
     int count =
-        _battleActController.mazeHight * _battleActController.mazeWidth ~/ 4;
+        _battleActController.mazeHight * _battleActController.mazeWidth ~/ 3;
     for (var i = 0; i < count; i++) {
       var coord = randCoordForMeteor();
+      Coordinates myCoord = _battleActController.yourRole == 'A'
+          ? _battleActController.mazeMap.value.Player_A_Coord
+          : _battleActController.mazeMap.value.Player_B_Coord;
+      if (coord == myCoord) {
+        damage(TrapsGenerator.meteorRain.damage);
+      }
       _battleActController.mazeMap.value.mazeMap[coord.row][coord.col]
           .additionalStuff = returnMeteor;
     }
+    showTrapWhenCaught = 3;
   }
 
-  void showTrapOnceWhenCaught(String trapImg) {
-    showTrapWhenCaught = 3;
+  void showTrapOnceWhenCaught(String trapImg, int timeToShow) {
+    showTrapWhenCaught = timeToShow;
     Coordinates coord = _battleActController.yourRole == 'A'
         ? _battleActController.mazeMap.value.Player_A_Coord
         : _battleActController.mazeMap.value.Player_B_Coord;
@@ -519,9 +614,27 @@ class TrapsController extends GetxController {
       int life = _battleActController.yourRole == 'A'
           ? main.player_A_Life.value.toInt()
           : main.player_B_Life.value.toInt();
-      changeLifeOnServer(
-          _battleActController.yourRole, life);
+      changeLifeOnServer(_battleActController.yourRole, life);
       await FlameAudio.play(TrapsGenerator.healing.audio);
+    }
+  }
+
+  void invisibility(int trapId) async {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.yourRole == 'A'
+          ? _battleActController.gameInfo.value.Invisibility_A.isInit = true
+          : _battleActController.gameInfo.value.Invisibility_B.isInit = true;
+      await FlameAudio.play(TrapsGenerator.invisibility.audio);
+    }
+  }
+
+  void meteorRain(int trapId) async {
+    if (main.backpackSet.any((obj) => obj.id == trapId)) {
+      _battleActController.yourRole == 'A'
+          ? _battleActController.gameInfo.value.MeteorRain_A.isInit = true
+          : _battleActController.gameInfo.value.MeteorRain_B.isInit = true;
+      generateMeteorRain();
+      await FlameAudio.play(TrapsGenerator.meteorRain.audio);
     }
   }
 }

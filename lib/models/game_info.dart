@@ -30,6 +30,8 @@ class GameInfo {
   Coordinates Healing_B;
   Coordinates Meteor_A;
   Coordinates Meteor_B;
+  Coordinates MeteorRain_A;
+  Coordinates MeteorRain_B;
   Coordinates Invisibility_A;
   Coordinates Invisibility_B;
   Coordinates Builder_A;
@@ -59,6 +61,8 @@ class GameInfo {
     required this.Healing_B,
     required this.Meteor_A,
     required this.Meteor_B,
+    required this.MeteorRain_A,
+    required this.MeteorRain_B,
     required this.Invisibility_A,
     required this.Invisibility_B,
     required this.Builder_A,
@@ -90,6 +94,8 @@ class GameInfo {
       Healing_B: Coordinates(isInit: false, row: 0, col: 0),
       Meteor_A: Coordinates(isInit: false, row: 0, col: 0),
       Meteor_B: Coordinates(isInit: false, row: 0, col: 0),
+      MeteorRain_A: Coordinates(isInit: false, row: 0, col: 0),
+      MeteorRain_B: Coordinates(isInit: false, row: 0, col: 0),
       Invisibility_A: Coordinates(isInit: false, row: 0, col: 0),
       Invisibility_B: Coordinates(isInit: false, row: 0, col: 0),
       Builder_A: Coordinates(isInit: false, row: 0, col: 0),
@@ -164,6 +170,12 @@ class GameInfo {
                 row: (map.mazeMap.length - 1) - info.Meteor_A.row,
                 col: (map.mazeMap[0].length - 1) - info.Meteor_A.col);
         }
+        if (info.MeteorRain_A.isInit) {
+            info.MeteorRain_A = Coordinates(
+                isInit: info.MeteorRain_A.isInit,
+                row: (map.mazeMap.length - 1) - info.MeteorRain_A.row,
+                col: (map.mazeMap[0].length - 1) - info.MeteorRain_A.col);
+        }
         if (info.Invisibility_A.isInit) {
             info.Invisibility_A = Coordinates(
                 isInit: info.Invisibility_A.isInit,
@@ -193,6 +205,7 @@ class GameInfo {
         poison: Poison_A,
         healing: Healing_A,
         meteor: Meteor_A,
+        meteorRain: MeteorRain_A,
         invisibility: Invisibility_A,
         builder: Builder_A,
         );
@@ -209,6 +222,7 @@ class GameInfo {
         poison: Poison_B,
         healing: Healing_B,
         meteor: Meteor_B,
+        meteorRain: MeteorRain_B,
         invisibility: Invisibility_B,
         builder: Builder_B,
       );
@@ -239,6 +253,8 @@ class GameInfo {
     Coordinates? Healing_B,
     Coordinates? Meteor_A,
     Coordinates? Meteor_B,
+    Coordinates? MeteorRain_A,
+    Coordinates? MeteorRain_B,
     Coordinates? Invisibility_A,
     Coordinates? Invisibility_B,
     Coordinates? Builder_A,
@@ -268,6 +284,8 @@ class GameInfo {
       Healing_B: Healing_B ?? this.Healing_B,
       Meteor_A: Meteor_A ?? this.Meteor_A,
       Meteor_B: Meteor_B ?? this.Meteor_B,
+      MeteorRain_A: MeteorRain_A ?? this.MeteorRain_A,
+      MeteorRain_B: MeteorRain_B ?? this.MeteorRain_B,
       Invisibility_A: Invisibility_A ?? this.Invisibility_A,
       Invisibility_B: Invisibility_B ?? this.Invisibility_B,
       Builder_A: Builder_A ?? this.Builder_A,
@@ -300,6 +318,8 @@ class GameInfo {
       'Healing_B': Healing_B.toMap(),
       'Meteor_A': Meteor_A.toMap(),
       'Meteor_B': Meteor_B.toMap(),
+      'MeteorRain_A': MeteorRain_A.toMap(),
+      'MeteorRain_B': MeteorRain_B.toMap(),
       'Invisibility_A': Invisibility_A.toMap(),
       'Invisibility_B': Invisibility_B.toMap(),
       'Builder_A': Builder_A.toMap(),
@@ -332,6 +352,8 @@ class GameInfo {
       Healing_B: Coordinates.fromMap(map['Healing_B'] as Map<String,dynamic>),
       Meteor_A: Coordinates.fromMap(map['Meteor_A'] as Map<String,dynamic>),
       Meteor_B: Coordinates.fromMap(map['Meteor_B'] as Map<String,dynamic>),
+      MeteorRain_A: Coordinates.fromMap(map['MeteorRain_A'] as Map<String,dynamic>),
+      MeteorRain_B: Coordinates.fromMap(map['MeteorRain_B'] as Map<String,dynamic>),
       Invisibility_A: Coordinates.fromMap(map['Invisibility_A'] as Map<String,dynamic>),
       Invisibility_B: Coordinates.fromMap(map['Invisibility_B'] as Map<String,dynamic>),
       Builder_A: Coordinates.fromMap(map['Builder_A'] as Map<String,dynamic>),
@@ -346,7 +368,7 @@ class GameInfo {
 
   @override
   String toString() {
-    return 'GameInfo(scrolOwner: $scrolOwner, Teleport_A: $Teleport_A, Teleport_B: $Teleport_B, Frozen_trap_A: $Frozen_trap_A, Frozen_trap_B: $Frozen_trap_B, Bomb_A: $Bomb_A, Bomb_B: $Bomb_B, Knifes_A: $Knifes_A, Knifes_B: $Knifes_B, Speed_increase_1_5_A: $Speed_increase_1_5_A, Speed_increase_1_5_B: $Speed_increase_1_5_B, Speed_increase_2_A: $Speed_increase_2_A, Speed_increase_2_B: $Speed_increase_2_B, Go_through_the_wall_A: $Go_through_the_wall_A, Go_through_the_wall_B: $Go_through_the_wall_B, Blindness_A: $Blindness_A, Blindness_B: $Blindness_B, Poison_A: $Poison_A, Poison_B: $Poison_B, Healing_A: $Healing_A, Healing_B: $Healing_B, Meteor_A: $Meteor_A, Meteor_B: $Meteor_B, Invisibility_A: $Invisibility_A, Invisibility_B: $Invisibility_B, Builder_A: $Builder_A, Builder_B: $Builder_B)';
+    return 'GameInfo(scrolOwner: $scrolOwner, Teleport_A: $Teleport_A, Teleport_B: $Teleport_B, Frozen_trap_A: $Frozen_trap_A, Frozen_trap_B: $Frozen_trap_B, Bomb_A: $Bomb_A, Bomb_B: $Bomb_B, Knifes_A: $Knifes_A, Knifes_B: $Knifes_B, Speed_increase_1_5_A: $Speed_increase_1_5_A, Speed_increase_1_5_B: $Speed_increase_1_5_B, Speed_increase_2_A: $Speed_increase_2_A, Speed_increase_2_B: $Speed_increase_2_B, Go_through_the_wall_A: $Go_through_the_wall_A, Go_through_the_wall_B: $Go_through_the_wall_B, Blindness_A: $Blindness_A, Blindness_B: $Blindness_B, Poison_A: $Poison_A, Poison_B: $Poison_B, Healing_A: $Healing_A, Healing_B: $Healing_B, Meteor_A: $Meteor_A, Meteor_B: $Meteor_B, MeteorRain_A: $MeteorRain_A, MeteorRain_B: $MeteorRain_B, Invisibility_A: $Invisibility_A, Invisibility_B: $Invisibility_B, Builder_A: $Builder_A, Builder_B: $Builder_B)';
   }
 
   @override
@@ -377,6 +399,8 @@ class GameInfo {
       other.Healing_B == Healing_B &&
       other.Meteor_A == Meteor_A &&
       other.Meteor_B == Meteor_B &&
+      other.MeteorRain_A == MeteorRain_A &&
+      other.MeteorRain_B == MeteorRain_B &&
       other.Invisibility_A == Invisibility_A &&
       other.Invisibility_B == Invisibility_B &&
       other.Builder_A == Builder_A &&
@@ -408,6 +432,8 @@ class GameInfo {
       Healing_B.hashCode ^
       Meteor_A.hashCode ^
       Meteor_B.hashCode ^
+      MeteorRain_A.hashCode ^
+      MeteorRain_B.hashCode ^
       Invisibility_A.hashCode ^
       Invisibility_B.hashCode ^
       Builder_A.hashCode ^
