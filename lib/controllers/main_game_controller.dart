@@ -28,7 +28,7 @@ class MainGameController extends GetxController {
       timer_back_for_battle: 240,
       timer_back_for_training: 600);
   MazeMap? currentGameMap;
-  List<Trap> allTrapsInTheGame = TrapsGenerator.getTraps();
+  late List<Trap> allTrapsInTheGame;
   RxList<Trap> allMyTraps = <Trap>[].obs;
   RxList<Trap> backpackSet = <Trap>[].obs;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots;
@@ -62,6 +62,7 @@ class MainGameController extends GetxController {
 
   @override
   void onInit() async {
+    allTrapsInTheGame = await loadTrapsFromDb();
     globalSettings = await loadSettings();
     pref = await SharedPreferences.getInstance();
     authenticate();
@@ -148,6 +149,7 @@ class MainGameController extends GetxController {
         'wantToPlay': true,
         'lastActive': FieldValue.serverTimestamp(),
         'points': 0,
+        'settings': 'settings',
       });
       pref.setString('secretToken', secrTok);
       pref.setString('uid', uid);
@@ -456,5 +458,47 @@ class MainGameController extends GetxController {
     num % 2 == 0
         ? await FlameAudio.play('sfx_Swipe.mp3')
         : await FlameAudio.play('sfx_Swipe1.mp3');
+  }
+
+  // void saveTrapsToDb() async {
+  //   var traps = TrapsGenerator.getTraps();
+  //   for (var i = 0; i < traps.length; i++) {
+  //     await firebaseFirestore.collection('traps').doc(traps[i].name).set({
+  //       'id': traps[i].id,
+  //       'name': traps[i].name,
+  //       'description': traps[i].description,
+  //       'damage': traps[i].damage,
+  //       'baff': traps[i].baff,
+  //       'img': traps[i].img,
+  //       'img_2': traps[i].img_2,
+  //       'audio': traps[i].audio,
+  //       'cost': traps[i].cost,
+  //       'used': traps[i].used,
+  //       'weight': traps[i].weight,
+  //     });
+  //   }
+  // }
+
+  Future<List<Trap>> loadTrapsFromDb() async {
+    List<Trap> traps = [];
+    var doc = await firebaseFirestore.collection('traps').get();
+    if (doc.size > 0) {
+      var data = doc.docs;
+      for (var i = 0; i < data.length; i++) {
+        traps.add(Trap(
+            id: data[i]['id'],
+            name: data[i]['name'],
+            description: data[i]['description'],
+            damage: data[i]['damage'],
+            baff: data[i]['baff'],
+            img: data[i]['img'],
+            img_2: data[i]['img_2'],
+            audio: data[i]['audio'],
+            cost: data[i]['cost'],
+            weight: data[i]['weight'],
+            used: data[i]['used']));
+      }
+    }
+    return TrapsGenerator.upTo(traps, 16);
   }
 }
