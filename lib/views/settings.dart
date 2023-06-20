@@ -14,14 +14,6 @@ import '../elements/shell.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  // Future<void> onBackPressed() async {
-  //   var adCtrl = Get.find<AdController>();
-  //   if (adCtrl.interstitialAd != null) {
-  //     adCtrl.interstitialAd?.show();
-  //   } else {
-  //     Get.back();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +77,10 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey,
-                              textStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
+                          backgroundColor: Colors.grey,
+                          textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
                       onPressed: () {
                         controller.generateMigrationToken();
                       },
@@ -128,26 +120,21 @@ class SettingsScreen extends StatelessWidget {
                           child: Text('Migrate')),
                     ],
                   ),
-                  // Container(
-                  //   width: kIsWeb ? Get.size.width / 6 : Get.size.width / 2,
-                  //   child: CustomTextField(
-                  //       controller: controller.migrationToken.value,
-                  //       iconData: Icons.swap_horiz,
-                  //       hintText: 'Token'),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 8),
-                  //   child: ElevatedButton(
-                  //       style: ElevatedButton.styleFrom(
-                  //             backgroundColor: Colors.grey,
-                  //             textStyle: const TextStyle(
-                  //                 color: Colors.black,
-                  //                 fontWeight: FontWeight.bold)),
-                  //       onPressed: () {
-                  //         controller.migrate();
-                  //       },
-                  //       child: const Text('Migrate')),
-                  // ),
+                  Row(
+                    children: [
+                      Text('Show direction arrows controller: '),
+                      Switch(
+                        value: controller.showControl.value,
+                        onChanged: (value) {
+                          controller.showControl.value = value;
+                          controller.changeShowControl(value);
+                          controller.update();
+                        },
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.green,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ));

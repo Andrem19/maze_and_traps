@@ -15,6 +15,7 @@ import '../models/game_info.dart';
 import '../models/maze_map.dart';
 
 class BattleActController extends GetxController {
+  late String textOfMazeScroll = '';
   late int mazeWidth;
   late int mazeHight;
   late Rx<MazeMap> mazeMap;
@@ -37,6 +38,7 @@ class BattleActController extends GetxController {
   Rx<String> timerText = ''.obs;
 
   String gameStatus = '';
+  bool showArrowController = false;
   String scrollOwner = 'none';
   String yourRole = 'A';
   Rx<String> textMessage = ''.obs;
@@ -176,6 +178,7 @@ class BattleActController extends GetxController {
     yourRole = mainCtrl.YourCurrentRole.value;
     mazeHight = mazeMap.value.mazeMap.length;
     mazeWidth = mazeMap.value.mazeMap[0].length;
+    showArrowController = mainCtrl.personalSettings.showArrowControl;
     shaddowRadius = mainCtrl.globalSettings.default_shaddow_radius;
     timerDuration = mainCtrl.globalSettings.speed_1;
     countRadiusAroundPlayerA = mazeMap.value.countRadiusAroundPlayer_A;
@@ -186,6 +189,7 @@ class BattleActController extends GetxController {
         mainCtrl.globalSettings.default_health.toDouble();
     mainCtrl.player_B_Life.value =
         mainCtrl.globalSettings.default_health.toDouble();
+
     if (yourRole == 'A') {
       mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
       changeState(mazeMap.value.Player_A_Coord, gameInfo.value, yourRole);
@@ -198,25 +202,35 @@ class BattleActController extends GetxController {
       );
     }
     update();
+    textOfMazeScroll = await getScroll();
   }
 
   void rewardCount(String scrollOwner) async {
     if (yourRole != scrollOwner) {
       return;
     }
+    // var doc = await firebaseFirestore
+    //     .collection('wisdomScrolls')
+    //     .doc('TO3pay0R0byjSLMinIXq')
+    //     .get();
+    // var data = doc.data();
+    // List<dynamic> scrollsCollection = data!['listOfScrolls'];
+    mainCtrl.scrollsList.add(textOfMazeScroll);
+    mainCtrl.scrolls.value = mainCtrl.scrollsList.length;
+    mainCtrl.update();
+    await firebaseFirestore.collection('users').doc(mainCtrl.userUid).update({
+      'scrolls': mainCtrl.scrollsList,
+    });
+  }
+
+  Future<String> getScroll() async {
     var doc = await firebaseFirestore
         .collection('wisdomScrolls')
         .doc('TO3pay0R0byjSLMinIXq')
         .get();
     var data = doc.data();
     List<dynamic> scrollsCollection = data!['listOfScrolls'];
-    mainCtrl.scrollsList
-        .add(scrollsCollection[Random().nextInt(scrollsCollection.length)]);
-    mainCtrl.scrolls.value = mainCtrl.scrollsList.length;
-    mainCtrl.update();
-    await firebaseFirestore.collection('users').doc(mainCtrl.userUid).update({
-      'scrolls': mainCtrl.scrollsList,
-    });
+    return scrollsCollection[Random().nextInt(scrollsCollection.length)];
   }
 
   void gameEngine() async {
@@ -276,6 +290,11 @@ class BattleActController extends GetxController {
         .listen((event) {
       update();
     });
+  }
+
+  void setUpMessage(int time, String text) {
+    messageCounter = time;
+    textMessage.value = text;
   }
 
   updateUI() {
@@ -354,6 +373,7 @@ class BattleActController extends GetxController {
           'scrollOwner': 'A',
         });
         await FlameAudio.play('sfx_scroll.mp3');
+        setUpMessage(4, textOfMazeScroll);
       }
     } else if (yourRole == 'B') {
       if (mazeMap.value.Player_B_Coord.row == 17 &&
@@ -367,6 +387,7 @@ class BattleActController extends GetxController {
           'scrollOwner': 'B',
         });
         await FlameAudio.play('sfx_scroll.mp3');
+        setUpMessage(4, textOfMazeScroll);
       }
     }
   }

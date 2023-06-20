@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,11 +14,14 @@ import 'package:uuid/uuid.dart';
 
 import '../keys.dart';
 import '../models/maze_map.dart';
+import '../models/personalSettings.dart';
 import '../models/settings.dart';
 import '../models/trap.dart';
 import '../services/generate_traps.dart';
 
 class MainGameController extends GetxController {
+  PersonalSettings personalSettings =
+      PersonalSettings(showArrowControl: false, showHints: true);
   GlobalSettings globalSettings = GlobalSettings(
       default_health: 55,
       default_shaddow_radius: 3,
@@ -26,7 +30,8 @@ class MainGameController extends GetxController {
       speed_2: 800,
       speed_3: 600,
       timer_back_for_battle: 240,
-      timer_back_for_training: 600);
+      timer_back_for_training: 600,
+      adInterval: 300);
   MazeMap? currentGameMap;
   late List<Trap> allTrapsInTheGame;
   RxList<Trap> allMyTraps = <Trap>[].obs;
@@ -130,6 +135,9 @@ class MainGameController extends GetxController {
     for (var i = 0; i < 300; i++) {
       scrollsList.add('scroll');
     }
+    DateTime currentTime = DateTime.now().toUtc(); // Get the current UTC time
+    DateTime previousTime = currentTime.subtract(Duration(minutes: 30)); // Subtract 30 minutes from the current time
+    Timestamp previousTimestamp = Timestamp.fromDate(previousTime);
 
     try {
       await firebaseFirestore.collection('users').doc(uid).set({
@@ -149,7 +157,8 @@ class MainGameController extends GetxController {
         'wantToPlay': true,
         'lastActive': FieldValue.serverTimestamp(),
         'points': 0,
-        'settings': 'settings',
+        'settings': PersonalSettings.getEmptyPS().toJson(),
+        'lastShowAd': previousTimestamp,
       });
       pref.setString('secretToken', secrTok);
       pref.setString('uid', uid);
@@ -173,6 +182,12 @@ class MainGameController extends GetxController {
         backgroundColor: Colors.red,
       ));
     }
+  }
+
+  void saveNewPersonalSettings() async {
+    await firebaseFirestore.collection('users').doc(userUid).update({
+      'settings': personalSettings.toJson(),
+    });
   }
 
   void changeInGameLastTime() async {
@@ -241,11 +256,13 @@ class MainGameController extends GetxController {
         if (secretT != token) {
           registerNewUser();
         }
+
         points.value = data['points'];
         userName.value = data['name'];
         userUid = data['uid'];
         scrollsList.value = data['scrolls'];
         wantToPlay.value = data['wantToPlay'];
+        personalSettings = PersonalSettings.fromJson(data['settings']);
         allMyTraps.value = TrapsGenerator.upTo(
             TrapsGenerator.toListTraps(data['allTraps'], allTrapsInTheGame),
             16);
@@ -268,6 +285,36 @@ class MainGameController extends GetxController {
         backgroundColor: Colors.red,
       ));
     }
+  }
+
+  Future<int> secLastAd() async {
+    var doc = await firebaseFirestore.collection('users').doc(userUid).get();
+    var data = doc.data();
+    Timestamp lastAd = data!['lastShowAd'] as Timestamp;
+    return lastAd.seconds;
+  }
+
+  void changeLastShowAdToNow() async {
+    await firebaseFirestore.collection('users').doc(userUid).update({
+      'lastShowAd': FieldValue.serverTimestamp(),
+    });
+  }
+  void addReward(int number) async {
+    var doc = await firebaseFirestore
+        .collection('wisdomScrolls')
+        .doc('TO3pay0R0byjSLMinIXq')
+        .get();
+    var data = doc.data();
+    List<dynamic> scrollsCollection = data!['listOfScrolls'];
+    for (var i = 0; i < number; i++) {
+      scrollsList
+        .add(scrollsCollection[Random().nextInt(scrollsCollection.length)]);
+    }
+    scrolls.value = scrollsList.length;
+    update();
+    await firebaseFirestore.collection('users').doc(userUid).update({
+      'scrolls': scrollsList,
+    });
   }
 
   //// Listner and game logic ////
@@ -413,6 +460,7 @@ class MainGameController extends GetxController {
       speed_3: data['speed_3'] as int? ?? 0,
       timer_back_for_battle: data['timer_back_for_battle'] as int? ?? 0,
       timer_back_for_training: data['timer_back_for_training'] as int? ?? 0,
+      adInterval: data['adInterval'] as int? ?? 0,
     );
   }
 
@@ -451,7 +499,8 @@ class MainGameController extends GetxController {
         speed_2: 800,
         speed_3: 600,
         timer_back_for_battle: 240,
-        timer_back_for_training: 600);
+        timer_back_for_training: 600,
+        adInterval: 300);
   }
 
   void playSwipe(int num) async {

@@ -27,6 +27,50 @@ class MenuButton extends StatelessWidget {
             if (!controller.buttonWasClick) {
               onPressed?.call();
               await controller.pressMenuButtonEffects(path);
+              if (controller.rewardedAd != null &&
+                  await controller.lastAdAloudToShowNext()) {
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Get Reward'),
+                    content: Container(
+                      height: Get.size.height / 4,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Image.asset(
+                              'assets/images/scrolls.png',
+                              height: Get.size.height / 20,
+                            ),
+                          ),
+                          Text('Do you want to watch an ad to get a scroll?'),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          controller.changeAdTimestamp();
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('NO'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          controller.rewardedAd?.show(
+                              onUserEarnedReward: (_, reward) {
+                            controller.addReward();
+                            controller.changeAdTimestamp();
+                          });
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('YES'),
+                      ),
+                    ],
+                  ),
+                );
+              }
             }
           },
           child: Container(
@@ -40,7 +84,8 @@ class MenuButton extends StatelessWidget {
                 colorFilter: path == controller.currentPress
                     ? null
                     : ColorFilter.mode(
-                        Colors.black.withOpacity(controller.mainScreenShaddow.value),
+                        Colors.black
+                            .withOpacity(controller.mainScreenShaddow.value),
                         BlendMode.darken,
                       ),
               ),
@@ -53,10 +98,13 @@ class MenuButton extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   shadows: [
-                    Shadow(offset: Offset(-shadow, -shadow), color: Colors.white),
-                    Shadow(offset: Offset(shadow, -shadow), color: Colors.white),
+                    Shadow(
+                        offset: Offset(-shadow, -shadow), color: Colors.white),
+                    Shadow(
+                        offset: Offset(shadow, -shadow), color: Colors.white),
                     Shadow(offset: Offset(shadow, shadow), color: Colors.white),
-                    Shadow(offset: Offset(-shadow, shadow), color: Colors.white),
+                    Shadow(
+                        offset: Offset(-shadow, shadow), color: Colors.white),
                   ],
                 ),
               ),

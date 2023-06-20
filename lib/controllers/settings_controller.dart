@@ -17,6 +17,7 @@ class SettingsController extends GetxController {
   Rx<TextEditingController> migrationToken = TextEditingController().obs;
   Rx<TextEditingController> userNameController = TextEditingController().obs;
   Rx<String> migrationTokenGen = ''.obs;
+  RxBool showControl = Get.find<MainGameController>().personalSettings.showArrowControl.obs;
 
   @override
   void onInit() async {
@@ -24,6 +25,11 @@ class SettingsController extends GetxController {
     update();
     pref = await SharedPreferences.getInstance();
     super.onInit();
+  }
+
+  void changeShowControl(bool switchRes) {
+    mainCtrl.personalSettings.showArrowControl = switchRes;
+    mainCtrl.saveNewPersonalSettings();
   }
 
   void generateMigrationToken() async {

@@ -168,7 +168,7 @@ class BattleAct extends StatelessWidget {
               right: 0,
               child: controller.showSkills.value ? TrapsShow() : SizedBox(),
             ),
-            kIsWeb ? Positioned(bottom: 15, right: 15, child: Control()) : SizedBox(),
+            controller.showArrowController ? Positioned(bottom: 15, right: 15, child: Control()) : SizedBox(),
           ],
         );
       }),
