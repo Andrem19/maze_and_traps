@@ -82,6 +82,7 @@ class WaitingGameController extends GetxController {
       }
       mainCtrl.currentmultiplayerGameId = playerList.docs[0].id;
       mainCtrl.currentMapName = data['MapName'];
+      nameOfMap.value = mainCtrl.currentMapName ?? '';
       mainCtrl.YourCurrentRole = 'B'.obs;
       startGameStream(playerList.docs[0].id);
     }
@@ -120,7 +121,6 @@ class WaitingGameController extends GetxController {
           'gameStatus': 'searching',
           'date': DateTime.now(),
         });
-        print(doc.id);
         mainCtrl.YourCurrentRole = 'A'.obs;
         nameOfMap.value = mainCtrl.currentMapName ?? '';
         mainCtrl.currentmultiplayerGameId = doc.id;
@@ -144,7 +144,6 @@ class WaitingGameController extends GetxController {
   }
 
   void startGameStream(String id) async {
-    print('listner');
     snapshots =
         FirebaseFirestore.instance.collection('gameBattle').doc(id).snapshots();
     listner = snapshots.listen((snapshot) {

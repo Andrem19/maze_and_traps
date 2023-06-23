@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -22,6 +23,17 @@ class MapTrainingActController extends GetxController {
       .obs;
   String mapId = '';
   int durationOfAct = 600;
+  List<String> listOfSteps = [
+    'sfx_Step.mp3',
+    'sfx_step1.mp3',
+    'sfx_Step2.mp3',
+    'sfx_Step3.mp3',
+    'sfx_Step4.mp3',
+    'sfx_Step5.mp3',
+    'sfx_Step6.mp3',
+    'sfx_Step7.mp3',
+    'sfx_Step8.mp3'
+  ];
 
   late int time;
   Duration clockTimer = Duration(seconds: 600);
@@ -46,12 +58,12 @@ class MapTrainingActController extends GetxController {
   RxBool right = false.obs;
 
   Rx<Direction> moveDirection = Direction.up.obs;
-  Rx<MazeMap> mazeMap =
-      TestData.createStruct(TestData.createTestMap()).obs;
+  Rx<MazeMap> mazeMap = TestData.createStruct(TestData.createTestMap()).obs;
 
   @override
   Future<void> onInit() async {
     super.onInit();
+    loadAudioAssets();
     mazeMap = TestData.createStruct(TestData.createTestMap()).obs;
     gameInfo = GameInfo.createEmptyGameInfo(mainCtrl.currentGameMap!).obs;
 
@@ -84,6 +96,7 @@ class MapTrainingActController extends GetxController {
   }
 
   Future<void> timerCode() async {
+    playStep();
     moveDirection.value = mainCtrl.moveDir;
     MovePlayer_A(moveDirection.value);
 
@@ -121,6 +134,25 @@ class MapTrainingActController extends GetxController {
     stopEngine();
     await countAndSaveStat();
     Get.back();
+  }
+
+  Future<void> loadAudioAssets() async {
+    await FlameAudio.audioCache.loadAll([
+      'sfx_Step.mp3',
+      'sfx_step1.mp3',
+      'sfx_Step2.mp3',
+      'sfx_Step3.mp3',
+      'sfx_Step4.mp3',
+      'sfx_Step5.mp3',
+      'sfx_Step6.mp3',
+      'sfx_Step7.mp3',
+      'sfx_Step8.mp3'
+    ]);
+  }
+
+  void playStep() async {
+    int rand = Random().nextInt(listOfSteps.length);
+    await FlameAudio.play(listOfSteps[rand]);
   }
 
   Future<void> countAndSaveStat() async {

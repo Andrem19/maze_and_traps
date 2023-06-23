@@ -10,6 +10,7 @@ class GlobalSettings {
   int speed_1;
   int speed_2;
   int speed_3;
+  int timer;
   int timer_back_for_battle;
   int timer_back_for_training;
   int adInterval;
@@ -20,6 +21,7 @@ class GlobalSettings {
     required this.speed_1,
     required this.speed_2,
     required this.speed_3,
+    required this.timer,
     required this.timer_back_for_battle,
     required this.timer_back_for_training,
     required this.adInterval,
@@ -32,6 +34,7 @@ class GlobalSettings {
     // Parse the data and return a new Settings object
     return GlobalSettings(
       default_health: data['default_health'] as int? ?? 0,
+      timer: data['timer'] as int? ?? 0,
       default_shaddow_radius: data['default_shaddow_radius'] as int? ?? 0,
       shaddow_radius_with_buf: data['shaddow_radius_with_buf'] as int? ?? 0,
       speed_1: data['speed_1'] as int? ?? 0,
@@ -65,6 +68,7 @@ class GlobalSettings {
     int? speed_1,
     int? speed_2,
     int? speed_3,
+    int? timer,
     int? timer_back_for_battle,
     int? timer_back_for_training,
     int? adInterval,
@@ -76,6 +80,7 @@ class GlobalSettings {
       speed_1: speed_1 ?? this.speed_1,
       speed_2: speed_2 ?? this.speed_2,
       speed_3: speed_3 ?? this.speed_3,
+      timer: timer ?? this.timer,
       timer_back_for_battle: timer_back_for_battle ?? this.timer_back_for_battle,
       timer_back_for_training: timer_back_for_training ?? this.timer_back_for_training,
       adInterval: adInterval ?? this.adInterval,
@@ -90,6 +95,7 @@ class GlobalSettings {
       'speed_1': speed_1,
       'speed_2': speed_2,
       'speed_3': speed_3,
+      'timer': timer,
       'timer_back_for_battle': timer_back_for_battle,
       'timer_back_for_training': timer_back_for_training,
       'adInterval': adInterval,
@@ -104,6 +110,7 @@ class GlobalSettings {
       speed_1: map['speed_1'] as int,
       speed_2: map['speed_2'] as int,
       speed_3: map['speed_3'] as int,
+      timer: map['timer'] as int,
       timer_back_for_battle: map['timer_back_for_battle'] as int,
       timer_back_for_training: map['timer_back_for_training'] as int,
       adInterval: map['adInterval'] as int,
@@ -117,7 +124,7 @@ class GlobalSettings {
 
   @override
   String toString() {
-    return 'GlobalSettings(default_health: $default_health, default_shaddow_radius: $default_shaddow_radius, shaddow_radius_with_buf: $shaddow_radius_with_buf, speed_1: $speed_1, speed_2: $speed_2, speed_3: $speed_3, timer_back_for_battle: $timer_back_for_battle, timer_back_for_training: $timer_back_for_training, adInterval: $adInterval)';
+    return 'GlobalSettings(default_health: $default_health, default_shaddow_radius: $default_shaddow_radius, shaddow_radius_with_buf: $shaddow_radius_with_buf, speed_1: $speed_1, speed_2: $speed_2, speed_3: $speed_3, timer: $timer, timer_back_for_battle: $timer_back_for_battle, timer_back_for_training: $timer_back_for_training, adInterval: $adInterval)';
   }
 
   @override
@@ -131,6 +138,7 @@ class GlobalSettings {
       other.speed_1 == speed_1 &&
       other.speed_2 == speed_2 &&
       other.speed_3 == speed_3 &&
+      other.timer == timer &&
       other.timer_back_for_battle == timer_back_for_battle &&
       other.timer_back_for_training == timer_back_for_training &&
       other.adInterval == adInterval;
@@ -144,6 +152,7 @@ class GlobalSettings {
       speed_1.hashCode ^
       speed_2.hashCode ^
       speed_3.hashCode ^
+      timer.hashCode ^
       timer_back_for_battle.hashCode ^
       timer_back_for_training.hashCode ^
       adInterval.hashCode;

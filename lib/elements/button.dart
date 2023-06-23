@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/ad_visual_controller.dart';
@@ -29,7 +32,8 @@ class MenuButton extends StatelessWidget {
               await controller.pressMenuButtonEffects(path);
               if (controller.rewardedAd != null &&
                   await controller.lastAdAloudToShowNext()) {
-                await showDialog(
+                if (Platform.isAndroid) {
+                  await showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
                     title: Text('Get Reward'),
@@ -70,6 +74,7 @@ class MenuButton extends StatelessWidget {
                     ],
                   ),
                 );
+                }
               }
             }
           },

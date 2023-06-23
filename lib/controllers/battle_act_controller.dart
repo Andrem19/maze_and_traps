@@ -35,6 +35,9 @@ class BattleActController extends GetxController {
   var checkTheFinishA;
   var checkTheFinishB;
   Rx<bool> showSkills = false.obs;
+
+  int time = 240;
+  Duration clockTimer = Duration(seconds: 240);
   Rx<String> timerText = ''.obs;
 
   String gameStatus = '';
@@ -189,7 +192,9 @@ class BattleActController extends GetxController {
         mainCtrl.globalSettings.default_health.toDouble();
     mainCtrl.player_B_Life.value =
         mainCtrl.globalSettings.default_health.toDouble();
-
+    clockTimer = Duration(seconds: mainCtrl.globalSettings.timer);
+    time = mainCtrl.globalSettings.timer;
+    timerText.value = '${clockTimer.inMinutes.remainder(60)}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
     if (yourRole == 'A') {
       mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
       changeState(mazeMap.value.Player_A_Coord, gameInfo.value, yourRole);
@@ -209,12 +214,6 @@ class BattleActController extends GetxController {
     if (yourRole != scrollOwner) {
       return;
     }
-    // var doc = await firebaseFirestore
-    //     .collection('wisdomScrolls')
-    //     .doc('TO3pay0R0byjSLMinIXq')
-    //     .get();
-    // var data = doc.data();
-    // List<dynamic> scrollsCollection = data!['listOfScrolls'];
     mainCtrl.scrollsList.add(textOfMazeScroll);
     mainCtrl.scrolls.value = mainCtrl.scrollsList.length;
     mainCtrl.update();
@@ -316,7 +315,7 @@ class BattleActController extends GetxController {
       }
 
       final res = checkTheFinishA();
-      if (res || mainCtrl.player_B_Life <= 0) {
+      if (res || mainCtrl.enemyLife <= 0 || (scrollOwner == 'A' && time <= 1)) {
         countFinal('A');
         mainCtrl.vinner.value = 'A';
       }
@@ -331,7 +330,7 @@ class BattleActController extends GetxController {
       }
 
       final res = checkTheFinishB();
-      if (res || mainCtrl.player_A_Life <= 0) {
+      if (res || mainCtrl.enemyLife <= 0 || (scrollOwner == 'B' && time <= 1)) {
         countFinal('B');
         mainCtrl.vinner.value = 'B';
       }
@@ -348,6 +347,10 @@ class BattleActController extends GetxController {
             ? gameInfo.value
             : GameInfo.reverseGameInfo(gameInfo.value, mazeMap.value),
         yourRole);
+    time--;
+    clockTimer = Duration(seconds: time);
+    timerText.value =
+        '${clockTimer.inMinutes.remainder(60)}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
   }
 
   void changeStreamInterval(int newInterval) {
@@ -378,8 +381,6 @@ class BattleActController extends GetxController {
     } else if (yourRole == 'B') {
       if (mazeMap.value.Player_B_Coord.row == 17 &&
           mazeMap.value.Player_B_Coord.col == 10) {
-        print(
-            '${mazeMap.value.Player_A_Coord.row} : ${mazeMap.value.Player_A_Coord.col}');
         await firebaseFirestore
             .collection('gameBattle')
             .doc(gameId.value)
@@ -394,7 +395,6 @@ class BattleActController extends GetxController {
 
   void changeState(
       Coordinates Player_L_Coord, GameInfo gameInfo, String role) async {
-    print(role);
     if (role == 'A') {
       await firebaseFirestore
           .collection('gameBattle')
@@ -472,6 +472,7 @@ class BattleActController extends GetxController {
           if (!mazeMap.value.mazeMap[player.row - 1][player.col].wall ||
               _trapsController.playerGhost > 0) {
             player.row -= 1;
+            _trapsController.playStep();
           }
         }
         break;
@@ -480,6 +481,7 @@ class BattleActController extends GetxController {
           if (!mazeMap.value.mazeMap[player.row + 1][player.col].wall ||
               _trapsController.playerGhost > 0) {
             player.row += 1;
+            _trapsController.playStep();
           }
         }
         break;
@@ -488,6 +490,7 @@ class BattleActController extends GetxController {
           if (!mazeMap.value.mazeMap[player.row][player.col - 1].wall ||
               _trapsController.playerGhost > 0) {
             player.col -= 1;
+            _trapsController.playStep();
           }
         }
         break;
@@ -496,6 +499,7 @@ class BattleActController extends GetxController {
           if (!mazeMap.value.mazeMap[player.row][player.col + 1].wall ||
               _trapsController.playerGhost > 0) {
             player.col += 1;
+            _trapsController.playStep();
           }
         }
         break;

@@ -29,6 +29,7 @@ class MainGameController extends GetxController {
       speed_1: 1200,
       speed_2: 800,
       speed_3: 600,
+      timer: 240,
       timer_back_for_battle: 240,
       timer_back_for_training: 600,
       adInterval: 300);
@@ -453,6 +454,7 @@ class MainGameController extends GetxController {
     // Parse the data and return a new Settings object
     return GlobalSettings(
       default_health: data['default_health'] as int? ?? 0,
+      timer: data['timer'] as int? ?? 0,
       default_shaddow_radius: data['default_shaddow_radius'] as int? ?? 0,
       shaddow_radius_with_buf: data['shaddow_radius_with_buf'] as int? ?? 0,
       speed_1: data['speed_1'] as int? ?? 0,
@@ -498,6 +500,7 @@ class MainGameController extends GetxController {
         speed_1: 1200,
         speed_2: 800,
         speed_3: 600,
+        timer: 240,
         timer_back_for_battle: 240,
         timer_back_for_training: 600,
         adInterval: 300);

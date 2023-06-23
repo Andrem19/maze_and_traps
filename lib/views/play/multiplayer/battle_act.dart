@@ -75,24 +75,26 @@ class BattleAct extends StatelessWidget {
                         controller.right.value))),
             Row(
               children: [
-                Opacity(
-                    opacity: 0.5,
-                    child: Text(
-                      controller.timerText.value,
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    )),
+                Text(
+                  controller.timerText.value,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(
                   width: 10,
                 ),
-                Text(
-                  controller.textMessage.value,
-                  style: TextStyle(
+                Flexible(
+                  child: Text(
+                    controller.textMessage.value,
+                    style: TextStyle(
                       color: Colors.red,
                       fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -168,7 +170,9 @@ class BattleAct extends StatelessWidget {
               right: 0,
               child: controller.showSkills.value ? TrapsShow() : SizedBox(),
             ),
-            controller.showArrowController ? Positioned(bottom: 15, right: 15, child: Control()) : SizedBox(),
+            controller.showArrowController
+                ? Positioned(bottom: 15, right: 15, child: Control())
+                : SizedBox(),
           ],
         );
       }),
