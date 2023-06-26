@@ -55,7 +55,6 @@ class MapEditorScreen extends StatelessWidget {
                       child: ElevatedButton(
                           onPressed: () async {
                             bool isValid = await controller.checkMazeValid();
-                            print('Maze is valid: $isValid');
                             if (isValid) {
                               Get.defaultDialog(
                                   title: '',

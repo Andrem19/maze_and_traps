@@ -330,7 +330,6 @@ class TrapsController extends GetxController {
   }
 
   void teleportAction() async {
-    print('teleport action');
     if (_battleActController.yourRole == 'A') {
       _battleActController.mazeMap.value.Player_A_Coord = randCoord();
     } else {

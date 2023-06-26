@@ -17,7 +17,9 @@ import '../models/maze_map.dart';
 import '../models/personalSettings.dart';
 import '../models/settings.dart';
 import '../models/trap.dart';
+import '../services/generate_maze.dart';
 import '../services/generate_traps.dart';
+import '../services/map_operation.dart';
 
 class MainGameController extends GetxController {
   PersonalSettings personalSettings =
@@ -49,6 +51,7 @@ class MainGameController extends GetxController {
   RxInt scrolls = 0.obs;
   RxList<dynamic> scrollsList = <dynamic>[].obs;
   TextEditingController playerSearch = TextEditingController(text: '');
+  TextEditingController mapSearch = TextEditingController(text: '');
   TextEditingController targetQrCode = TextEditingController();
 
   bool IsUserInGame = false;
@@ -137,7 +140,8 @@ class MainGameController extends GetxController {
       scrollsList.add('scroll');
     }
     DateTime currentTime = DateTime.now().toUtc(); // Get the current UTC time
-    DateTime previousTime = currentTime.subtract(Duration(minutes: 30)); // Subtract 30 minutes from the current time
+    DateTime previousTime = currentTime.subtract(
+        Duration(minutes: 30)); // Subtract 30 minutes from the current time
     Timestamp previousTimestamp = Timestamp.fromDate(previousTime);
 
     try {
@@ -300,6 +304,7 @@ class MainGameController extends GetxController {
       'lastShowAd': FieldValue.serverTimestamp(),
     });
   }
+
   void addReward(int number) async {
     var doc = await firebaseFirestore
         .collection('wisdomScrolls')
@@ -309,7 +314,7 @@ class MainGameController extends GetxController {
     List<dynamic> scrollsCollection = data!['listOfScrolls'];
     for (var i = 0; i < number; i++) {
       scrollsList
-        .add(scrollsCollection[Random().nextInt(scrollsCollection.length)]);
+          .add(scrollsCollection[Random().nextInt(scrollsCollection.length)]);
     }
     scrolls.value = scrollsList.length;
     update();
@@ -353,18 +358,10 @@ class MainGameController extends GetxController {
       if (doc.exists) {
         var data = doc.data();
 
-        currentMapId = data!['Map_Id'];
-        var maps = await FirebaseFirestore.instance
-            .collection('maps')
-            .where('id', isEqualTo: currentMapId)
-            .get();
-        if (maps.docs.length > 0) {
-          var data = maps.docs[0].data();
-          currentGameMap = MazeMap.fromJson(data['map']);
-          // prepareMapToGame();
-        }
+         String map = data!['Map'];
+        
+        currentGameMap = MazeMap.fromJson(map);
         currentmultiplayerGameId = theGameIdInviteMe;
-        currentMapName = data['MapName'];
         YourCurrentRole = 'B'.obs;
       }
       Get.toNamed(Routes.WAITING_PAGE);
@@ -393,7 +390,6 @@ class MainGameController extends GetxController {
       bool isAnybodyAscMe = data['isAnybodyAscMe'];
       String whoAskMe = data['whoInviteMeToPlay'];
       String theGameIdInviteMe = data['theGameIdInviteMe'];
-      print('game_id: $theGameIdInviteMe');
       if (isAnybodyAscMe) {
         firebaseFirestore.collection('users').doc(userUid).update({
           'isAnybodyAscMe': false,
@@ -552,5 +548,19 @@ class MainGameController extends GetxController {
       }
     }
     return TrapsGenerator.upTo(traps, 16);
+  }
+
+  void randomMapName() async {
+    var maps = await FirebaseFirestore.instance
+        .collection('maps')
+        .orderBy('rating', descending: false)
+        .limit(10)
+        .get();
+    int randomInt = Random().nextInt(maps.docs.length);
+    mapSearch.text = maps.docs[randomInt]['name'];
+    update();
+  }
+  Future<MazeMap> generateNewRandomMap() async {
+    return MazeGenerator.createMaze(TestData.createTestMap());
   }
 }

@@ -70,8 +70,7 @@ class MapEditorController extends GetxController {
   Future<bool> checkMazeWallValid() async {
     int wallCount = mazeMap.mazeMap
         .fold(0, (acc, row) => acc + row.where((cell) => cell.wall).length);
-    print('Number of walls: $wallCount');
-    return wallCount > 5;
+    return wallCount > 30;
   }
 
   void saveMap() async {
@@ -199,7 +198,7 @@ class MapEditorController extends GetxController {
   }
 
   void createNewMap() {
-    _mazeMap = MazeGenerator.createMaze(TestData.createTestMap()).obs;
+    _mazeMap = TestData.createStruct(TestData.createTestMap()).obs;
     Get.toNamed(Routes.MAP_EDITOR);
   }
 }

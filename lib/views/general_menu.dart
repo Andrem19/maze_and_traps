@@ -6,7 +6,6 @@ import 'package:mazeandtraps/elements/app_bar.dart';
 import 'package:mazeandtraps/elements/button.dart';
 import 'package:mazeandtraps/elements/play_switcher.dart';
 import 'package:mazeandtraps/elements/qr_code.dart';
-import 'package:mazeandtraps/elements/search_field.dart';
 import 'package:mazeandtraps/elements/shell.dart';
 
 import '../controllers/routing/app_pages.dart';

@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/play_menu_controller.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/elements/appbar_pages.dart';
+import 'package:mazeandtraps/elements/friend_battle.dart';
 
 import '../../elements/button.dart';
-import '../../elements/search_field.dart';
 import '../../elements/shell.dart';
 
 class PlayMenu extends StatelessWidget {
@@ -22,9 +22,9 @@ class PlayMenu extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SearchField(),
+                      FriendBattle(),
                       MenuButton(path: Routes.WAITING_PAGE, name: 'Search Random Rival', onPressed: () => controller.setUpRandomRival(true)),
-                      MenuButton(path: Routes.MAP_TRAINING_MENU, name: 'Training Maps'),
+                      const MenuButton(path: Routes.MAP_TRAINING_MENU, name: 'Training Maps'),
                       
                     ],
                   );

@@ -32,9 +32,9 @@ class WaitingPage extends StatelessWidget {
                                   height: 40,
                                   width: 40,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(controller.nameOfMap.value),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text('A new maze has been generated'),
                                 )
                               ],
                             ),

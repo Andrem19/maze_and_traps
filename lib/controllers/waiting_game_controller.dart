@@ -10,6 +10,8 @@ import 'package:mazeandtraps/models/gameInfoCloud.dart';
 import '../keys.dart';
 import '../models/game_info.dart';
 import '../models/maze_map.dart';
+import '../services/generate_maze.dart';
+import '../services/map_operation.dart';
 import 'main_game_controller.dart';
 
 class WaitingGameController extends GetxController {
@@ -48,6 +50,7 @@ class WaitingGameController extends GetxController {
   @override
   void onClose() {
     listner.cancel();
+    mainCtrl.deleteGameInstant();
     super.onClose();
   }
 
@@ -70,80 +73,62 @@ class WaitingGameController extends GetxController {
       });
       var data = playerList.docs[0].data();
 
-      mainCtrl.currentMapId = data['Map_Id'];
-      var maps = await FirebaseFirestore.instance
-          .collection('maps')
-          .where('id', isEqualTo: mainCtrl.currentMapId)
-          .get();
-      if (maps.docs.length > 0) {
-        var data = maps.docs[0].data();
-        mainCtrl.currentGameMap = MazeMap.fromJson(data['map']);
-        // prepareMapToGame();
-      }
+      String map = data['Map'];
+      mainCtrl.currentGameMap = MazeMap.fromJson(map);
       mainCtrl.currentmultiplayerGameId = playerList.docs[0].id;
-      mainCtrl.currentMapName = data['MapName'];
-      nameOfMap.value = mainCtrl.currentMapName ?? '';
       mainCtrl.YourCurrentRole = 'B'.obs;
       startGameStream(playerList.docs[0].id);
     }
   }
 
-  Future<bool> _addPlayerToList(bool randomRival) async {
-    bool res = await chooseRandomMap();
-    print('res: $res');
-    if (res) {
-      try {
-        var doc = await firebaseFirestore.collection('gameBattle').add({
-          'randomRival': randomRival,
-          'scrollOwner': 'none',
-          'IcantPlay': false,
-          'MapName': mainCtrl.currentMapName,
-          'Map_Id': mainCtrl.currentMapId,
-          'Player_A_uid': mainCtrl.userUid,
-          'Player_A_Name': mainCtrl.userName.value,
-          'Player_A_ready': false,
-          'Player_B_uid': '',
-          'Player_B_Name': '',
-          'Player_B_ready': false,
-          'B_used_trap': false,
-          'A_used_trap': false,
-          'Player_A_Life': mainCtrl.globalSettings.default_health,
-          'Player_B_Life': mainCtrl.globalSettings.default_health,
-          'Player_A_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
-          'Player_B_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
-          'Player_A_caught': 0,
-          'Player_B_caught': 0,
-          'GameInfo_A':
-              GameInfoCloud.createEmptyForServer().toJson(),
-          'GameInfo_B':
-              GameInfoCloud.createEmptyForServer().toJson(),
-          'vinner': '',
-          'gameStatus': 'searching',
-          'date': DateTime.now(),
-        });
-        mainCtrl.YourCurrentRole = 'A'.obs;
-        nameOfMap.value = mainCtrl.currentMapName ?? '';
-        mainCtrl.currentmultiplayerGameId = doc.id;
-        startGameStream(doc.id);
-        return true;
-      } on FirebaseException catch (error) {
-        Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
-          content: Text(error.code),
-          backgroundColor: Colors.red,
-        ));
-        return false;
-      } catch (error) {
-        Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
-          content: Text('1${error.toString()}'),
-          backgroundColor: Colors.red,
-        ));
-        return false;
-      }
+  Future<void> _addPlayerToList(bool randomRival) async {
+    if (randomRival) {
+      mainCtrl.currentGameMap = await mainCtrl.generateNewRandomMap();
     }
-    return false;
+    try {
+      var doc = await firebaseFirestore.collection('gameBattle').add({
+        'randomRival': randomRival,
+        'scrollOwner': 'none',
+        'IcantPlay': false,
+        'Map': mainCtrl.currentGameMap!.toJson(),
+        'Player_A_uid': mainCtrl.userUid,
+        'Player_A_Name': mainCtrl.userName.value,
+        'Player_A_ready': false,
+        'Player_B_uid': '',
+        'Player_B_Name': '',
+        'Player_B_ready': false,
+        'B_used_trap': false,
+        'A_used_trap': false,
+        'Player_A_Life': mainCtrl.globalSettings.default_health,
+        'Player_B_Life': mainCtrl.globalSettings.default_health,
+        'Player_A_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
+        'Player_B_Coord': Coordinates(isInit: false, row: 0, col: 0).toJson(),
+        'Player_A_caught': 0,
+        'Player_B_caught': 0,
+        'GameInfo_A': GameInfoCloud.createEmptyForServer().toJson(),
+        'GameInfo_B': GameInfoCloud.createEmptyForServer().toJson(),
+        'vinner': '',
+        'gameStatus': 'searching',
+        'date': DateTime.now(),
+      });
+      mainCtrl.YourCurrentRole = 'A'.obs;
+      mainCtrl.currentmultiplayerGameId = doc.id;
+      startGameStream(doc.id);
+    } on FirebaseException catch (error) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text(error.code),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
+        content: Text('1${error.toString()}'),
+        backgroundColor: Colors.red,
+      ));
+    }
   }
 
   void startGameStream(String id) async {
+    print(mainCtrl.YourCurrentRole);
     snapshots =
         FirebaseFirestore.instance.collection('gameBattle').doc(id).snapshots();
     listner = snapshots.listen((snapshot) {
