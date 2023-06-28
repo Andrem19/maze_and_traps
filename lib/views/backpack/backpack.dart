@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/controllers/traps_and_shop_controller.dart';
-import 'package:mazeandtraps/elements/appbar_pages.dart';
 import 'package:mazeandtraps/elements/shell.dart';
 import 'package:mazeandtraps/views/backpack/current_set.dart';
 import 'package:mazeandtraps/views/backpack/upper_collection.dart';
+
+import '../../elements/appbar_withscrolls.dart';
 
 class BackpackScreen extends StatelessWidget {
   const BackpackScreen({super.key});
@@ -18,7 +17,7 @@ class BackpackScreen extends StatelessWidget {
     var main = Get.find<MainGameController>();
     return Shell(
       content: Scaffold(
-      appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'BACKPACK'),
+      appBar: AppBarWithScrolls.getAppBar(Routes.GENERAL_MENU, 'BACKPACK'),
       body: GetBuilder<TrapsAndShopController>(builder: (controller) {
         return Column(
           children: [

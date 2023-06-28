@@ -21,7 +21,6 @@ class MazeMap {
   });
 
   void reverse() {
-
     Coordinates tempCoords = Player_A_Coord;
     Player_A_Coord = Player_B_Coord;
     Player_B_Coord = tempCoords;
@@ -63,6 +62,33 @@ class MazeMap {
         sqrt(pow(player2Row - player1Row, 2) + pow(player2Col - player1Col, 2));
 
     return distance;
+  }
+
+  String calcDistToFinish(String role) {
+    int numRows = mazeMap.length;
+    int numCols = mazeMap[0].length;
+
+    int playerAFinishRow = 0;
+    int playerAFinishCol = mazeMap[0].length - 1;
+
+    int playerBFinishRow = role == 'A'? mazeMap.length - 1 : 0;
+    int playerBFinishCol = role == 'A'? 0 : mazeMap[0].length - 1;
+
+    int playerARow = Player_A_Coord.row;
+    int playerACol = Player_A_Coord.col;
+
+    int playerBRow = Player_B_Coord.row;
+    int playerBCol = Player_B_Coord.col;
+
+    double distanceToFinishA = sqrt(pow(playerAFinishRow - playerARow, 2) +
+        pow(playerAFinishCol - playerACol, 2));
+    double distanceToFinishB = sqrt(pow(playerBFinishRow - playerBRow, 2) +
+        pow(playerBFinishCol - playerBCol, 2));
+    if (distanceToFinishA < distanceToFinishB) {
+      return "A";
+    } else {
+      return "B";
+    }
   }
 
   void countRadiusAroundPlayer_A(int shaddowRadius, bool withBorder) {

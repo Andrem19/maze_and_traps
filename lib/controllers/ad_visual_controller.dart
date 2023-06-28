@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
@@ -24,7 +25,9 @@ class AdAndVisualController extends GetxController {
   @override
   void onInit() async {
     await loadAudioAssets();
-    _loadRewardedAd();
+    if (!kIsWeb) {
+      _loadRewardedAd();
+    }
     super.onInit();
   }
 

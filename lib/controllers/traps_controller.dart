@@ -21,10 +21,10 @@ class TrapsController extends GetxController {
       'sfx_Step2.mp3',
       'sfx_Step3.mp3',
       'sfx_Step4.mp3',
-      'sfx_Step5.mp3',
+      'sfx_step5.mp3',
       'sfx_Step6.mp3',
       'sfx_Step7.mp3',
-      'sfx_Step8.mp3'
+      'sfx_step8.mp3'
     ];
   late BattleActController _battleActController;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -73,10 +73,10 @@ class TrapsController extends GetxController {
       'sfx_Step2.mp3',
       'sfx_Step3.mp3',
       'sfx_Step4.mp3',
-      'sfx_Step5.mp3',
+      'sfx_step5.mp3',
       'sfx_Step6.mp3',
       'sfx_Step7.mp3',
-      'sfx_Step8.mp3'
+      'sfx_step8.mp3'
     ]);
   }
 

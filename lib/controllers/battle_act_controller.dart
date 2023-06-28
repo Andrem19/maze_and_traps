@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/main_game_controller.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/controllers/traps_controller.dart';
+import 'package:mazeandtraps/elements/play_material/player_A.dart';
 import 'package:mazeandtraps/models/gameInfoCloud.dart';
 
 import '../keys.dart';
@@ -177,6 +178,7 @@ class BattleActController extends GetxController {
     mazeMap = mainCtrl.YourCurrentRole == 'B'
         ? mainCtrl.currentGameMap!.reversePlus().obs
         : mainCtrl.currentGameMap!.obs;
+    update();
     gameId.value = mainCtrl.currentmultiplayerGameId;
     yourRole = mainCtrl.YourCurrentRole.value;
     mazeHight = mazeMap.value.mazeMap.length;
@@ -194,7 +196,8 @@ class BattleActController extends GetxController {
         mainCtrl.globalSettings.default_health.toDouble();
     clockTimer = Duration(seconds: mainCtrl.globalSettings.timer);
     time = mainCtrl.globalSettings.timer;
-    timerText.value = '${clockTimer.inMinutes.remainder(60)}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    timerText.value =
+        '${clockTimer.inMinutes.remainder(60)}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
     if (yourRole == 'A') {
       mazeMap.value.countRadiusAroundPlayer_A(shaddowRadius, true);
       changeState(mazeMap.value.Player_A_Coord, gameInfo.value, yourRole);
@@ -246,7 +249,8 @@ class BattleActController extends GetxController {
           final gameInfoB = data['GameInfo_B'];
           final playerBCoord = data['Player_B_Coord'];
           scrollOwner = data['scrollOwner'];
-          mainCtrl.enemyLife.value = data['Player_B_Life'];
+          int pl_B_Life = data['Player_B_Life'];
+          mainCtrl.enemyLife.value = pl_B_Life.toDouble();
           int B_Caught_New = data['Player_B_caught'];
           updateCoordinates(gameInfoB, playerBCoord, scrollOwner, yourRole);
           final gameStatus = data['gameStatus'];
@@ -262,7 +266,8 @@ class BattleActController extends GetxController {
           final gameInfoA = data['GameInfo_A'];
           final playerACoord = data['Player_A_Coord'];
           scrollOwner = data['scrollOwner'];
-          mainCtrl.enemyLife.value = data['Player_A_Life'];
+          int pl_A_Life = data['Player_A_Life'];
+          mainCtrl.enemyLife.value = pl_A_Life.toDouble();
           int A_Caught_New = data['Player_A_caught'];
           updateCoordinates(gameInfoA, playerACoord, scrollOwner, yourRole);
           gameStatus = data['gameStatus'];
@@ -318,6 +323,8 @@ class BattleActController extends GetxController {
       if (res || mainCtrl.enemyLife <= 0 || (scrollOwner == 'A' && time <= 1)) {
         countFinal('A');
         mainCtrl.vinner.value = 'A';
+      } else if (time <= 1 && scrollOwner == 'none') {
+        countFinal(mazeMap.value.calcDistToFinish(yourRole));
       }
     } else if (yourRole == 'B') {
       MovePlayer(moveDirection.value);
@@ -333,6 +340,8 @@ class BattleActController extends GetxController {
       if (res || mainCtrl.enemyLife <= 0 || (scrollOwner == 'B' && time <= 1)) {
         countFinal('B');
         mainCtrl.vinner.value = 'B';
+      } else if (time <= 1 && scrollOwner == 'none') {
+        countFinal(mazeMap.value.calcDistToFinish(yourRole));
       }
     }
     if (scrollOwner == 'none') {

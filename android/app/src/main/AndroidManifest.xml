@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mazeandtraps">
+    package="quibgames.mazerush">
    <application
         android:label="Maze Rush"
         android:name="${applicationName}"

@@ -17,6 +17,7 @@ class PlayMenuController extends GetxController {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   void invitePlayerForBattle() async {
+    await mainCtrl.deleteAllMyGamesIfExist();
     if (mainCtrl.mapSearch.text.length > 0) {
       var map = await firebaseFirestore
           .collection('maps')
@@ -30,7 +31,6 @@ class PlayMenuController extends GetxController {
       }
     } else {
       mainCtrl.currentGameMap = await mainCtrl.generateNewRandomMap();
-
     }
     var doc = await firebaseFirestore
         .collection('users')
@@ -50,7 +50,7 @@ class PlayMenuController extends GetxController {
         }
         mainCtrl.changeStatusInGame(true);
         mainCtrl.YourCurrentRole = 'A'.obs;
-        mainCtrl.playerWhoIInvite_ID = doc.docs[0].id;
+        mainCtrl.playerWhoIInvite_ID = doc.docs[0].id;//????
         mainCtrl.randomRival = false;
 
         Get.toNamed(Routes.WAITING_PAGE);
@@ -65,7 +65,7 @@ class PlayMenuController extends GetxController {
     }
   }
 
-  void setUpRandomRival(bool randomRival) {
+  void setUpRandomRival(bool randomRival) async {
     mainCtrl.randomRival = randomRival;
   }
 }

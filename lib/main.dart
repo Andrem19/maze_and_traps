@@ -13,8 +13,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
     await MobileAds.instance.initialize();
-    await MobileAds.instance
-      .updateRequestConfiguration(RequestConfiguration(testDeviceIds: ['1db7a663-dd6d-49a9-896f-921520fb1c62']));
+    // await MobileAds.instance
+    //   .updateRequestConfiguration(RequestConfiguration(testDeviceIds: ['1db7a663-dd6d-49a9-896f-921520fb1c62']));
   }
 
   await Firebase.initializeApp(

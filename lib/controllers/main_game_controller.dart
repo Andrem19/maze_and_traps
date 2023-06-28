@@ -136,9 +136,9 @@ class MainGameController extends GetxController {
     String uid = uuid.v4();
     String part = uid.substring(30);
     String secrTok = uuid.v4();
-    for (var i = 0; i < 300; i++) {
-      scrollsList.add('scroll');
-    }
+    // for (var i = 0; i < 300; i++) {
+    //   scrollsList.add('scroll');
+    // }
     DateTime currentTime = DateTime.now().toUtc(); // Get the current UTC time
     DateTime previousTime = currentTime.subtract(
         Duration(minutes: 30)); // Subtract 30 minutes from the current time
@@ -344,6 +344,7 @@ class MainGameController extends GetxController {
   }
 
   Future<void> agreeToPlayPreparing(String theGameIdInviteMe) async {
+    await deleteAllMyGamesIfExist();
     try {
       firebaseFirestore.collection('gameBattle').doc(theGameIdInviteMe).update({
         'Player_B_uid': userUid,
@@ -358,11 +359,11 @@ class MainGameController extends GetxController {
       if (doc.exists) {
         var data = doc.data();
 
-         String map = data!['Map'];
-        
+        String map = data!['Map'];
+
         currentGameMap = MazeMap.fromJson(map);
         currentmultiplayerGameId = theGameIdInviteMe;
-        YourCurrentRole = 'B'.obs;
+        YourCurrentRole.value = 'B';
       }
       Get.toNamed(Routes.WAITING_PAGE);
     } on FirebaseException catch (error) {
@@ -560,7 +561,37 @@ class MainGameController extends GetxController {
     mapSearch.text = maps.docs[randomInt]['name'];
     update();
   }
+
   Future<MazeMap> generateNewRandomMap() async {
     return MazeGenerator.createMaze(TestData.createTestMap());
+    // return TestData.createTestMap();
+  }
+
+  Future<void> deleteAllMyGamesIfExist() async {
+    var gameList_A = await firebaseFirestore
+        .collection('gameBattle')
+        .where('Player_A_uid', isEqualTo: userUid)
+        .get();
+    if (gameList_A.docs.length > 0) {
+      for (var i = 0; i < gameList_A.docs.length; i++) {
+        await firebaseFirestore
+            .collection('gameBattle')
+            .doc(gameList_A.docs[i].id)
+            .delete();
+      }
+    }
+
+    var gameList_B = await firebaseFirestore
+        .collection('gameBattle')
+        .where('Player_B_uid', isEqualTo: userUid)
+        .get();
+    if (gameList_B.docs.length > 0) {
+      for (var i = 0; i < gameList_B.docs.length; i++) {
+        await firebaseFirestore
+            .collection('gameBattle')
+            .doc(gameList_B.docs[i].id)
+            .delete();
+      }
+    }
   }
 }

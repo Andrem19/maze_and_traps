@@ -20,7 +20,6 @@ class WaitingGameController extends GetxController {
   RxString gameStatus = 'searching...'.obs;
   RxString nameOfMap = 'searching...'.obs;
   Rx<bool> startButtonShow = false.obs;
-  String playerWhoIInvite_ID = '';
   late Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots;
   late StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> listner;
 
@@ -55,6 +54,7 @@ class WaitingGameController extends GetxController {
   }
 
   void _adPlayerToQueueOrFindRival() async {
+    await mainCtrl.deleteAllMyGamesIfExist();
     var playerList = await FirebaseFirestore.instance
         .collection('gameBattle')
         .where('gameStatus', isEqualTo: 'searching')
@@ -128,7 +128,6 @@ class WaitingGameController extends GetxController {
   }
 
   void startGameStream(String id) async {
-    print(mainCtrl.YourCurrentRole);
     snapshots =
         FirebaseFirestore.instance.collection('gameBattle').doc(id).snapshots();
     listner = snapshots.listen((snapshot) {

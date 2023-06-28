@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:mazeandtraps/controllers/routing/app_pages.dart';
 import 'package:mazeandtraps/elements/appbar_pages.dart';
+import 'package:mazeandtraps/elements/appbar_withscrolls.dart';
 import 'package:mazeandtraps/elements/shell.dart';
 import 'package:mazeandtraps/services/dialog.dart';
 
@@ -15,10 +16,9 @@ class TrapShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shell(
-      content: GetBuilder<MainGameController>(builder: (controller) {
+    return Shell(content: GetBuilder<MainGameController>(builder: (controller) {
       return Scaffold(
-        appBar: AppBarPages.getAppBar(Routes.GENERAL_MENU, 'TRAPS SHOP'),
+        appBar: AppBarWithScrolls.getAppBar(Routes.GENERAL_MENU, 'TRAPS SHOP'),
         body: Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Center(
@@ -65,7 +65,15 @@ class TrapShop extends StatelessWidget {
                                         children: [
                                           Text(element.name),
                                         ],
-                                      )
+                                      ),
+                                      Builder(builder: (context) {
+                                        if (controller.allMyTraps
+                                            .contains(element) || controller.backpackSet.contains(element)) {
+                                          return Icon(Icons.check, color: Colors.blue, size: 40,);
+                                        } else {
+                                          return SizedBox();
+                                        }
+                                      })
                                     ],
                                   ),
                                 );
