@@ -1,4 +1,4 @@
-package com.example.mazeandtraps
+package quibgames.mazerush
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -235,13 +235,13 @@ class MainGameController extends GetxController {
     if (wantToPlay.value) {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content:
-            Text('You have allowed other players to invite you to the game.'),
+            Text('You have allowed other players to invite you to the game'),
         backgroundColor: Colors.green,
       ));
     } else {
       Keys.scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(
-            'You have blocked other players from inviting you to the game.'),
+            'You have blocked other players from inviting you to the game'),
         backgroundColor: Colors.red,
       ));
     }

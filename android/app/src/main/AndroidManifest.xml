@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="quibgames.mazerush">
+    package="quibgames.mazerush"
+    android:versionCode="2">
    <application
         android:label="Maze Rush"
         android:name="${applicationName}"
