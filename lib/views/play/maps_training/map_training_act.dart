@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +15,37 @@ import '../../../elements/play_material/cube_widget_A.dart';
 import '../../../elements/shell.dart';
 import '../../../models/maze_map.dart';
 
-class MapTrainingAct extends StatelessWidget {
+class MapTrainingAct extends StatefulWidget with WidgetsBindingObserver {
   const MapTrainingAct({super.key});
+  
+
+  @override
+  State<MapTrainingAct> createState() => _MapTrainingActState();
+}
+
+
+class _MapTrainingActState extends State<MapTrainingAct> {
+  @override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addObserver(widget);
+}
+@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+  if (state == AppLifecycleState.paused) {
+    // Stop playing audio when the application is paused
+    FlameAudio.bgm.pause();
+  } else if (state == AppLifecycleState.resumed) {
+    // Resume playing audio when the application is resumed
+    FlameAudio.bgm.resume();
+  }
+}
+@override
+void dispose() {
+  // Remove the observer when the widget is disposed
+  WidgetsBinding.instance.removeObserver(widget);
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {

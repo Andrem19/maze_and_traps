@@ -16,16 +16,16 @@ import '../services/generate_traps.dart';
 
 class TrapsController extends GetxController {
   List<String> listOfSteps = [
-      'sfx_Step.mp3',
-      'sfx_step1.mp3',
-      'sfx_Step2.mp3',
-      'sfx_Step3.mp3',
-      'sfx_Step4.mp3',
-      'sfx_step5.mp3',
-      'sfx_Step6.mp3',
-      'sfx_Step7.mp3',
-      'sfx_step8.mp3'
-    ];
+    'sfx_Step.mp3',
+    'sfx_step1.mp3',
+    'sfx_Step2.mp3',
+    'sfx_Step3.mp3',
+    'sfx_Step4.mp3',
+    'sfx_step5.mp3',
+    'sfx_Step6.mp3',
+    'sfx_Step7.mp3',
+    'sfx_step8.mp3'
+  ];
   late BattleActController _battleActController;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   MainGameController main = Get.find<MainGameController>();
@@ -82,7 +82,9 @@ class TrapsController extends GetxController {
 
   void playStep() async {
     int rand = Random().nextInt(listOfSteps.length);
-    await FlameAudio.play(listOfSteps[rand]);
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+      await FlameAudio.play(listOfSteps[rand]);
+    }
   }
 
   List<String> getAudioSet() {

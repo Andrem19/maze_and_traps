@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +15,37 @@ import '../../../elements/shell.dart';
 import '../../../models/maze_map.dart';
 import '../../../services/arrow_direction.dart';
 
-class BattleAct extends StatelessWidget {
+class BattleAct extends StatefulWidget with WidgetsBindingObserver {
   const BattleAct({super.key});
+
+  @override
+  State<BattleAct> createState() => _BattleActState();
+}
+
+class _BattleActState extends State<BattleAct> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(widget);
+  }
+
+  @override
+  void dispose() {
+    // Remove the observer when the widget is disposed
+    WidgetsBinding.instance.removeObserver(widget);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // Stop playing audio when the application is paused
+      FlameAudio.bgm.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      // Resume playing audio when the application is resumed
+      FlameAudio.bgm.resume();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

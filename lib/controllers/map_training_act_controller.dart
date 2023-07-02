@@ -96,7 +96,6 @@ class MapTrainingActController extends GetxController {
   }
 
   Future<void> timerCode() async {
-    playStep();
     moveDirection.value = mainCtrl.moveDir;
     MovePlayer_A(moveDirection.value);
 
@@ -152,7 +151,9 @@ class MapTrainingActController extends GetxController {
 
   void playStep() async {
     int rand = Random().nextInt(listOfSteps.length);
+    if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
     await FlameAudio.play(listOfSteps[rand]);
+  }
   }
 
   Future<void> countAndSaveStat() async {
@@ -225,6 +226,7 @@ class MapTrainingActController extends GetxController {
                   [mazeMap.value.Player_A_Coord.col]
               .wall) {
             mazeMap.value.Player_A_Coord.row -= 1;
+            playStep();
           }
         }
         break;
@@ -237,6 +239,7 @@ class MapTrainingActController extends GetxController {
                   [mazeMap.value.Player_A_Coord.col]
               .wall) {
             mazeMap.value.Player_A_Coord.row += 1;
+            playStep();
           }
         }
         break;
@@ -248,6 +251,7 @@ class MapTrainingActController extends GetxController {
                   [mazeMap.value.Player_A_Coord.col - 1]
               .wall) {
             mazeMap.value.Player_A_Coord.col -= 1;
+            playStep();
           }
         }
         break;
@@ -260,6 +264,7 @@ class MapTrainingActController extends GetxController {
                   [mazeMap.value.Player_A_Coord.col + 1]
               .wall) {
             mazeMap.value.Player_A_Coord.col += 1;
+            playStep();
           }
         }
         break;
